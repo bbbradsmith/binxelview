@@ -21,6 +21,10 @@ Once the data is identified and located within the file,
 more work would follow with other appropriate tools.
 
 
+Unstable preview builds:
+https://ci.appveyor.com/project/bbbradsmith/binxelview/branch/master/artifacts
+
+
 Requirements
 ------------
 

@@ -2,3 +2,6 @@ bin/
 obj/
 .vs/
 *.user
+presets/Binxelview.exe
+presets/Binxelview.txt
+presets/_*.bxp
