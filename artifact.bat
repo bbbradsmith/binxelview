@@ -1,2 +1,2 @@
-copy bin\Release\Binxelview.exe plugins\Binxelview.exe
-copy readme.txt plugins\Binxelview.txt
+copy bin\Release\Binxelview.exe presets\Binxelview.exe
+copy readme.txt presets\Binxelview.txt
