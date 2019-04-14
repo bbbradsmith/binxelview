@@ -1204,6 +1204,7 @@
             this.buttonZero.Size = new System.Drawing.Size(36, 34);
             this.buttonZero.TabIndex = 9;
             this.buttonZero.Text = "&0";
+            this.toolTip.SetToolTip(this.buttonZero, "Return position to 0");
             this.buttonZero.UseVisualStyleBackColor = true;
             this.buttonZero.Click += new System.EventHandler(this.buttonZero_Click);
             // 
