@@ -71,10 +71,10 @@ namespace Binxelview
             public int next_stride_byte;
             public int next_stride_bit;
             public bool next_stride_auto;
-            public int tile_group_x;
+            public int tile_size_x;
             public int tile_stride_byte_x;
             public int tile_stride_bit_x;
-            public int tile_group_y;
+            public int tile_size_y;
             public int tile_stride_byte_y;
             public int tile_stride_bit_y;
             public int[] bit_stride_byte;
@@ -96,8 +96,8 @@ namespace Binxelview
                 pixel_stride_bit = 0;
                 row_stride_bit = 0;
                 next_stride_bit = 0;
-                tile_group_x = 0;
-                tile_group_y = 0;
+                tile_size_x = 0;
+                tile_size_y = 0;
                 tile_stride_byte_x = 0;
                 tile_stride_byte_y = 0;
                 tile_stride_bit_x = 0;
@@ -135,8 +135,8 @@ namespace Binxelview
                         sw.WriteLine(string.Format("{0} {1} {2}", pixel_stride_byte, row_stride_byte, next_stride_byte));
                         sw.WriteLine(string.Format("{0} {1} {2}", pixel_stride_bit, row_stride_bit, next_stride_bit));
                         sw.WriteLine(string.Format("{0} {1} {2}", pixel_stride_auto ? 1 : 0, row_stride_auto ? 1 : 0, next_stride_auto ? 1 : 0));
-                        sw.WriteLine(string.Format("{0} {1} {2}", tile_group_x, tile_stride_byte_x, tile_stride_bit_x));
-                        sw.WriteLine(string.Format("{0} {1} {2}", tile_group_y, tile_stride_byte_y, tile_stride_bit_y));
+                        sw.WriteLine(string.Format("{0} {1} {2}", tile_size_x, tile_stride_byte_x, tile_stride_bit_x));
+                        sw.WriteLine(string.Format("{0} {1} {2}", tile_size_y, tile_stride_byte_y, tile_stride_bit_y));
                         if (!chunky)
                         {
                             for (int i = 0; i < bpp; ++i)
@@ -166,8 +166,8 @@ namespace Binxelview
                     // (stride byte) pixel row next
                     // (stride bit) pixel row next
                     // (stride auto) pixel row next
-                    // plane X group byte bit
-                    // plane Y group byte bit
+                    // plane X size byte bit
+                    // plane Y size byte bit
                     // (bpp * bit stride) byte bit
 
                     name = Path.GetFileNameWithoutExtension(path);
@@ -210,13 +210,13 @@ namespace Binxelview
 
                         l = tr.ReadLine();
                         ls = l.Split(' ');
-                        tile_group_x = int.Parse(ls[0]);
+                        tile_size_x = int.Parse(ls[0]);
                         tile_stride_byte_x = int.Parse(ls[1]);
                         tile_stride_bit_x = int.Parse(ls[2]);
 
                         l = tr.ReadLine();
                         ls = l.Split(' ');
-                        tile_group_y = int.Parse(ls[0]);
+                        tile_size_y = int.Parse(ls[0]);
                         tile_stride_byte_y = int.Parse(ls[1]);
                         tile_stride_bit_y = int.Parse(ls[2]);
 
@@ -244,22 +244,22 @@ namespace Binxelview
 
                             if (tile_stride_x == 0)
                             {
-                                tile_group_x = 0;
+                                tile_size_x = 0;
                             }
                             else
                             {
-                                tile_stride_x += (stride_x * tile_group_x);
+                                tile_stride_x += (stride_x * tile_size_x);
                                 tile_stride_byte_x = tile_stride_x >> 3;
                                 tile_stride_bit_x = tile_stride_x & 7;
                             }
 
                             if (tile_stride_y == 0)
                             {
-                                tile_group_y = 0;
+                                tile_size_y = 0;
                             }
                             else
                             {
-                                tile_stride_y += (stride_y * tile_group_y);
+                                tile_stride_y += (stride_y * tile_size_y);
                                 tile_stride_byte_y = tile_stride_y >> 3;
                                 tile_stride_bit_y = tile_stride_y & 7;
                             }
@@ -331,7 +331,7 @@ namespace Binxelview
             int pos, int bpp, bool little_endian,
             int length, int w, int h,
             int pixel_stride, int row_stride, int render_stride,
-            int tile_group_x, int tile_group_y, int tile_shift_x, int tile_shift_y,
+            int tile_size_x, int tile_size_y, int tile_shift_x, int tile_shift_y,
             byte* data, int* bit_stride, long* render_buffer)
         {
             int pos_row = pos;
@@ -346,7 +346,7 @@ namespace Binxelview
                     render_row[x] = buildPixel(pos_pixel, bpp, little_endian, length, data, bit_stride);
                     pos_pixel += pixel_stride;
                     ++plane_x;
-                    if (plane_x >= tile_group_x)
+                    if (plane_x >= tile_size_x)
                     {
                         plane_x = 0;
                         pos_pixel += tile_shift_x;
@@ -354,7 +354,7 @@ namespace Binxelview
                 }
                 pos_row += row_stride;
                 ++plane_y;
-                if (plane_y >= tile_group_y)
+                if (plane_y >= tile_size_y)
                 {
                     plane_y = 0;
                     pos_row += tile_shift_y;
@@ -389,15 +389,15 @@ namespace Binxelview
             int pixel_stride = preset.pixel_stride_bit + (preset.pixel_stride_byte * 8);
             int row_stride = preset.row_stride_bit + (preset.row_stride_byte * 8);
             int next_stride = preset.next_stride_bit + (preset.next_stride_byte * 8);
-            int tile_group_x = preset.tile_group_x;
-            int tile_group_y = preset.tile_group_y;
-            int tile_shift_x = preset.tile_stride_bit_x + (preset.tile_stride_byte_x * 8) - (tile_group_x * pixel_stride);
-            int tile_shift_y = preset.tile_stride_bit_y + (preset.tile_stride_byte_y * 8) - (tile_group_y * row_stride);
+            int tile_size_x = preset.tile_size_x;
+            int tile_size_y = preset.tile_size_y;
+            int tile_shift_x = preset.tile_stride_bit_x + (preset.tile_stride_byte_x * 8) - (tile_size_x * pixel_stride);
+            int tile_shift_y = preset.tile_stride_bit_y + (preset.tile_stride_byte_y * 8) - (tile_size_y * row_stride);
             int bpp = preset.bpp;
             bool little_endian = preset.little_endian;
-            if (tile_group_x == 0) tile_shift_x = 0;
-            if (tile_group_y == 0) tile_shift_y = 0;
-            // tile stride is converted to a relative shift that is applied at the end of each tile group
+            if (tile_size_x == 0) tile_shift_x = 0;
+            if (tile_size_y == 0) tile_shift_y = 0;
+            // tile stride is converted to a relative shift that is applied at the end of each tile
 
             int length = data.Length;
 
@@ -421,7 +421,7 @@ namespace Binxelview
                             int sy = pady + (thp * ty);
                             renderTile(pos, bpp, little_endian, length, tw, th,
                                 pixel_stride, row_stride, pixel_buffer_width,
-                                tile_group_x, tile_group_y, tile_shift_x, tile_shift_y,
+                                tile_size_x, tile_size_y, tile_shift_x, tile_shift_y,
                                 data_raw, bit_stride_raw,
                                 pixel_buffer_raw + sx + (sy * pixel_buffer_width));
                             pos += next_stride;
@@ -888,8 +888,8 @@ namespace Binxelview
             numericPixelStrideBit.Enabled = !preset.pixel_stride_auto;
             numericRowStrideBit.Enabled = !preset.row_stride_auto;
             numericNextStrideBit.Enabled = !preset.next_stride_auto;
-            numericTileGroupX.Value = preset.tile_group_x;
-            numericTileGroupY.Value = preset.tile_group_y;
+            numericTileSizeX.Value = preset.tile_size_x;
+            numericTileSizeY.Value = preset.tile_size_y;
             numericTileStrideByteX.Value = preset.tile_stride_byte_x;
             numericTileStrideByteY.Value = preset.tile_stride_byte_y;
             numericTileStrideBitX.Value = preset.tile_stride_bit_x;
@@ -1166,15 +1166,15 @@ namespace Binxelview
             redrawPixels();
         }
 
-        private void numericTileGroupX_ValueChanged(object sender, EventArgs e)
+        private void numericTileSizeX_ValueChanged(object sender, EventArgs e)
         {
-            preset.tile_group_x = (int)numericTileGroupX.Value;
+            preset.tile_size_x = (int)numericTileSizeX.Value;
             redrawPixels();
         }
 
-        private void numericTileGroupY_ValueChanged(object sender, EventArgs e)
+        private void numericTileSizeY_ValueChanged(object sender, EventArgs e)
         {
-            preset.tile_group_y = (int)numericTileGroupY.Value;
+            preset.tile_size_y = (int)numericTileSizeY.Value;
             redrawPixels();
         }
 
@@ -1600,13 +1600,13 @@ namespace Binxelview
                 (row_stride * oy) +
                 (pixel_stride * ox);
 
-            if (preset.tile_group_x != 0)
+            if (preset.tile_size_x != 0)
             {
-                pos += (ox / preset.tile_group_x) * ((preset.tile_stride_byte_x * 8) + preset.tile_stride_bit_x - (preset.tile_group_x * pixel_stride));
+                pos += (ox / preset.tile_size_x) * ((preset.tile_stride_byte_x * 8) + preset.tile_stride_bit_x - (preset.tile_size_x * pixel_stride));
             }
-            if (preset.tile_group_y != 0)
+            if (preset.tile_size_y != 0)
             {
-                pos += (oy / preset.tile_group_y) * ((preset.tile_stride_byte_y * 8) + preset.tile_stride_bit_y - (preset.tile_group_y * row_stride));
+                pos += (oy / preset.tile_size_y) * ((preset.tile_stride_byte_y * 8) + preset.tile_stride_bit_y - (preset.tile_size_y * row_stride));
             }
 
             prepareBitStride();

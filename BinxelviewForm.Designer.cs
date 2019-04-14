@@ -89,13 +89,13 @@
             this.numericPosByte = new System.Windows.Forms.NumericUpDown();
             this.groupTile = new System.Windows.Forms.GroupBox();
             this.labelTileStride = new System.Windows.Forms.Label();
-            this.labelTileGroup = new System.Windows.Forms.Label();
+            this.labelTileSize = new System.Windows.Forms.Label();
             this.labelTileY = new System.Windows.Forms.Label();
-            this.numericTileGroupY = new System.Windows.Forms.NumericUpDown();
+            this.numericTileSizeY = new System.Windows.Forms.NumericUpDown();
             this.numericTileStrideBitY = new System.Windows.Forms.NumericUpDown();
             this.numericTileStrideByteY = new System.Windows.Forms.NumericUpDown();
             this.labelTileX = new System.Windows.Forms.Label();
-            this.numericTileGroupX = new System.Windows.Forms.NumericUpDown();
+            this.numericTileSizeX = new System.Windows.Forms.NumericUpDown();
             this.numericTileStrideBitX = new System.Windows.Forms.NumericUpDown();
             this.numericTileStrideByteX = new System.Windows.Forms.NumericUpDown();
             this.tableBase = new System.Windows.Forms.TableLayoutPanel();
@@ -133,10 +133,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericPosBit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPosByte)).BeginInit();
             this.groupTile.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTileGroupY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileSizeY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideBitY)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideByteY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTileGroupX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileSizeX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideBitX)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideByteX)).BeginInit();
             this.tableBase.SuspendLayout();
@@ -914,13 +914,13 @@
             // 
             this.groupTile.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.groupTile.Controls.Add(this.labelTileStride);
-            this.groupTile.Controls.Add(this.labelTileGroup);
+            this.groupTile.Controls.Add(this.labelTileSize);
             this.groupTile.Controls.Add(this.labelTileY);
-            this.groupTile.Controls.Add(this.numericTileGroupY);
+            this.groupTile.Controls.Add(this.numericTileSizeY);
             this.groupTile.Controls.Add(this.numericTileStrideBitY);
             this.groupTile.Controls.Add(this.numericTileStrideByteY);
             this.groupTile.Controls.Add(this.labelTileX);
-            this.groupTile.Controls.Add(this.numericTileGroupX);
+            this.groupTile.Controls.Add(this.numericTileSizeX);
             this.groupTile.Controls.Add(this.numericTileStrideBitX);
             this.groupTile.Controls.Add(this.numericTileStrideByteX);
             this.groupTile.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -940,14 +940,14 @@
             this.labelTileStride.Text = "Stride";
             this.labelTileStride.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // labelTileGroup
+            // labelTileSize
             // 
-            this.labelTileGroup.Location = new System.Drawing.Point(3, 34);
-            this.labelTileGroup.Name = "labelTileGroup";
-            this.labelTileGroup.Size = new System.Drawing.Size(45, 20);
-            this.labelTileGroup.TabIndex = 26;
-            this.labelTileGroup.Text = "Group";
-            this.labelTileGroup.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelTileSize.Location = new System.Drawing.Point(3, 34);
+            this.labelTileSize.Name = "labelTileSize";
+            this.labelTileSize.Size = new System.Drawing.Size(45, 20);
+            this.labelTileSize.TabIndex = 26;
+            this.labelTileSize.Text = "Size";
+            this.labelTileSize.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // labelTileY
             // 
@@ -960,16 +960,16 @@
             // 
             // numericTileGroupY
             // 
-            this.numericTileGroupY.Location = new System.Drawing.Point(106, 34);
-            this.numericTileGroupY.Maximum = new decimal(new int[] {
+            this.numericTileSizeY.Location = new System.Drawing.Point(106, 34);
+            this.numericTileSizeY.Maximum = new decimal(new int[] {
             2147483647,
             0,
             0,
             0});
-            this.numericTileGroupY.Name = "numericTileGroupY";
-            this.numericTileGroupY.Size = new System.Drawing.Size(51, 20);
-            this.numericTileGroupY.TabIndex = 24;
-            this.numericTileGroupY.ValueChanged += new System.EventHandler(this.numericTileGroupY_ValueChanged);
+            this.numericTileSizeY.Name = "numericTileGroupY";
+            this.numericTileSizeY.Size = new System.Drawing.Size(51, 20);
+            this.numericTileSizeY.TabIndex = 24;
+            this.numericTileSizeY.ValueChanged += new System.EventHandler(this.numericTileSizeY_ValueChanged);
             // 
             // numericTileStrideBitY
             // 
@@ -1019,16 +1019,16 @@
             // 
             // numericTileGroupX
             // 
-            this.numericTileGroupX.Location = new System.Drawing.Point(49, 34);
-            this.numericTileGroupX.Maximum = new decimal(new int[] {
+            this.numericTileSizeX.Location = new System.Drawing.Point(49, 34);
+            this.numericTileSizeX.Maximum = new decimal(new int[] {
             2147483647,
             0,
             0,
             0});
-            this.numericTileGroupX.Name = "numericTileGroupX";
-            this.numericTileGroupX.Size = new System.Drawing.Size(51, 20);
-            this.numericTileGroupX.TabIndex = 20;
-            this.numericTileGroupX.ValueChanged += new System.EventHandler(this.numericTileGroupX_ValueChanged);
+            this.numericTileSizeX.Name = "numericTileGroupX";
+            this.numericTileSizeX.Size = new System.Drawing.Size(51, 20);
+            this.numericTileSizeX.TabIndex = 20;
+            this.numericTileSizeX.ValueChanged += new System.EventHandler(this.numericTileSizeX_ValueChanged);
             // 
             // numericTileStrideBitX
             // 
@@ -1248,10 +1248,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericPosBit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPosByte)).EndInit();
             this.groupTile.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericTileGroupY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileSizeY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideBitY)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideByteY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericTileGroupX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileSizeX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideBitX)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideByteX)).EndInit();
             this.tableBase.ResumeLayout(false);
@@ -1328,15 +1328,15 @@
         private System.Windows.Forms.TableLayoutPanel tablePosPlane;
         private System.Windows.Forms.GroupBox groupTile;
         private System.Windows.Forms.Label labelTileY;
-        private System.Windows.Forms.NumericUpDown numericTileGroupY;
+        private System.Windows.Forms.NumericUpDown numericTileSizeY;
         private System.Windows.Forms.NumericUpDown numericTileStrideBitY;
         private System.Windows.Forms.NumericUpDown numericTileStrideByteY;
         private System.Windows.Forms.Label labelTileX;
-        private System.Windows.Forms.NumericUpDown numericTileGroupX;
+        private System.Windows.Forms.NumericUpDown numericTileSizeX;
         private System.Windows.Forms.NumericUpDown numericTileStrideBitX;
         private System.Windows.Forms.NumericUpDown numericTileStrideByteX;
         private System.Windows.Forms.Label labelTileStride;
-        private System.Windows.Forms.Label labelTileGroup;
+        private System.Windows.Forms.Label labelTileSize;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem decimalPositionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hexadecimalPositionToolStripMenuItem;

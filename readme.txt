@@ -1,7 +1,7 @@
 
 Binxelview binary image explorer
 
-Version 1.1.0.0
+Version 1.1.1.0
 2019-04-13
 Brad Smith
 
@@ -92,7 +92,7 @@ Pixel Formats
 
 * Tiling
     This performs a secondary subdivision of the image into tiles.
-    The group size is the width of a tile. 0 will disable tiling on that axis.
+    A size of 0 will disable tiling on that axis.
     The stride is the distance between the start of each tile pixel (X) or row (Y).
     Example: (Atari 4BPP.bxp)
         Atari ST video memory stores 16 pixels in a tile.
@@ -101,7 +101,7 @@ Pixel Formats
         Unchecking Chunky mode allows us to specify where the 4 bits are found:
           0, 2, 4, and 6 bytes relative to the read position.
         Using a pixel stride of 1 bit will advance through the 16 pixels one by one.
-        Using an tile X group of 16 pixels, on every 16th pixel
+        Using an tile X size of 16 pixels, on every 16th pixel
           a stride of 8 bytes will advance to the start of the next tile.
 
 Presets can be loaded and saved. The Preset menu is populated from the current working directory.
@@ -120,6 +120,9 @@ Click on a colour in the palette box to edit it.
 
 Changes
 -------
+
+1.1.1.0 (unreleased)
+- Renamed tiling "group" to "size".
 
 1.1.0.0 (2019-04-13)
 - Switch from .NET 4 (from 4.6.1) for XP support.
