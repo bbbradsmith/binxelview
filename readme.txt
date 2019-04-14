@@ -1,8 +1,8 @@
 
 Binxelview binary image explorer
 
-Version 1.1.1.0
-2019-04-13
+Version 1.2.0.0
+2019-04-14
 Brad Smith
 
 https://github.com/bbbradsmith/binxelview
@@ -118,10 +118,17 @@ Custom palettes are 24-bit RGB triples (8 bits for each component).
 Click on a colour in the palette box to edit it.
 
 
+Other Notes
+-----------
+
+Due to signed 32-bit integer precision, only the first 256MB of a file can be viewed.
+To inspect extremely large files, you may wish to split them first.
+
+
 Changes
 -------
 
-1.1.1.0 (unreleased)
+1.2.0.0 (2019-04-14)
 - Renamed tiling "group" to "size".
 - Allow partial images in view on right side.
 
