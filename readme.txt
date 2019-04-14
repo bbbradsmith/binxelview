@@ -1,8 +1,8 @@
 
 Binxelview binary image explorer
 
-Version 1.0.0.0
-2019-04-12
+Version 1.1.0.0
+2019-04-13
 Brad Smith
 
 https://github.com/bbbradsmith/binxelview
@@ -28,14 +28,14 @@ https://ci.appveyor.com/project/bbbradsmith/binxelview/branch/master/artifacts
 Requirements
 ------------
 
-.NET 4.6.1 framework
-Windows 7 SP1, 8, 10
+.NET 4 framework
+Windows XP SP3, Vista, 7, 8, 10
 
 The .NET runtime can be downloaded here:
- https://www.microsoft.com/en-ca/download/details.aspx?id=49981
+https://www.microsoft.com/en-ca/download/details.aspx?id=17718
 
 This project is open source, and might be compatible with other .NET frameworks,
-or substitutes, which could potentially enable use on other platforms.
+which could potentially enable use on other platforms.
 
 
 Basic Use
@@ -53,9 +53,15 @@ The top left corner of the display will start at the byte/bit offset given in th
 Right click on an image for an option to save it to disk.
 If the pixels are 8-BPP or less, it will be saved as an indexed image.
 
-Alt+B will return to position to the start of the file.
+Alt+0 will return to position to the start of the file.
+
+Alt+B will advance the position by 1 byte.
+Alt+I will advance the position by 1 bit.
+Alt+X will advance the position by 1 pixel.
+Alt+R will advance the position by 1 row.
 Alt+N will advance the position by 1 image (or 16 rows if the image height is 1).
-Shift+Alt+N will retreat the position by 1 image.
+
+Shift+Alt+B,I,X,R,N will retreat the position by 1 byte, bit, pixel, row, image.
 
 
 Pixel Formats
@@ -84,10 +90,10 @@ Pixel Formats
 * Next stride
     After a complete image is read, the next image starts at this distance from the previous.
 
-* Plane tiling
+* Tiling
     This performs a secondary subdivision of the image into tiles.
-    The group size is the width of a tile.
-    The shift is an additional offset to move the read position when the end of a group is reached.
+    The group size is the width of a tile, 0 will disable tiling on that axis.
+    The stride is the distance between the start of each tile pixel (X) or row (Y).
     Example: (Atari 4BPP.bxp)
         Atari ST video memory stores 16 pixels in a tile.
         In 4BPP mode, each pixel has 4 bits,
@@ -96,7 +102,7 @@ Pixel Formats
           0, 2, 4, and 6 bytes relative to the read position.
         Using a pixel stride of 1 bit will advance through the 16 pixels one by one.
         Using an plane X group of 16 pixels, once the 16th pixel is read,
-          a shift of 6 bytes will skip over the next 3 words to find the start of the next tile.
+          a stride of 8 bytes will advance to the start of the next tile.
 
 Presets can be loaded and saved. The Preset menu is populated from the current working directory.
 You can save a preset file "Default.bxp" to replace the default.

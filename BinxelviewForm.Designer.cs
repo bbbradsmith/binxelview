@@ -57,8 +57,6 @@
             this.numericPixelStrideBit = new System.Windows.Forms.NumericUpDown();
             this.numericRowStrideByte = new System.Windows.Forms.NumericUpDown();
             this.numericNextStrideByte = new System.Windows.Forms.NumericUpDown();
-            this.labelWStride = new System.Windows.Forms.Label();
-            this.labelPStride = new System.Windows.Forms.Label();
             this.numericPixelStrideByte = new System.Windows.Forms.NumericUpDown();
             this.numericWidth = new System.Windows.Forms.NumericUpDown();
             this.numericHeight = new System.Windows.Forms.NumericUpDown();
@@ -85,23 +83,21 @@
             this.tablePosPlane = new System.Windows.Forms.TableLayoutPanel();
             this.groupPosition = new System.Windows.Forms.GroupBox();
             this.buttonBytePos = new System.Windows.Forms.Button();
-            this.labelZoom = new System.Windows.Forms.Label();
             this.numericZoom = new System.Windows.Forms.NumericUpDown();
             this.labelInfoPixel = new System.Windows.Forms.Label();
-            this.labelPosBit = new System.Windows.Forms.Label();
             this.numericPosBit = new System.Windows.Forms.NumericUpDown();
             this.numericPosByte = new System.Windows.Forms.NumericUpDown();
-            this.groupPlane = new System.Windows.Forms.GroupBox();
-            this.labelPlaneStride = new System.Windows.Forms.Label();
-            this.labelPlaneGroup = new System.Windows.Forms.Label();
-            this.labelPlaneY = new System.Windows.Forms.Label();
-            this.numericPlaneGroupY = new System.Windows.Forms.NumericUpDown();
-            this.numericPlaneShiftBitY = new System.Windows.Forms.NumericUpDown();
-            this.numericPlaneShiftByteY = new System.Windows.Forms.NumericUpDown();
-            this.labelPlaneX = new System.Windows.Forms.Label();
-            this.numericPlaneGroupX = new System.Windows.Forms.NumericUpDown();
-            this.numericPlaneShiftBitX = new System.Windows.Forms.NumericUpDown();
-            this.numericPlaneShiftByteX = new System.Windows.Forms.NumericUpDown();
+            this.groupTile = new System.Windows.Forms.GroupBox();
+            this.labelTileStride = new System.Windows.Forms.Label();
+            this.labelTileGroup = new System.Windows.Forms.Label();
+            this.labelTileY = new System.Windows.Forms.Label();
+            this.numericTileGroupY = new System.Windows.Forms.NumericUpDown();
+            this.numericTileStrideBitY = new System.Windows.Forms.NumericUpDown();
+            this.numericTileStrideByteY = new System.Windows.Forms.NumericUpDown();
+            this.labelTileX = new System.Windows.Forms.Label();
+            this.numericTileGroupX = new System.Windows.Forms.NumericUpDown();
+            this.numericTileStrideBitX = new System.Windows.Forms.NumericUpDown();
+            this.numericTileStrideByteX = new System.Windows.Forms.NumericUpDown();
             this.tableBase = new System.Windows.Forms.TableLayoutPanel();
             this.tableBottom = new System.Windows.Forms.TableLayoutPanel();
             this.pixelBox = new System.Windows.Forms.PictureBox();
@@ -110,6 +106,11 @@
             this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pixelScroll = new System.Windows.Forms.VScrollBar();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.buttonRow = new System.Windows.Forms.Button();
+            this.buttonPixel = new System.Windows.Forms.Button();
+            this.buttonZoom = new System.Windows.Forms.Button();
+            this.buttonBitPos = new System.Windows.Forms.Button();
+            this.buttonZero = new System.Windows.Forms.Button();
             this.menuStripMain.SuspendLayout();
             this.tableTop.SuspendLayout();
             this.groupPacking.SuspendLayout();
@@ -131,13 +132,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericZoom)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPosBit)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPosByte)).BeginInit();
-            this.groupPlane.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPlaneGroupY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPlaneShiftBitY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPlaneShiftByteY)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPlaneGroupX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPlaneShiftBitX)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPlaneShiftByteX)).BeginInit();
+            this.groupTile.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileGroupY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideBitY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideByteY)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileGroupX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideBitX)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideByteX)).BeginInit();
             this.tableBase.SuspendLayout();
             this.tableBottom.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pixelBox)).BeginInit();
@@ -153,7 +154,7 @@
             this.helpToolStripMenuItem});
             this.menuStripMain.Location = new System.Drawing.Point(0, 0);
             this.menuStripMain.Name = "menuStripMain";
-            this.menuStripMain.Size = new System.Drawing.Size(808, 24);
+            this.menuStripMain.Size = new System.Drawing.Size(797, 24);
             this.menuStripMain.TabIndex = 0;
             this.menuStripMain.Text = "menuStrip";
             // 
@@ -200,14 +201,14 @@
             // reloadToolStripMenuItem
             // 
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.reloadToolStripMenuItem.Text = "&Reload";
             this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
             // 
             // presetStripMenuDash
             // 
             this.presetStripMenuDash.Name = "presetStripMenuDash";
-            this.presetStripMenuDash.Size = new System.Drawing.Size(177, 6);
+            this.presetStripMenuDash.Size = new System.Drawing.Size(107, 6);
             // 
             // optionsToolStripMenuItem
             // 
@@ -245,7 +246,7 @@
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutToolStripMenuItem.Text = "&About";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -267,12 +268,14 @@
             this.tableTop.Name = "tableTop";
             this.tableTop.RowCount = 1;
             this.tableTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableTop.Size = new System.Drawing.Size(808, 233);
+            this.tableTop.Size = new System.Drawing.Size(797, 233);
             this.tableTop.TabIndex = 0;
             // 
             // groupPacking
             // 
             this.groupPacking.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupPacking.Controls.Add(this.buttonPixel);
+            this.groupPacking.Controls.Add(this.buttonRow);
             this.groupPacking.Controls.Add(this.buttonNext);
             this.groupPacking.Controls.Add(this.checkAutoNext);
             this.groupPacking.Controls.Add(this.checkAutoRow);
@@ -285,8 +288,6 @@
             this.groupPacking.Controls.Add(this.numericPixelStrideBit);
             this.groupPacking.Controls.Add(this.numericRowStrideByte);
             this.groupPacking.Controls.Add(this.numericNextStrideByte);
-            this.groupPacking.Controls.Add(this.labelWStride);
-            this.groupPacking.Controls.Add(this.labelPStride);
             this.groupPacking.Controls.Add(this.numericPixelStrideByte);
             this.groupPacking.Controls.Add(this.numericWidth);
             this.groupPacking.Controls.Add(this.numericHeight);
@@ -307,12 +308,12 @@
             // 
             // buttonNext
             // 
-            this.buttonNext.Location = new System.Drawing.Point(122, 89);
+            this.buttonNext.Location = new System.Drawing.Point(121, 89);
             this.buttonNext.Name = "buttonNext";
-            this.buttonNext.Size = new System.Drawing.Size(51, 24);
+            this.buttonNext.Size = new System.Drawing.Size(53, 24);
             this.buttonNext.TabIndex = 22;
             this.buttonNext.Text = "&Next";
-            this.toolTip.SetToolTip(this.buttonNext, "Left click to advance\r\nRight/shift click to retreat");
+            this.toolTip.SetToolTip(this.buttonNext, "Left click to advance next image\r\nRight/shift click to retreat");
             this.buttonNext.UseVisualStyleBackColor = true;
             this.buttonNext.Click += new System.EventHandler(this.buttonNext_Click);
             this.buttonNext.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonNext_MouseDown);
@@ -489,24 +490,6 @@
             0,
             0});
             this.numericNextStrideByte.ValueChanged += new System.EventHandler(this.numericNextStrideByte_ValueChanged);
-            // 
-            // labelWStride
-            // 
-            this.labelWStride.Location = new System.Drawing.Point(65, 89);
-            this.labelWStride.Name = "labelWStride";
-            this.labelWStride.Size = new System.Drawing.Size(51, 24);
-            this.labelWStride.TabIndex = 11;
-            this.labelWStride.Text = "Row";
-            this.labelWStride.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // labelPStride
-            // 
-            this.labelPStride.Location = new System.Drawing.Point(6, 89);
-            this.labelPStride.Name = "labelPStride";
-            this.labelPStride.Size = new System.Drawing.Size(51, 24);
-            this.labelPStride.TabIndex = 10;
-            this.labelPStride.Text = "Stride";
-            this.labelPStride.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // numericPixelStrideByte
             // 
@@ -712,7 +695,7 @@
             this.groupPalette.Dock = System.Windows.Forms.DockStyle.Fill;
             this.groupPalette.Location = new System.Drawing.Point(510, 3);
             this.groupPalette.Name = "groupPalette";
-            this.groupPalette.Size = new System.Drawing.Size(295, 227);
+            this.groupPalette.Size = new System.Drawing.Size(284, 227);
             this.groupPalette.TabIndex = 1;
             this.groupPalette.TabStop = false;
             this.groupPalette.Text = "Palette";
@@ -814,7 +797,7 @@
             this.tablePosPlane.ColumnCount = 1;
             this.tablePosPlane.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tablePosPlane.Controls.Add(this.groupPosition, 0, 0);
-            this.tablePosPlane.Controls.Add(this.groupPlane, 0, 1);
+            this.tablePosPlane.Controls.Add(this.groupTile, 0, 1);
             this.tablePosPlane.Dock = System.Windows.Forms.DockStyle.Fill;
             this.tablePosPlane.Location = new System.Drawing.Point(0, 0);
             this.tablePosPlane.Margin = new System.Windows.Forms.Padding(0);
@@ -828,11 +811,12 @@
             // groupPosition
             // 
             this.groupPosition.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupPosition.Controls.Add(this.buttonZero);
+            this.groupPosition.Controls.Add(this.buttonBitPos);
+            this.groupPosition.Controls.Add(this.buttonZoom);
             this.groupPosition.Controls.Add(this.buttonBytePos);
-            this.groupPosition.Controls.Add(this.labelZoom);
             this.groupPosition.Controls.Add(this.numericZoom);
             this.groupPosition.Controls.Add(this.labelInfoPixel);
-            this.groupPosition.Controls.Add(this.labelPosBit);
             this.groupPosition.Controls.Add(this.numericPosBit);
             this.groupPosition.Controls.Add(this.numericPosByte);
             this.groupPosition.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -850,18 +834,10 @@
             this.buttonBytePos.Size = new System.Drawing.Size(36, 22);
             this.buttonBytePos.TabIndex = 7;
             this.buttonBytePos.Text = "&Byte";
-            this.toolTip.SetToolTip(this.buttonBytePos, "Reset position to 0");
+            this.toolTip.SetToolTip(this.buttonBytePos, "Left click to advance byte\r\nRight/shift click to retreat");
             this.buttonBytePos.UseVisualStyleBackColor = true;
             this.buttonBytePos.Click += new System.EventHandler(this.buttonBytePos_Click);
-            // 
-            // labelZoom
-            // 
-            this.labelZoom.Location = new System.Drawing.Point(115, 20);
-            this.labelZoom.Name = "labelZoom";
-            this.labelZoom.Size = new System.Drawing.Size(42, 20);
-            this.labelZoom.TabIndex = 6;
-            this.labelZoom.Text = "Zoom";
-            this.labelZoom.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.buttonBytePos.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonBytePos_MouseDown);
             // 
             // numericZoom
             // 
@@ -889,21 +865,12 @@
             // labelInfoPixel
             // 
             this.labelInfoPixel.BackColor = System.Drawing.SystemColors.ControlLight;
-            this.labelInfoPixel.Location = new System.Drawing.Point(6, 68);
+            this.labelInfoPixel.Location = new System.Drawing.Point(42, 68);
             this.labelInfoPixel.Name = "labelInfoPixel";
-            this.labelInfoPixel.Size = new System.Drawing.Size(151, 32);
+            this.labelInfoPixel.Size = new System.Drawing.Size(115, 32);
             this.labelInfoPixel.TabIndex = 4;
             this.labelInfoPixel.Text = "(Pixel Info)";
             this.labelInfoPixel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // labelPosBit
-            // 
-            this.labelPosBit.Location = new System.Drawing.Point(9, 43);
-            this.labelPosBit.Name = "labelPosBit";
-            this.labelPosBit.Size = new System.Drawing.Size(26, 20);
-            this.labelPosBit.TabIndex = 3;
-            this.labelPosBit.Text = "Bit";
-            this.labelPosBit.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // numericPosBit
             // 
@@ -943,182 +910,162 @@
             this.numericPosByte.TabIndex = 0;
             this.numericPosByte.ValueChanged += new System.EventHandler(this.numericPosByte_ValueChanged);
             // 
-            // groupPlane
+            // groupTile
             // 
-            this.groupPlane.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupPlane.Controls.Add(this.labelPlaneStride);
-            this.groupPlane.Controls.Add(this.labelPlaneGroup);
-            this.groupPlane.Controls.Add(this.labelPlaneY);
-            this.groupPlane.Controls.Add(this.numericPlaneGroupY);
-            this.groupPlane.Controls.Add(this.numericPlaneShiftBitY);
-            this.groupPlane.Controls.Add(this.numericPlaneShiftByteY);
-            this.groupPlane.Controls.Add(this.labelPlaneX);
-            this.groupPlane.Controls.Add(this.numericPlaneGroupX);
-            this.groupPlane.Controls.Add(this.numericPlaneShiftBitX);
-            this.groupPlane.Controls.Add(this.numericPlaneShiftByteX);
-            this.groupPlane.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.groupPlane.Location = new System.Drawing.Point(3, 114);
-            this.groupPlane.Name = "groupPlane";
-            this.groupPlane.Size = new System.Drawing.Size(163, 116);
-            this.groupPlane.TabIndex = 3;
-            this.groupPlane.TabStop = false;
-            this.groupPlane.Text = "Plane Tiling";
+            this.groupTile.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            this.groupTile.Controls.Add(this.labelTileStride);
+            this.groupTile.Controls.Add(this.labelTileGroup);
+            this.groupTile.Controls.Add(this.labelTileY);
+            this.groupTile.Controls.Add(this.numericTileGroupY);
+            this.groupTile.Controls.Add(this.numericTileStrideBitY);
+            this.groupTile.Controls.Add(this.numericTileStrideByteY);
+            this.groupTile.Controls.Add(this.labelTileX);
+            this.groupTile.Controls.Add(this.numericTileGroupX);
+            this.groupTile.Controls.Add(this.numericTileStrideBitX);
+            this.groupTile.Controls.Add(this.numericTileStrideByteX);
+            this.groupTile.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.groupTile.Location = new System.Drawing.Point(3, 114);
+            this.groupTile.Name = "groupTile";
+            this.groupTile.Size = new System.Drawing.Size(163, 116);
+            this.groupTile.TabIndex = 3;
+            this.groupTile.TabStop = false;
+            this.groupTile.Text = "Tiling";
             // 
-            // labelPlaneStride
+            // labelTileStride
             // 
-            this.labelPlaneStride.Location = new System.Drawing.Point(3, 57);
-            this.labelPlaneStride.Name = "labelPlaneStride";
-            this.labelPlaneStride.Size = new System.Drawing.Size(45, 43);
-            this.labelPlaneStride.TabIndex = 27;
-            this.labelPlaneStride.Text = "Shift";
-            this.labelPlaneStride.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelTileStride.Location = new System.Drawing.Point(3, 57);
+            this.labelTileStride.Name = "labelTileStride";
+            this.labelTileStride.Size = new System.Drawing.Size(45, 43);
+            this.labelTileStride.TabIndex = 27;
+            this.labelTileStride.Text = "Stride";
+            this.labelTileStride.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // labelPlaneGroup
+            // labelTileGroup
             // 
-            this.labelPlaneGroup.Location = new System.Drawing.Point(3, 34);
-            this.labelPlaneGroup.Name = "labelPlaneGroup";
-            this.labelPlaneGroup.Size = new System.Drawing.Size(45, 20);
-            this.labelPlaneGroup.TabIndex = 26;
-            this.labelPlaneGroup.Text = "Group";
-            this.labelPlaneGroup.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelTileGroup.Location = new System.Drawing.Point(3, 34);
+            this.labelTileGroup.Name = "labelTileGroup";
+            this.labelTileGroup.Size = new System.Drawing.Size(45, 20);
+            this.labelTileGroup.TabIndex = 26;
+            this.labelTileGroup.Text = "Group";
+            this.labelTileGroup.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // labelPlaneY
+            // labelTileY
             // 
-            this.labelPlaneY.Location = new System.Drawing.Point(106, 16);
-            this.labelPlaneY.Name = "labelPlaneY";
-            this.labelPlaneY.Size = new System.Drawing.Size(51, 15);
-            this.labelPlaneY.TabIndex = 25;
-            this.labelPlaneY.Text = "Y";
-            this.labelPlaneY.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelTileY.Location = new System.Drawing.Point(106, 16);
+            this.labelTileY.Name = "labelTileY";
+            this.labelTileY.Size = new System.Drawing.Size(51, 15);
+            this.labelTileY.TabIndex = 25;
+            this.labelTileY.Text = "Y";
+            this.labelTileY.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // numericPlaneGroupY
+            // numericTileGroupY
             // 
-            this.numericPlaneGroupY.Location = new System.Drawing.Point(106, 34);
-            this.numericPlaneGroupY.Maximum = new decimal(new int[] {
+            this.numericTileGroupY.Location = new System.Drawing.Point(106, 34);
+            this.numericTileGroupY.Maximum = new decimal(new int[] {
             2147483647,
             0,
             0,
             0});
-            this.numericPlaneGroupY.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericPlaneGroupY.Name = "numericPlaneGroupY";
-            this.numericPlaneGroupY.Size = new System.Drawing.Size(51, 20);
-            this.numericPlaneGroupY.TabIndex = 24;
-            this.numericPlaneGroupY.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericPlaneGroupY.ValueChanged += new System.EventHandler(this.numericPlaneGroupY_ValueChanged);
+            this.numericTileGroupY.Name = "numericTileGroupY";
+            this.numericTileGroupY.Size = new System.Drawing.Size(51, 20);
+            this.numericTileGroupY.TabIndex = 24;
+            this.numericTileGroupY.ValueChanged += new System.EventHandler(this.numericTileGroupY_ValueChanged);
             // 
-            // numericPlaneShiftBitY
+            // numericTileStrideBitY
             // 
-            this.numericPlaneShiftBitY.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.numericPlaneShiftBitY.Location = new System.Drawing.Point(106, 80);
-            this.numericPlaneShiftBitY.Maximum = new decimal(new int[] {
+            this.numericTileStrideBitY.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.numericTileStrideBitY.Location = new System.Drawing.Point(106, 80);
+            this.numericTileStrideBitY.Maximum = new decimal(new int[] {
             2147483647,
             0,
             0,
             0});
-            this.numericPlaneShiftBitY.Minimum = new decimal(new int[] {
+            this.numericTileStrideBitY.Minimum = new decimal(new int[] {
             -2147483648,
             0,
             0,
             -2147483648});
-            this.numericPlaneShiftBitY.Name = "numericPlaneShiftBitY";
-            this.numericPlaneShiftBitY.Size = new System.Drawing.Size(51, 20);
-            this.numericPlaneShiftBitY.TabIndex = 23;
-            this.numericPlaneShiftBitY.ValueChanged += new System.EventHandler(this.numericPlaneStrideBitY_ValueChanged);
+            this.numericTileStrideBitY.Name = "numericTileStrideBitY";
+            this.numericTileStrideBitY.Size = new System.Drawing.Size(51, 20);
+            this.numericTileStrideBitY.TabIndex = 23;
+            this.numericTileStrideBitY.ValueChanged += new System.EventHandler(this.numericTileStrideBitY_ValueChanged);
             // 
-            // numericPlaneShiftByteY
+            // numericTileStrideByteY
             // 
-            this.numericPlaneShiftByteY.Location = new System.Drawing.Point(106, 57);
-            this.numericPlaneShiftByteY.Maximum = new decimal(new int[] {
+            this.numericTileStrideByteY.Location = new System.Drawing.Point(106, 57);
+            this.numericTileStrideByteY.Maximum = new decimal(new int[] {
             2147483647,
             0,
             0,
             0});
-            this.numericPlaneShiftByteY.Minimum = new decimal(new int[] {
+            this.numericTileStrideByteY.Minimum = new decimal(new int[] {
             -2147483648,
             0,
             0,
             -2147483648});
-            this.numericPlaneShiftByteY.Name = "numericPlaneShiftByteY";
-            this.numericPlaneShiftByteY.Size = new System.Drawing.Size(51, 20);
-            this.numericPlaneShiftByteY.TabIndex = 22;
-            this.numericPlaneShiftByteY.ValueChanged += new System.EventHandler(this.numericPlaneStrideByteY_ValueChanged);
+            this.numericTileStrideByteY.Name = "numericTileStrideByteY";
+            this.numericTileStrideByteY.Size = new System.Drawing.Size(51, 20);
+            this.numericTileStrideByteY.TabIndex = 22;
+            this.numericTileStrideByteY.ValueChanged += new System.EventHandler(this.numericTileStrideByteY_ValueChanged);
             // 
-            // labelPlaneX
+            // labelTileX
             // 
-            this.labelPlaneX.Location = new System.Drawing.Point(49, 16);
-            this.labelPlaneX.Name = "labelPlaneX";
-            this.labelPlaneX.Size = new System.Drawing.Size(51, 15);
-            this.labelPlaneX.TabIndex = 21;
-            this.labelPlaneX.Text = "X";
-            this.labelPlaneX.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.labelTileX.Location = new System.Drawing.Point(49, 16);
+            this.labelTileX.Name = "labelTileX";
+            this.labelTileX.Size = new System.Drawing.Size(51, 15);
+            this.labelTileX.TabIndex = 21;
+            this.labelTileX.Text = "X";
+            this.labelTileX.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // numericPlaneGroupX
+            // numericTileGroupX
             // 
-            this.numericPlaneGroupX.Location = new System.Drawing.Point(49, 34);
-            this.numericPlaneGroupX.Maximum = new decimal(new int[] {
+            this.numericTileGroupX.Location = new System.Drawing.Point(49, 34);
+            this.numericTileGroupX.Maximum = new decimal(new int[] {
             2147483647,
             0,
             0,
             0});
-            this.numericPlaneGroupX.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericPlaneGroupX.Name = "numericPlaneGroupX";
-            this.numericPlaneGroupX.Size = new System.Drawing.Size(51, 20);
-            this.numericPlaneGroupX.TabIndex = 20;
-            this.numericPlaneGroupX.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.numericPlaneGroupX.ValueChanged += new System.EventHandler(this.numericPlaneGroupX_ValueChanged);
+            this.numericTileGroupX.Name = "numericTileGroupX";
+            this.numericTileGroupX.Size = new System.Drawing.Size(51, 20);
+            this.numericTileGroupX.TabIndex = 20;
+            this.numericTileGroupX.ValueChanged += new System.EventHandler(this.numericTileGroupX_ValueChanged);
             // 
-            // numericPlaneShiftBitX
+            // numericTileStrideBitX
             // 
-            this.numericPlaneShiftBitX.ForeColor = System.Drawing.SystemColors.MenuHighlight;
-            this.numericPlaneShiftBitX.Location = new System.Drawing.Point(49, 80);
-            this.numericPlaneShiftBitX.Maximum = new decimal(new int[] {
+            this.numericTileStrideBitX.ForeColor = System.Drawing.SystemColors.MenuHighlight;
+            this.numericTileStrideBitX.Location = new System.Drawing.Point(49, 80);
+            this.numericTileStrideBitX.Maximum = new decimal(new int[] {
             2147483647,
             0,
             0,
             0});
-            this.numericPlaneShiftBitX.Minimum = new decimal(new int[] {
+            this.numericTileStrideBitX.Minimum = new decimal(new int[] {
             -2147483648,
             0,
             0,
             -2147483648});
-            this.numericPlaneShiftBitX.Name = "numericPlaneShiftBitX";
-            this.numericPlaneShiftBitX.Size = new System.Drawing.Size(51, 20);
-            this.numericPlaneShiftBitX.TabIndex = 19;
-            this.numericPlaneShiftBitX.ValueChanged += new System.EventHandler(this.numericPlaneStrideBitX_ValueChanged);
+            this.numericTileStrideBitX.Name = "numericTileStrideBitX";
+            this.numericTileStrideBitX.Size = new System.Drawing.Size(51, 20);
+            this.numericTileStrideBitX.TabIndex = 19;
+            this.numericTileStrideBitX.ValueChanged += new System.EventHandler(this.numericTileStrideBitX_ValueChanged);
             // 
-            // numericPlaneShiftByteX
+            // numericTileStrideByteX
             // 
-            this.numericPlaneShiftByteX.Location = new System.Drawing.Point(49, 57);
-            this.numericPlaneShiftByteX.Maximum = new decimal(new int[] {
+            this.numericTileStrideByteX.Location = new System.Drawing.Point(49, 57);
+            this.numericTileStrideByteX.Maximum = new decimal(new int[] {
             2147483647,
             0,
             0,
             0});
-            this.numericPlaneShiftByteX.Minimum = new decimal(new int[] {
+            this.numericTileStrideByteX.Minimum = new decimal(new int[] {
             -2147483648,
             0,
             0,
             -2147483648});
-            this.numericPlaneShiftByteX.Name = "numericPlaneShiftByteX";
-            this.numericPlaneShiftByteX.Size = new System.Drawing.Size(51, 20);
-            this.numericPlaneShiftByteX.TabIndex = 18;
-            this.numericPlaneShiftByteX.ValueChanged += new System.EventHandler(this.numericPlaneStrideByteX_ValueChanged);
+            this.numericTileStrideByteX.Name = "numericTileStrideByteX";
+            this.numericTileStrideByteX.Size = new System.Drawing.Size(51, 20);
+            this.numericTileStrideByteX.TabIndex = 18;
+            this.numericTileStrideByteX.ValueChanged += new System.EventHandler(this.numericTileStrideByteX_ValueChanged);
             // 
             // tableBase
             // 
@@ -1135,7 +1082,7 @@
             this.tableBase.RowCount = 2;
             this.tableBase.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableBase.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableBase.Size = new System.Drawing.Size(808, 626);
+            this.tableBase.Size = new System.Drawing.Size(797, 647);
             this.tableBase.TabIndex = 1;
             // 
             // tableBottom
@@ -1151,7 +1098,7 @@
             this.tableBottom.Name = "tableBottom";
             this.tableBottom.RowCount = 1;
             this.tableBottom.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tableBottom.Size = new System.Drawing.Size(808, 393);
+            this.tableBottom.Size = new System.Drawing.Size(797, 414);
             this.tableBottom.TabIndex = 1;
             // 
             // pixelBox
@@ -1161,7 +1108,7 @@
             this.pixelBox.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pixelBox.Location = new System.Drawing.Point(3, 3);
             this.pixelBox.Name = "pixelBox";
-            this.pixelBox.Size = new System.Drawing.Size(778, 387);
+            this.pixelBox.Size = new System.Drawing.Size(767, 408);
             this.pixelBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pixelBox.TabIndex = 0;
             this.pixelBox.TabStop = false;
@@ -1195,19 +1142,77 @@
             // 
             this.pixelScroll.Dock = System.Windows.Forms.DockStyle.Fill;
             this.pixelScroll.LargeChange = 1;
-            this.pixelScroll.Location = new System.Drawing.Point(784, 0);
+            this.pixelScroll.Location = new System.Drawing.Point(773, 0);
             this.pixelScroll.Maximum = 0;
             this.pixelScroll.Name = "pixelScroll";
-            this.pixelScroll.Size = new System.Drawing.Size(24, 393);
+            this.pixelScroll.Size = new System.Drawing.Size(24, 414);
             this.pixelScroll.TabIndex = 1;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
+            // 
+            // buttonRow
+            // 
+            this.buttonRow.Location = new System.Drawing.Point(64, 89);
+            this.buttonRow.Name = "buttonRow";
+            this.buttonRow.Size = new System.Drawing.Size(53, 24);
+            this.buttonRow.TabIndex = 23;
+            this.buttonRow.Text = "&Row";
+            this.toolTip.SetToolTip(this.buttonRow, "Left click to advance row\r\nRight/shift click to retreat");
+            this.buttonRow.UseVisualStyleBackColor = true;
+            this.buttonRow.Click += new System.EventHandler(this.buttonRow_Click);
+            this.buttonRow.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonRow_MouseDown);
+            // 
+            // buttonPixel
+            // 
+            this.buttonPixel.Location = new System.Drawing.Point(6, 89);
+            this.buttonPixel.Name = "buttonPixel";
+            this.buttonPixel.Size = new System.Drawing.Size(53, 24);
+            this.buttonPixel.TabIndex = 24;
+            this.buttonPixel.Text = "Pi&xel";
+            this.toolTip.SetToolTip(this.buttonPixel, "Left click to advance pixel\r\nRight/shift click to retreat");
+            this.buttonPixel.UseVisualStyleBackColor = true;
+            this.buttonPixel.Click += new System.EventHandler(this.buttonPixel_Click);
+            this.buttonPixel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonPixel_MouseDown);
+            // 
+            // buttonZoom
+            // 
+            this.buttonZoom.Location = new System.Drawing.Point(114, 18);
+            this.buttonZoom.Name = "buttonZoom";
+            this.buttonZoom.Size = new System.Drawing.Size(44, 22);
+            this.buttonZoom.TabIndex = 8;
+            this.buttonZoom.Text = "&Zoom";
+            this.toolTip.SetToolTip(this.buttonZoom, "Left click to increse zoom\r\nRight/shift click to decrease");
+            this.buttonZoom.UseVisualStyleBackColor = true;
+            this.buttonZoom.Click += new System.EventHandler(this.buttonZoom_Click);
+            this.buttonZoom.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonZoom_MouseDown);
+            // 
+            // buttonBitPos
+            // 
+            this.buttonBitPos.Location = new System.Drawing.Point(6, 42);
+            this.buttonBitPos.Name = "buttonBitPos";
+            this.buttonBitPos.Size = new System.Drawing.Size(36, 22);
+            this.buttonBitPos.TabIndex = 9;
+            this.buttonBitPos.Text = "B&it";
+            this.toolTip.SetToolTip(this.buttonBitPos, "Left click to advance bit\r\nRight/shift click to retreat");
+            this.buttonBitPos.UseVisualStyleBackColor = true;
+            this.buttonBitPos.Click += new System.EventHandler(this.buttonBitPos_Click);
+            this.buttonBitPos.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonBitPos_MouseDown);
+            // 
+            // buttonZero
+            // 
+            this.buttonZero.Location = new System.Drawing.Point(6, 67);
+            this.buttonZero.Name = "buttonZero";
+            this.buttonZero.Size = new System.Drawing.Size(36, 34);
+            this.buttonZero.TabIndex = 9;
+            this.buttonZero.Text = "&0";
+            this.buttonZero.UseVisualStyleBackColor = true;
+            this.buttonZero.Click += new System.EventHandler(this.buttonZero_Click);
             // 
             // BinxelviewForm
             // 
             this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(808, 650);
+            this.ClientSize = new System.Drawing.Size(797, 671);
             this.Controls.Add(this.tableBase);
             this.Controls.Add(this.menuStripMain);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
@@ -1241,13 +1246,13 @@
             ((System.ComponentModel.ISupportInitialize)(this.numericZoom)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPosBit)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numericPosByte)).EndInit();
-            this.groupPlane.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.numericPlaneGroupY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPlaneShiftBitY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPlaneShiftByteY)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPlaneGroupX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPlaneShiftBitX)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.numericPlaneShiftByteX)).EndInit();
+            this.groupTile.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileGroupY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideBitY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideByteY)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileGroupX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideBitX)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numericTileStrideByteX)).EndInit();
             this.tableBase.ResumeLayout(false);
             this.tableBase.PerformLayout();
             this.tableBottom.ResumeLayout(false);
@@ -1298,18 +1303,14 @@
         private System.Windows.Forms.NumericUpDown numericPixelStrideBit;
         private System.Windows.Forms.NumericUpDown numericRowStrideByte;
         private System.Windows.Forms.NumericUpDown numericNextStrideByte;
-        private System.Windows.Forms.Label labelWStride;
-        private System.Windows.Forms.Label labelPStride;
         private System.Windows.Forms.NumericUpDown numericPixelStrideByte;
         private System.Windows.Forms.Button buttonSavePreset;
         private System.Windows.Forms.Button buttonLoadPreset;
         private System.Windows.Forms.Button buttonDefaultPreset;
         private System.Windows.Forms.ToolStripMenuItem presetToolStripMenuItem;
         private System.Windows.Forms.Label labelInfoPixel;
-        private System.Windows.Forms.Label labelPosBit;
         private System.Windows.Forms.NumericUpDown numericPosBit;
         private System.Windows.Forms.NumericUpDown numericPosByte;
-        private System.Windows.Forms.Label labelZoom;
         private System.Windows.Forms.NumericUpDown numericZoom;
         private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator presetStripMenuDash;
@@ -1324,23 +1325,28 @@
         private System.Windows.Forms.CheckBox checkAutoRow;
         private System.Windows.Forms.CheckBox checkAutoPixel;
         private System.Windows.Forms.TableLayoutPanel tablePosPlane;
-        private System.Windows.Forms.GroupBox groupPlane;
-        private System.Windows.Forms.Label labelPlaneY;
-        private System.Windows.Forms.NumericUpDown numericPlaneGroupY;
-        private System.Windows.Forms.NumericUpDown numericPlaneShiftBitY;
-        private System.Windows.Forms.NumericUpDown numericPlaneShiftByteY;
-        private System.Windows.Forms.Label labelPlaneX;
-        private System.Windows.Forms.NumericUpDown numericPlaneGroupX;
-        private System.Windows.Forms.NumericUpDown numericPlaneShiftBitX;
-        private System.Windows.Forms.NumericUpDown numericPlaneShiftByteX;
-        private System.Windows.Forms.Label labelPlaneStride;
-        private System.Windows.Forms.Label labelPlaneGroup;
+        private System.Windows.Forms.GroupBox groupTile;
+        private System.Windows.Forms.Label labelTileY;
+        private System.Windows.Forms.NumericUpDown numericTileGroupY;
+        private System.Windows.Forms.NumericUpDown numericTileStrideBitY;
+        private System.Windows.Forms.NumericUpDown numericTileStrideByteY;
+        private System.Windows.Forms.Label labelTileX;
+        private System.Windows.Forms.NumericUpDown numericTileGroupX;
+        private System.Windows.Forms.NumericUpDown numericTileStrideBitX;
+        private System.Windows.Forms.NumericUpDown numericTileStrideByteX;
+        private System.Windows.Forms.Label labelTileStride;
+        private System.Windows.Forms.Label labelTileGroup;
         private System.Windows.Forms.ToolStripMenuItem optionsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem decimalPositionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem hexadecimalPositionToolStripMenuItem;
         private System.Windows.Forms.Button buttonBytePos;
         private System.Windows.Forms.ToolTip toolTip;
         private System.Windows.Forms.Button buttonNext;
+        private System.Windows.Forms.Button buttonPixel;
+        private System.Windows.Forms.Button buttonRow;
+        private System.Windows.Forms.Button buttonBitPos;
+        private System.Windows.Forms.Button buttonZoom;
+        private System.Windows.Forms.Button buttonZero;
     }
 }
 

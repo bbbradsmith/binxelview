@@ -11,7 +11,7 @@ namespace Binxelview
     public partial class BinxelviewForm : Form
     {
         const int MAX_BPP = 32;
-        const int PRESET_VERSION = 1;
+        const int PRESET_VERSION = 2;
         const int PALETTE_BITS = 14; // maximum bits to fill 128 x 128 square
         const int PALETTE_DIM = 128; // should match paletteBox size
 
@@ -71,12 +71,12 @@ namespace Binxelview
             public int next_stride_byte;
             public int next_stride_bit;
             public bool next_stride_auto;
-            public int plane_group_x;
-            public int plane_shift_byte_x;
-            public int plane_shift_bit_x;
-            public int plane_group_y;
-            public int plane_shift_byte_y;
-            public int plane_shift_bit_y;
+            public int tile_group_x;
+            public int tile_stride_byte_x;
+            public int tile_stride_bit_x;
+            public int tile_group_y;
+            public int tile_stride_byte_y;
+            public int tile_stride_bit_y;
             public int[] bit_stride_byte;
             public int[] bit_stride_bit;
 
@@ -96,12 +96,12 @@ namespace Binxelview
                 pixel_stride_bit = 0;
                 row_stride_bit = 0;
                 next_stride_bit = 0;
-                plane_group_x = 1;
-                plane_group_y = 1;
-                plane_shift_byte_x = 0;
-                plane_shift_byte_y = 0;
-                plane_shift_bit_x = 0;
-                plane_shift_bit_y = 0;
+                tile_group_x = 0;
+                tile_group_y = 0;
+                tile_stride_byte_x = 0;
+                tile_stride_byte_y = 0;
+                tile_stride_bit_x = 0;
+                tile_stride_bit_y = 0;
                 pixel_stride_auto = true;
                 row_stride_auto = true;
                 next_stride_auto = true;
@@ -135,8 +135,8 @@ namespace Binxelview
                         sw.WriteLine(string.Format("{0} {1} {2}", pixel_stride_byte, row_stride_byte, next_stride_byte));
                         sw.WriteLine(string.Format("{0} {1} {2}", pixel_stride_bit, row_stride_bit, next_stride_bit));
                         sw.WriteLine(string.Format("{0} {1} {2}", pixel_stride_auto ? 1 : 0, row_stride_auto ? 1 : 0, next_stride_auto ? 1 : 0));
-                        sw.WriteLine(string.Format("{0} {1} {2}", plane_group_x, plane_shift_byte_x, plane_shift_bit_x));
-                        sw.WriteLine(string.Format("{0} {1} {2}", plane_group_y, plane_shift_byte_y, plane_shift_bit_y));
+                        sw.WriteLine(string.Format("{0} {1} {2}", tile_group_x, tile_stride_byte_x, tile_stride_bit_x));
+                        sw.WriteLine(string.Format("{0} {1} {2}", tile_group_y, tile_stride_byte_y, tile_stride_bit_y));
                         if (!chunky)
                         {
                             for (int i = 0; i < bpp; ++i)
@@ -174,10 +174,10 @@ namespace Binxelview
 
                     using (TextReader tr = File.OpenText(path))
                     {
-
                         string l = tr.ReadLine();
                         int v = int.Parse(l);
-                        if (v != PRESET_VERSION) return false;
+                        if (v > PRESET_VERSION) return false;
+                        int version = v;
 
                         l = tr.ReadLine();
                         string[] ls = l.Split(' ');
@@ -210,15 +210,15 @@ namespace Binxelview
 
                         l = tr.ReadLine();
                         ls = l.Split(' ');
-                        plane_group_x = int.Parse(ls[0]);
-                        plane_shift_byte_x = int.Parse(ls[1]);
-                        plane_shift_bit_x = int.Parse(ls[2]);
+                        tile_group_x = int.Parse(ls[0]);
+                        tile_stride_byte_x = int.Parse(ls[1]);
+                        tile_stride_bit_x = int.Parse(ls[2]);
 
                         l = tr.ReadLine();
                         ls = l.Split(' ');
-                        plane_group_y = int.Parse(ls[0]);
-                        plane_shift_byte_y = int.Parse(ls[1]);
-                        plane_shift_bit_y = int.Parse(ls[2]);
+                        tile_group_y = int.Parse(ls[0]);
+                        tile_stride_byte_y = int.Parse(ls[1]);
+                        tile_stride_bit_y = int.Parse(ls[2]);
 
                         if (!chunky)
                         {
@@ -228,6 +228,40 @@ namespace Binxelview
                                 ls = l.Split(' ');
                                 bit_stride_byte[i] = int.Parse(ls[0]);
                                 bit_stride_bit[i] = int.Parse(ls[1]);
+                            }
+                        }
+
+                        if (version == 1)
+                        {
+                            // version 1 used tile stride as an additional "shift" on top of the pixel/row strides
+                            // convert the shift to an absolute stride
+
+                            int tile_stride_x = tile_stride_bit_x + (tile_stride_byte_x * 8);
+                            int tile_stride_y = tile_stride_bit_y + (tile_stride_byte_y * 8);
+
+                            int stride_x = pixel_stride_bit + (pixel_stride_byte * 8);
+                            int stride_y = row_stride_bit + (row_stride_byte * 8);
+
+                            if (tile_stride_x == 0)
+                            {
+                                tile_group_x = 0;
+                            }
+                            else
+                            {
+                                tile_stride_x += (stride_x * tile_group_x);
+                                tile_stride_byte_x = tile_stride_x >> 3;
+                                tile_stride_bit_x = tile_stride_x & 7;
+                            }
+
+                            if (tile_stride_y == 0)
+                            {
+                                tile_group_y = 0;
+                            }
+                            else
+                            {
+                                tile_stride_y += (stride_y * tile_group_y);
+                                tile_stride_byte_y = tile_stride_y >> 3;
+                                tile_stride_bit_y = tile_stride_y & 7;
                             }
                         }
                     }
@@ -297,7 +331,7 @@ namespace Binxelview
             int pos, int bpp, bool little_endian,
             int length, int w, int h,
             int pixel_stride, int row_stride, int render_stride,
-            int plane_group_x, int plane_group_y, int plane_shift_x, int plane_shift_y,
+            int tile_group_x, int tile_group_y, int tile_shift_x, int tile_shift_y,
             byte* data, int* bit_stride, long* render_buffer)
         {
             int pos_row = pos;
@@ -312,18 +346,18 @@ namespace Binxelview
                     render_row[x] = buildPixel(pos_pixel, bpp, little_endian, length, data, bit_stride);
                     pos_pixel += pixel_stride;
                     ++plane_x;
-                    if (plane_x >= plane_group_x)
+                    if (plane_x >= tile_group_x)
                     {
                         plane_x = 0;
-                        pos_pixel += plane_shift_x;
+                        pos_pixel += tile_shift_x;
                     }
                 }
                 pos_row += row_stride;
                 ++plane_y;
-                if (plane_y >= plane_group_y)
+                if (plane_y >= tile_group_y)
                 {
                     plane_y = 0;
-                    pos_row += plane_shift_y;
+                    pos_row += tile_shift_y;
                 }
             }
         }
@@ -355,12 +389,15 @@ namespace Binxelview
             int pixel_stride = preset.pixel_stride_bit + (preset.pixel_stride_byte * 8);
             int row_stride = preset.row_stride_bit + (preset.row_stride_byte * 8);
             int next_stride = preset.next_stride_bit + (preset.next_stride_byte * 8);
-            int plane_group_x = preset.plane_group_x;
-            int plane_group_y = preset.plane_group_y;
-            int plane_shift_x = preset.plane_shift_bit_x + (preset.plane_shift_byte_x * 8);
-            int plane_shift_y = preset.plane_shift_bit_y + (preset.plane_shift_byte_y * 8);
+            int tile_group_x = preset.tile_group_x;
+            int tile_group_y = preset.tile_group_y;
+            int tile_shift_x = preset.tile_stride_bit_x + (preset.tile_stride_byte_x * 8) - (tile_group_x * pixel_stride);
+            int tile_shift_y = preset.tile_stride_bit_y + (preset.tile_stride_byte_y * 8) - (tile_group_y * row_stride);
             int bpp = preset.bpp;
             bool little_endian = preset.little_endian;
+            if (tile_group_x == 0) tile_shift_x = 0;
+            if (tile_group_y == 0) tile_shift_y = 0;
+            // tile stride is converted to a relative shift that is applied at the end of each tile group
 
             int length = data.Length;
 
@@ -384,7 +421,7 @@ namespace Binxelview
                             int sy = pady + (thp * ty);
                             renderTile(pos, bpp, little_endian, length, tw, th,
                                 pixel_stride, row_stride, pixel_buffer_width,
-                                plane_group_x, plane_group_y, plane_shift_x, plane_shift_y,
+                                tile_group_x, tile_group_y, tile_shift_x, tile_shift_y,
                                 data_raw, bit_stride_raw,
                                 pixel_buffer_raw + sx + (sy * pixel_buffer_width));
                             pos += next_stride;
@@ -851,12 +888,12 @@ namespace Binxelview
             numericPixelStrideBit.Enabled = !preset.pixel_stride_auto;
             numericRowStrideBit.Enabled = !preset.row_stride_auto;
             numericNextStrideBit.Enabled = !preset.next_stride_auto;
-            numericPlaneGroupX.Value = preset.plane_group_x;
-            numericPlaneGroupY.Value = preset.plane_group_y;
-            numericPlaneShiftByteX.Value = preset.plane_shift_byte_x;
-            numericPlaneShiftByteY.Value = preset.plane_shift_byte_y;
-            numericPlaneShiftBitX.Value = preset.plane_shift_bit_x;
-            numericPlaneShiftBitY.Value = preset.plane_shift_bit_y;
+            numericTileGroupX.Value = preset.tile_group_x;
+            numericTileGroupY.Value = preset.tile_group_y;
+            numericTileStrideByteX.Value = preset.tile_stride_byte_x;
+            numericTileStrideByteY.Value = preset.tile_stride_byte_y;
+            numericTileStrideBitX.Value = preset.tile_stride_bit_x;
+            numericTileStrideBitY.Value = preset.tile_stride_bit_y;
 
             int old_scroll = dataGridPixel.FirstDisplayedScrollingRowIndex;
             dataGridPixel.Rows.Clear();
@@ -900,6 +937,14 @@ namespace Binxelview
                 (pos_byte < pixelScroll.Minimum) ? pixelScroll.Minimum :
                 (pos_byte > pixelScroll.Maximum) ? pixelScroll.Maximum :
                 pos_byte;
+        }
+
+        void normalizePos()
+        {
+            int nb = pos_bit / 8;
+            pos_byte += nb;
+            pos_bit -= nb * 8;
+            updatePos();
         }
 
         // Forms designer linked code
@@ -1121,39 +1166,39 @@ namespace Binxelview
             redrawPixels();
         }
 
-        private void numericPlaneGroupX_ValueChanged(object sender, EventArgs e)
+        private void numericTileGroupX_ValueChanged(object sender, EventArgs e)
         {
-            preset.plane_group_x = (int)numericPlaneGroupX.Value;
+            preset.tile_group_x = (int)numericTileGroupX.Value;
             redrawPixels();
         }
 
-        private void numericPlaneGroupY_ValueChanged(object sender, EventArgs e)
+        private void numericTileGroupY_ValueChanged(object sender, EventArgs e)
         {
-            preset.plane_group_y = (int)numericPlaneGroupY.Value;
+            preset.tile_group_y = (int)numericTileGroupY.Value;
             redrawPixels();
         }
 
-        private void numericPlaneStrideByteX_ValueChanged(object sender, EventArgs e)
+        private void numericTileStrideByteX_ValueChanged(object sender, EventArgs e)
         {
-            preset.plane_shift_byte_x = (int)numericPlaneShiftByteX.Value;
+            preset.tile_stride_byte_x = (int)numericTileStrideByteX.Value;
             redrawPixels();
         }
 
-        private void numericPlaneStrideByteY_ValueChanged(object sender, EventArgs e)
+        private void numericTileStrideByteY_ValueChanged(object sender, EventArgs e)
         {
-            preset.plane_shift_byte_y = (int)numericPlaneShiftByteY.Value;
+            preset.tile_stride_byte_y = (int)numericTileStrideByteY.Value;
             redrawPixels();
         }
 
-        private void numericPlaneStrideBitX_ValueChanged(object sender, EventArgs e)
+        private void numericTileStrideBitX_ValueChanged(object sender, EventArgs e)
         {
-            preset.plane_shift_bit_x = (int)numericPlaneShiftBitX.Value;
+            preset.tile_stride_bit_x = (int)numericTileStrideBitX.Value;
             redrawPixels();
         }
 
-        private void numericPlaneStrideBitY_ValueChanged(object sender, EventArgs e)
+        private void numericTileStrideBitY_ValueChanged(object sender, EventArgs e)
         {
-            preset.plane_shift_bit_y = (int)numericPlaneShiftBitY.Value;
+            preset.tile_stride_bit_y = (int)numericTileStrideBitY.Value;
             redrawPixels();
         }
 
@@ -1406,43 +1451,112 @@ namespace Binxelview
             redrawPixels();
         }
 
+        private void buttonZoom_Click(object sender, EventArgs e)
+        {
+            if ((Control.ModifierKeys & Keys.Shift) != 0)
+            {
+                --zoom;
+            }
+            else
+            {
+                ++zoom;
+            }
+            if (zoom < numericZoom.Minimum) zoom = (int)numericZoom.Minimum;
+            if (zoom > numericZoom.Maximum) zoom = (int)numericZoom.Maximum;
+            numericZoom.Value = zoom;
+            redrawPixels();
+        }
+
+        private void buttonZoom_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            --zoom;
+            if (zoom < numericZoom.Minimum) zoom = (int)numericZoom.Minimum;
+            numericZoom.Value = zoom;
+            redrawPixels();
+        }
+
+        private void common_AdvanceClick(int inc_byte, int inc_bit)
+        {
+            if ((Control.ModifierKeys & Keys.Shift) != 0)
+            {
+                pos_byte -= inc_byte;
+                pos_bit -= inc_bit;
+            }
+            else
+            {
+                pos_byte += inc_byte;
+                pos_bit += inc_bit;
+            }
+            normalizePos();
+        }
+
+        private void common_AdvanceMouseDown(MouseEventArgs e, int inc_byte, int inc_bit)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            pos_byte -= inc_byte;
+            pos_bit -= inc_bit;
+            normalizePos();
+        }
+
         private void buttonBytePos_Click(object sender, EventArgs e)
+        {
+            common_AdvanceClick(1, 0);
+        }
+
+        private void buttonBitPos_Click(object sender, EventArgs e)
+        {
+            common_AdvanceClick(0, 1);
+        }
+
+        private void buttonPixel_Click(object sender, EventArgs e)
+        {
+            common_AdvanceClick(preset.pixel_stride_byte, preset.pixel_stride_bit);
+        }
+
+        private void buttonRow_Click(object sender, EventArgs e)
+        {
+            common_AdvanceClick(preset.row_stride_byte, preset.row_stride_bit);
+        }
+
+        private void buttonNext_Click(object sender, EventArgs e)
+        {
+            common_AdvanceClick(next_increment_byte, next_increment_bit);
+        }
+
+        private void buttonBytePos_MouseDown(object sender, MouseEventArgs e)
+        {
+            common_AdvanceMouseDown(e, 1, 0);
+        }
+
+        private void buttonBitPos_MouseDown(object sender, MouseEventArgs e)
+        {
+            common_AdvanceMouseDown(e, 0, 1);
+        }
+
+        private void buttonPixel_MouseDown(object sender, MouseEventArgs e)
+        {
+            common_AdvanceMouseDown(e, preset.pixel_stride_byte, preset.pixel_stride_bit);
+        }
+
+        private void buttonRow_MouseDown(object sender, MouseEventArgs e)
+        {
+            common_AdvanceMouseDown(e, preset.row_stride_byte, preset.row_stride_bit);
+        }
+
+        private void buttonNext_MouseDown(object sender, MouseEventArgs e)
+        {
+            common_AdvanceMouseDown(e, next_increment_byte, next_increment_bit);
+        }
+
+        private void buttonZero_Click(object sender, EventArgs e)
         {
             pos_byte = 0;
             pos_bit = 0;
             updatePos();
         }
 
-        private void buttonNext_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Right) return;
-            pos_byte -= next_increment_byte;
-            pos_bit -= next_increment_bit;
-            int nb = pos_bit / 8;
-            pos_byte += nb;
-            pos_bit -= nb * 8;
-            updatePos();
-        }
-
-        private void buttonNext_Click(object sender, EventArgs e)
-        {
-            if ((Control.ModifierKeys & Keys.Shift) != 0)
-            {
-                pos_byte -= next_increment_byte;
-                pos_bit -= next_increment_bit;
-            }
-            else
-            {
-                pos_byte += next_increment_byte;
-                pos_bit += next_increment_bit;
-            }
-            int nb = pos_bit / 8;
-            pos_byte += nb;
-            pos_bit -= nb* 8;
-            updatePos();
-        }
-
-    private void pixelBox_MouseMove(object sender, MouseEventArgs e)
+        private void pixelBox_MouseMove(object sender, MouseEventArgs e)
         {
             // grid settings from last redrawPixels
             int padx = pixel_padx;
@@ -1477,14 +1591,23 @@ namespace Binxelview
 
             // find data at pixel
 
+            int row_stride = (preset.row_stride_byte * 8) + preset.row_stride_bit;
+            int pixel_stride = (preset.pixel_stride_byte * 8) + preset.pixel_stride_bit;
+
             int pos =
                 (pos_byte * 8) + pos_bit +
                 (((preset.next_stride_byte * 8) + preset.next_stride_bit) * tile) +
-                (((preset.row_stride_byte * 8) + preset.row_stride_bit) * oy) +
-                (((preset.pixel_stride_byte * 8) + preset.pixel_stride_bit) * ox);
+                (row_stride * oy) +
+                (pixel_stride * ox);
 
-            pos += (ox / preset.plane_group_x) * ((preset.plane_shift_byte_x * 8) + preset.plane_shift_bit_x);
-            pos += (oy / preset.plane_group_x) * ((preset.plane_shift_byte_y * 8) + preset.plane_shift_bit_y);
+            if (preset.tile_group_x != 0)
+            {
+                pos += (ox / preset.tile_group_x) * ((preset.tile_stride_byte_x * 8) + preset.tile_stride_bit_x - (preset.tile_group_x * pixel_stride));
+            }
+            if (preset.tile_group_y != 0)
+            {
+                pos += (oy / preset.tile_group_y) * ((preset.tile_stride_byte_y * 8) + preset.tile_stride_bit_y - (preset.tile_group_y * row_stride));
+            }
 
             prepareBitStride();
             long p = -1;
