@@ -828,8 +828,8 @@ namespace Binxelview
             int twp = padx + preset.width;
             int thp = pady + preset.height;
 
-            int gx = sx / twp;
-            int gy = sy / thp;
+            int gx = (sx + twp - 1) / twp; // round up horizontally (allow data to extend past right side)
+            int gy = sy / thp; // round down vertically (confine grid to vertical space)
             if (gx < 1) gx = 1;
             if (gy < 1) gy = 1;
 

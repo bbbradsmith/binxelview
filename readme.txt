@@ -123,6 +123,7 @@ Changes
 
 1.1.1.0 (unreleased)
 - Renamed tiling "group" to "size".
+- Allow partial images in view on right side.
 
 1.1.0.0 (2019-04-13)
 - Switch from .NET 4 (from 4.6.1) for XP support.
