@@ -955,15 +955,18 @@ namespace Binxelview
             preparePalette();
         }
 
-        void updatePos()
+        void updatePos(bool update_scroll = true)
         {
             numericPosByte.Hexadecimal = (pos_byte >= 0) && !decimal_position;
             numericPosByte.Value = pos_byte;
             numericPosBit.Value = pos_bit;
-            pixelScroll.Value =
-                (pos_byte < pixelScroll.Minimum) ? pixelScroll.Minimum :
-                (pos_byte > pixelScroll.Maximum) ? pixelScroll.Maximum :
-                pos_byte;
+            if (update_scroll)
+            {
+                pixelScroll.Value =
+                    (pos_byte < pixelScroll.Minimum) ? pixelScroll.Minimum :
+                    (pos_byte > pixelScroll.Maximum) ? pixelScroll.Maximum :
+                    pos_byte;
+            }
         }
 
         void normalizePos()
@@ -1704,7 +1707,7 @@ namespace Binxelview
                 pos_byte = e.NewValue;
             }
 
-            updatePos();
+            updatePos(false);
             redrawPixels();
         }
 

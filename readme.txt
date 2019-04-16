@@ -128,6 +128,9 @@ To inspect extremely large files, you may wish to split them first.
 Changes
 -------
 
+1.3.1.0 (unstable)
+- Less jitter on snap scrollbar.
+
 1.3.0.0 (2019-04-16)
 - Fix crash on negative next stride.
 - Fix scrollbar moving on release.
