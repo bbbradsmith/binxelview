@@ -41,10 +41,14 @@
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.decimalPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hexadecimalPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsStripMenuDash1 = new System.Windows.Forms.ToolStripSeparator();
+            this.snapScrollToNextStrideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableTop = new System.Windows.Forms.TableLayoutPanel();
             this.groupPacking = new System.Windows.Forms.GroupBox();
+            this.buttonPixel = new System.Windows.Forms.Button();
+            this.buttonRow = new System.Windows.Forms.Button();
             this.buttonNext = new System.Windows.Forms.Button();
             this.checkAutoNext = new System.Windows.Forms.CheckBox();
             this.checkAutoRow = new System.Windows.Forms.CheckBox();
@@ -82,6 +86,9 @@
             this.paletteBox = new System.Windows.Forms.PictureBox();
             this.tablePosPlane = new System.Windows.Forms.TableLayoutPanel();
             this.groupPosition = new System.Windows.Forms.GroupBox();
+            this.buttonZero = new System.Windows.Forms.Button();
+            this.buttonBitPos = new System.Windows.Forms.Button();
+            this.buttonZoom = new System.Windows.Forms.Button();
             this.buttonBytePos = new System.Windows.Forms.Button();
             this.numericZoom = new System.Windows.Forms.NumericUpDown();
             this.labelInfoPixel = new System.Windows.Forms.Label();
@@ -106,13 +113,6 @@
             this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pixelScroll = new System.Windows.Forms.VScrollBar();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.buttonRow = new System.Windows.Forms.Button();
-            this.buttonPixel = new System.Windows.Forms.Button();
-            this.buttonZoom = new System.Windows.Forms.Button();
-            this.buttonBitPos = new System.Windows.Forms.Button();
-            this.buttonZero = new System.Windows.Forms.Button();
-            this.optionsStripMenuDash1 = new System.Windows.Forms.ToolStripSeparator();
-            this.snapScrollToNextStrideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             this.tableTop.SuspendLayout();
             this.groupPacking.SuspendLayout();
@@ -203,14 +203,14 @@
             // reloadToolStripMenuItem
             // 
             this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.reloadToolStripMenuItem.Text = "&Reload";
             this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
             // 
             // presetStripMenuDash
             // 
             this.presetStripMenuDash.Name = "presetStripMenuDash";
-            this.presetStripMenuDash.Size = new System.Drawing.Size(177, 6);
+            this.presetStripMenuDash.Size = new System.Drawing.Size(107, 6);
             // 
             // optionsToolStripMenuItem
             // 
@@ -238,6 +238,18 @@
             this.hexadecimalPositionToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.hexadecimalPositionToolStripMenuItem.Text = "&Hexadecimal Position";
             this.hexadecimalPositionToolStripMenuItem.Click += new System.EventHandler(this.hexadecimalPositionToolStripMenuItem_Click);
+            // 
+            // optionsStripMenuDash1
+            // 
+            this.optionsStripMenuDash1.Name = "optionsStripMenuDash1";
+            this.optionsStripMenuDash1.Size = new System.Drawing.Size(199, 6);
+            // 
+            // snapScrollToNextStrideToolStripMenuItem
+            // 
+            this.snapScrollToNextStrideToolStripMenuItem.Name = "snapScrollToNextStrideToolStripMenuItem";
+            this.snapScrollToNextStrideToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.snapScrollToNextStrideToolStripMenuItem.Text = "&Snap scroll to next stride";
+            this.snapScrollToNextStrideToolStripMenuItem.Click += new System.EventHandler(this.snapScrollToNextStrideToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -309,6 +321,30 @@
             this.groupPacking.TabIndex = 0;
             this.groupPacking.TabStop = false;
             this.groupPacking.Text = "Packing";
+            // 
+            // buttonPixel
+            // 
+            this.buttonPixel.Location = new System.Drawing.Point(6, 89);
+            this.buttonPixel.Name = "buttonPixel";
+            this.buttonPixel.Size = new System.Drawing.Size(53, 24);
+            this.buttonPixel.TabIndex = 24;
+            this.buttonPixel.Text = "Pi&xel";
+            this.toolTip.SetToolTip(this.buttonPixel, "Left click to advance pixel\r\nRight/shift click to retreat");
+            this.buttonPixel.UseVisualStyleBackColor = true;
+            this.buttonPixel.Click += new System.EventHandler(this.buttonPixel_Click);
+            this.buttonPixel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonPixel_MouseDown);
+            // 
+            // buttonRow
+            // 
+            this.buttonRow.Location = new System.Drawing.Point(64, 89);
+            this.buttonRow.Name = "buttonRow";
+            this.buttonRow.Size = new System.Drawing.Size(53, 24);
+            this.buttonRow.TabIndex = 23;
+            this.buttonRow.Text = "&Row";
+            this.toolTip.SetToolTip(this.buttonRow, "Left click to advance row\r\nRight/shift click to retreat");
+            this.buttonRow.UseVisualStyleBackColor = true;
+            this.buttonRow.Click += new System.EventHandler(this.buttonRow_Click);
+            this.buttonRow.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonRow_MouseDown);
             // 
             // buttonNext
             // 
@@ -831,6 +867,41 @@
             this.groupPosition.TabStop = false;
             this.groupPosition.Text = "Position";
             // 
+            // buttonZero
+            // 
+            this.buttonZero.Location = new System.Drawing.Point(6, 67);
+            this.buttonZero.Name = "buttonZero";
+            this.buttonZero.Size = new System.Drawing.Size(36, 34);
+            this.buttonZero.TabIndex = 9;
+            this.buttonZero.Text = "&0";
+            this.toolTip.SetToolTip(this.buttonZero, "Return position to 0");
+            this.buttonZero.UseVisualStyleBackColor = true;
+            this.buttonZero.Click += new System.EventHandler(this.buttonZero_Click);
+            // 
+            // buttonBitPos
+            // 
+            this.buttonBitPos.Location = new System.Drawing.Point(6, 42);
+            this.buttonBitPos.Name = "buttonBitPos";
+            this.buttonBitPos.Size = new System.Drawing.Size(36, 22);
+            this.buttonBitPos.TabIndex = 9;
+            this.buttonBitPos.Text = "B&it";
+            this.toolTip.SetToolTip(this.buttonBitPos, "Left click to advance bit\r\nRight/shift click to retreat");
+            this.buttonBitPos.UseVisualStyleBackColor = true;
+            this.buttonBitPos.Click += new System.EventHandler(this.buttonBitPos_Click);
+            this.buttonBitPos.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonBitPos_MouseDown);
+            // 
+            // buttonZoom
+            // 
+            this.buttonZoom.Location = new System.Drawing.Point(114, 18);
+            this.buttonZoom.Name = "buttonZoom";
+            this.buttonZoom.Size = new System.Drawing.Size(44, 22);
+            this.buttonZoom.TabIndex = 8;
+            this.buttonZoom.Text = "&Zoom";
+            this.toolTip.SetToolTip(this.buttonZoom, "Left click to increse zoom\r\nRight/shift click to decrease");
+            this.buttonZoom.UseVisualStyleBackColor = true;
+            this.buttonZoom.Click += new System.EventHandler(this.buttonZoom_Click);
+            this.buttonZoom.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonZoom_MouseDown);
+            // 
             // buttonBytePos
             // 
             this.buttonBytePos.Location = new System.Drawing.Point(6, 18);
@@ -1152,76 +1223,6 @@
             this.pixelScroll.Size = new System.Drawing.Size(24, 414);
             this.pixelScroll.TabIndex = 1;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
-            // 
-            // buttonRow
-            // 
-            this.buttonRow.Location = new System.Drawing.Point(64, 89);
-            this.buttonRow.Name = "buttonRow";
-            this.buttonRow.Size = new System.Drawing.Size(53, 24);
-            this.buttonRow.TabIndex = 23;
-            this.buttonRow.Text = "&Row";
-            this.toolTip.SetToolTip(this.buttonRow, "Left click to advance row\r\nRight/shift click to retreat");
-            this.buttonRow.UseVisualStyleBackColor = true;
-            this.buttonRow.Click += new System.EventHandler(this.buttonRow_Click);
-            this.buttonRow.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonRow_MouseDown);
-            // 
-            // buttonPixel
-            // 
-            this.buttonPixel.Location = new System.Drawing.Point(6, 89);
-            this.buttonPixel.Name = "buttonPixel";
-            this.buttonPixel.Size = new System.Drawing.Size(53, 24);
-            this.buttonPixel.TabIndex = 24;
-            this.buttonPixel.Text = "Pi&xel";
-            this.toolTip.SetToolTip(this.buttonPixel, "Left click to advance pixel\r\nRight/shift click to retreat");
-            this.buttonPixel.UseVisualStyleBackColor = true;
-            this.buttonPixel.Click += new System.EventHandler(this.buttonPixel_Click);
-            this.buttonPixel.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonPixel_MouseDown);
-            // 
-            // buttonZoom
-            // 
-            this.buttonZoom.Location = new System.Drawing.Point(114, 18);
-            this.buttonZoom.Name = "buttonZoom";
-            this.buttonZoom.Size = new System.Drawing.Size(44, 22);
-            this.buttonZoom.TabIndex = 8;
-            this.buttonZoom.Text = "&Zoom";
-            this.toolTip.SetToolTip(this.buttonZoom, "Left click to increse zoom\r\nRight/shift click to decrease");
-            this.buttonZoom.UseVisualStyleBackColor = true;
-            this.buttonZoom.Click += new System.EventHandler(this.buttonZoom_Click);
-            this.buttonZoom.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonZoom_MouseDown);
-            // 
-            // buttonBitPos
-            // 
-            this.buttonBitPos.Location = new System.Drawing.Point(6, 42);
-            this.buttonBitPos.Name = "buttonBitPos";
-            this.buttonBitPos.Size = new System.Drawing.Size(36, 22);
-            this.buttonBitPos.TabIndex = 9;
-            this.buttonBitPos.Text = "B&it";
-            this.toolTip.SetToolTip(this.buttonBitPos, "Left click to advance bit\r\nRight/shift click to retreat");
-            this.buttonBitPos.UseVisualStyleBackColor = true;
-            this.buttonBitPos.Click += new System.EventHandler(this.buttonBitPos_Click);
-            this.buttonBitPos.MouseDown += new System.Windows.Forms.MouseEventHandler(this.buttonBitPos_MouseDown);
-            // 
-            // buttonZero
-            // 
-            this.buttonZero.Location = new System.Drawing.Point(6, 67);
-            this.buttonZero.Name = "buttonZero";
-            this.buttonZero.Size = new System.Drawing.Size(36, 34);
-            this.buttonZero.TabIndex = 9;
-            this.buttonZero.Text = "&0";
-            this.toolTip.SetToolTip(this.buttonZero, "Return position to 0");
-            this.buttonZero.UseVisualStyleBackColor = true;
-            this.buttonZero.Click += new System.EventHandler(this.buttonZero_Click);
-            // optionsStripMenuDash1
-            // 
-            this.optionsStripMenuDash1.Name = "optionsStripMenuDash1";
-            this.optionsStripMenuDash1.Size = new System.Drawing.Size(199, 6);
-            // 
-            // snapScrollToNextStrideToolStripMenuItem
-            // 
-            this.snapScrollToNextStrideToolStripMenuItem.Name = "snapScrollToNextStrideToolStripMenuItem";
-            this.snapScrollToNextStrideToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
-            this.snapScrollToNextStrideToolStripMenuItem.Text = "Snap scroll to next stride";
-            this.snapScrollToNextStrideToolStripMenuItem.Click += new System.EventHandler(this.snapScrollToNextStrideToolStripMenuItem_Click);
             // 
             // BinxelviewForm
             // 
