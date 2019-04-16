@@ -130,7 +130,9 @@ Changes
 
 1.2.1.0 (unreleased)
 - Fix crash on negative next stride.
+- Fix scrollbar moving on release.
 - Option to snap scroll to next stride (scroll without losing image alignment).
+- Horizontal layout option.
 
 1.2.0.0 (2019-04-14)
 - Renamed tiling "group" to "size".

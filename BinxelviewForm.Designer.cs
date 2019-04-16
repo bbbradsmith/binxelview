@@ -113,6 +113,9 @@
             this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pixelScroll = new System.Windows.Forms.VScrollBar();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.optionsStripMenuDash2 = new System.Windows.Forms.ToolStripSeparator();
+            this.verticalLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.horizontalLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             this.tableTop.SuspendLayout();
             this.groupPacking.SuspendLayout();
@@ -218,7 +221,10 @@
             this.decimalPositionToolStripMenuItem,
             this.hexadecimalPositionToolStripMenuItem,
             this.optionsStripMenuDash1,
-            this.snapScrollToNextStrideToolStripMenuItem});
+            this.snapScrollToNextStrideToolStripMenuItem,
+            this.optionsStripMenuDash2,
+            this.verticalLayoutToolStripMenuItem,
+            this.horizontalLayoutToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "&Options";
@@ -1224,6 +1230,27 @@
             this.pixelScroll.TabIndex = 1;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
             // 
+            // optionsStripMenuDash2
+            // 
+            this.optionsStripMenuDash2.Name = "optionsStripMenuDash2";
+            this.optionsStripMenuDash2.Size = new System.Drawing.Size(199, 6);
+            // 
+            // verticalLayoutToolStripMenuItem
+            // 
+            this.verticalLayoutToolStripMenuItem.Checked = true;
+            this.verticalLayoutToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.verticalLayoutToolStripMenuItem.Name = "verticalLayoutToolStripMenuItem";
+            this.verticalLayoutToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.verticalLayoutToolStripMenuItem.Text = "&Vertical layout";
+            this.verticalLayoutToolStripMenuItem.Click += new System.EventHandler(this.verticalLayoutToolStripMenuItem_Click);
+            // 
+            // horizontalLayoutToolStripMenuItem
+            // 
+            this.horizontalLayoutToolStripMenuItem.Name = "horizontalLayoutToolStripMenuItem";
+            this.horizontalLayoutToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.horizontalLayoutToolStripMenuItem.Text = "H&orizontal layout";
+            this.horizontalLayoutToolStripMenuItem.Click += new System.EventHandler(this.horizontalLayoutToolStripMenuItem_Click);
+            // 
             // BinxelviewForm
             // 
             this.AllowDrop = true;
@@ -1366,6 +1393,9 @@
         private System.Windows.Forms.Button buttonZero;
         private System.Windows.Forms.ToolStripSeparator optionsStripMenuDash1;
         private System.Windows.Forms.ToolStripMenuItem snapScrollToNextStrideToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator optionsStripMenuDash2;
+        private System.Windows.Forms.ToolStripMenuItem verticalLayoutToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem horizontalLayoutToolStripMenuItem;
     }
 }
 

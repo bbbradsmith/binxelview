@@ -43,6 +43,7 @@ namespace Binxelview
         int next_increment_bit = 0;
         int selected_tile = -1;
         bool snap_scroll = false;
+        bool horizontal_layout = false;
 
         Random random = new Random();
 
@@ -400,6 +401,14 @@ namespace Binxelview
             if (tile_size_y == 0) tile_shift_y = 0;
             // tile stride is converted to a relative shift that is applied at the end of each tile
 
+            int rgx = gx;
+            int rgy = gy;
+            if (horizontal_layout)
+            {
+                rgx = gy;
+                rgy = gx;
+            }
+
             int length = data.Length;
 
             unsafe
@@ -414,12 +423,18 @@ namespace Binxelview
                         pixel_buffer_raw[i] = -1;
                     }
 
-                    for (int tx = 0; tx < gx; ++tx)
+                    for (int tx = 0; tx < rgx; ++tx)
                     {
                         int sx = padx + (twp * tx);
-                        for (int ty = 0; ty < gy; ++ty)
+                        for (int ty = 0; ty < rgy; ++ty)
                         {
                             int sy = pady + (thp * ty);
+                            if (horizontal_layout)
+                            {
+                                sx = padx + (twp * ty);
+                                sy = pady + (thp * tx);
+                            }
+
                             renderTile(pos, bpp, little_endian, length, tw, th,
                                 pixel_stride, row_stride, pixel_buffer_width,
                                 tile_size_x, tile_size_y, tile_shift_x, tile_shift_y,
@@ -717,6 +732,12 @@ namespace Binxelview
             next_increment_bit -= nb * 8;
 
             pixelScroll.LargeChange = (next_increment_byte >= 0) ? next_increment_byte : -next_increment_byte;
+
+            pixelScroll.SmallChange = 1;
+            if (snap_scroll)
+            {
+                pixelScroll.SmallChange = pixelScroll.LargeChange;
+            }
         }
 
         void preparePalette()
@@ -831,6 +852,11 @@ namespace Binxelview
 
             int gx = (sx + twp - 1) / twp; // round up horizontally (allow data to extend past right side)
             int gy = sy / thp; // round down vertically (confine grid to vertical space)
+            if (horizontal_layout)
+            {
+                gx = sx / twp;
+                gy = (sy + thp - 1) / thp;
+            }
             if (gx < 1) gx = 1;
             if (gy < 1) gy = 1;
 
@@ -1561,6 +1587,23 @@ namespace Binxelview
         {
             snap_scroll = !snap_scroll;
             snapScrollToNextStrideToolStripMenuItem.Checked = snap_scroll;
+            scrollRange();
+        }
+
+        private void verticalLayoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            horizontal_layout = false;
+            verticalLayoutToolStripMenuItem.Checked = true;
+            horizontalLayoutToolStripMenuItem.Checked = false;
+            redrawPixels();
+        }
+
+        private void horizontalLayoutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            horizontal_layout = true;
+            verticalLayoutToolStripMenuItem.Checked = false;
+            horizontalLayoutToolStripMenuItem.Checked = true;
+            redrawPixels();
         }
 
         private void pixelBox_MouseMove(object sender, MouseEventArgs e)
@@ -1587,6 +1630,7 @@ namespace Binxelview
             int tx = x / twp;
             int ty = y / thp;
             int tile = (tx * gy) + ty;
+            if (horizontal_layout) tile = (ty * gx) + tx;
             if (tx >= gx) return;
             if (ty >= gy) return;
             if (tile < 0) return;
@@ -1643,20 +1687,21 @@ namespace Binxelview
                 int next_stride = preset.next_stride_bit + (preset.next_stride_byte * 8);
                 if (next_stride < 0) next_stride = -next_stride;
                 if (next_stride == 0) next_stride = 8;
-                int abs_pos = (pos_byte * 8) + pos_bit;
+                int old_pos = (pos_byte * 8) + pos_bit;
 
-                int snap_pos = abs_pos / next_stride;
-                int snap_off = abs_pos % next_stride;
+                int snap_old = old_pos / next_stride;
+                int snap_off = old_pos % next_stride;
 
-                int snap_target = (pixelScroll.Value * 8) / next_stride;
-                int pos = (snap_target * next_stride) + snap_off;
+                int target_pos = e.NewValue * 8;
+                int snap_new = target_pos / next_stride;
+                int new_pos = (snap_new * next_stride) + snap_off;
 
-                pos_byte = pos / 8;
-                pos_bit = pos % 8;
+                pos_byte = new_pos / 8;
+                pos_bit = new_pos % 8;
             }
             else
             {
-                pos_byte = pixelScroll.Value;
+                pos_byte = e.NewValue;
             }
 
             updatePos();
