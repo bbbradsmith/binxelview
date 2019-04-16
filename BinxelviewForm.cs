@@ -715,7 +715,7 @@ namespace Binxelview
             next_increment_byte += nb;
             next_increment_bit -= nb * 8;
 
-            pixelScroll.LargeChange = next_increment_byte;
+            pixelScroll.LargeChange = (next_increment_byte >= 0) ? next_increment_byte : -next_increment_byte;
         }
 
         void preparePalette()

@@ -128,6 +128,9 @@ To inspect extremely large files, you may wish to split them first.
 Changes
 -------
 
+1.3.0.0 (unreleased)
+- Fix crash on negative next stride.
+
 1.2.0.0 (2019-04-14)
 - Renamed tiling "group" to "size".
 - Allow partial images in view on right side.
