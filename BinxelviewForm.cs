@@ -42,6 +42,7 @@ namespace Binxelview
         int next_increment_byte = 1;
         int next_increment_bit = 0;
         int selected_tile = -1;
+        bool snap_scroll = false;
 
         Random random = new Random();
 
@@ -1556,6 +1557,12 @@ namespace Binxelview
             updatePos();
         }
 
+        private void snapScrollToNextStrideToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            snap_scroll = !snap_scroll;
+            snapScrollToNextStrideToolStripMenuItem.Checked = snap_scroll;
+        }
+
         private void pixelBox_MouseMove(object sender, MouseEventArgs e)
         {
             // grid settings from last redrawPixels
@@ -1631,7 +1638,27 @@ namespace Binxelview
 
         private void pixelScroll_Scroll(object sender, ScrollEventArgs e)
         {
-            pos_byte = pixelScroll.Value;
+            if (snap_scroll)
+            {
+                int next_stride = preset.next_stride_bit + (preset.next_stride_byte * 8);
+                if (next_stride < 0) next_stride = -next_stride;
+                if (next_stride == 0) next_stride = 8;
+                int abs_pos = (pos_byte * 8) + pos_bit;
+
+                int snap_pos = abs_pos / next_stride;
+                int snap_off = abs_pos % next_stride;
+
+                int snap_target = (pixelScroll.Value * 8) / next_stride;
+                int pos = (snap_target * next_stride) + snap_off;
+
+                pos_byte = pos / 8;
+                pos_bit = pos % 8;
+            }
+            else
+            {
+                pos_byte = pixelScroll.Value;
+            }
+
             updatePos();
             redrawPixels();
         }
