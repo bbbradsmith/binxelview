@@ -1319,6 +1319,7 @@ namespace Binxelview
                 if (openPalette(d.FileName))
                 {
                     preparePalette();
+                    redrawPixels();
                 }
                 else
                 {
