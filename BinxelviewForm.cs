@@ -623,7 +623,7 @@ namespace Binxelview
             }
         }
 
-        bool openPalette(string path)
+        bool openPalette(string path, bool image)
         {
             if (preset.bpp > PALETTE_BITS)
             {
@@ -631,6 +631,33 @@ namespace Binxelview
                 return false;
             }
             paletteCustom();
+
+            if (image)
+            {
+                Image img;
+                try
+                {
+                    img = Image.FromFile(path);
+                }
+                catch (Exception ex)
+                {
+                    palette_error = ex.ToString();
+                    return false;
+                }
+
+                Color[] cols = img.Palette.Entries;
+                if (cols.Length < 1)
+                {
+                    palette_error = "Image does not contain a palette.";
+                    return false;
+                }
+                for (int i=0; (i<(1<<preset.bpp)) && (i<cols.Length); ++i)
+                {
+                    Color c = cols[i];
+                    setPalette(i, c.R, c.G, c.B);
+                }
+                return true;
+            }
 
             byte[] read_data;
             try
@@ -1313,10 +1340,13 @@ namespace Binxelview
             OpenFileDialog d = new OpenFileDialog();
             d.Title = "Load Palette";
             d.DefaultExt = "pal";
-            d.Filter = "RGB Palette (*.pal)|*.pal|All files (*.*)|*.*";
+            d.Filter =
+                "Palette, RGB24 (*.pal)|*.pal|" +
+                "Image (*.bmp;*.gif;*.png;*.tif)|*.bmp;*.gif;*.png;*.tif|" +
+                "All files, RGB24 (*.*)|*.*";
             if (d.ShowDialog() == DialogResult.OK)
             {
-                if (openPalette(d.FileName))
+                if (openPalette(d.FileName,d.FilterIndex==2))
                 {
                     preparePalette();
                     redrawPixels();

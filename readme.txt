@@ -131,6 +131,7 @@ Changes
 1.3.1.0 (unstable)
 - Less jitter on snap scrollbar.
 - Loading palette now refreshes the pixel view.
+- Can load palette from image via file dialog filter dropdown.
 
 1.3.0.0 (2019-04-16)
 - Fix crash on negative next stride.
