@@ -1,8 +1,8 @@
 
 Binxelview binary image explorer
 
-Version 1.3.0.0
-2019-04-16
+Version 1.4.0.0
+2019-04-25
 Brad Smith
 
 https://github.com/bbbradsmith/binxelview
@@ -128,7 +128,7 @@ To inspect extremely large files, you may wish to split them first.
 Changes
 -------
 
-1.3.1.0 (unstable)
+1.4.0.0 (2019-04-25)
 - Less jitter on snap scrollbar.
 - Loading palette now refreshes the pixel view.
 - Can load palette from image via file dialog filter dropdown.
