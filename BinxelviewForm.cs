@@ -29,6 +29,7 @@ namespace Binxelview
         Color[] palette = new Color[PALETTE_DIM * PALETTE_DIM];
         int[] palette_raw = new int[PALETTE_DIM * PALETTE_DIM];
         int[] twiddle_cache = null;
+        int twiddle_cache_order = 0;
         Color background = SystemColors.Control;
         int background_raw = SystemColors.Control.ToArgb();
         PaletteMode palette_mode = PaletteMode.PALETTE_RGB;
@@ -45,7 +46,7 @@ namespace Binxelview
         int selected_tile = -1;
         bool snap_scroll = false;
         bool horizontal_layout = false;
-        bool twiddle = false;
+        int twiddle = 0;
 
         Random random = new Random();
 
@@ -411,10 +412,11 @@ namespace Binxelview
             if (tile_size_y == 0) tile_shift_y = 0;
             // tile stride is converted to a relative shift that is applied at the end of each tile
 
-            if (twiddle)
+            if (twiddle != 0)
             {
-                if (twiddle_cache == null || twiddle_cache.Length < (tw*th))
+                if (twiddle_cache == null || twiddle_cache.Length < (tw*th) || twiddle_cache_order != twiddle)
                 {
+                    twiddle_cache_order = twiddle;
                     twiddle_cache = new int[tw * th];
                     for (int y = 0; y < th; ++y)
                     {
@@ -424,7 +426,13 @@ namespace Binxelview
                             int twy = y;
                             int bit = 0;
                             int twxy = 0;
-                            while (twx > 0 || twy > 0)
+                            if (twiddle == 2) // N instead of Z order
+                            {
+                                int temp = twx;
+                                twx = twy;
+                                twy = temp;
+                            }
+                            while (twx > 0 || twy > 0) // interleaved bits = Z order / morton
                             {
                                 twxy |=
                                     ((twx >> bit) & 1) << (bit * 2 + 0) |
@@ -1684,10 +1692,21 @@ namespace Binxelview
             redrawPixels();
         }
 
-        private void twiddleToolStripMenuItem_Click(object sender, EventArgs e)
+        private void twiddleNToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            twiddle = !twiddle;
-            twiddleToolStripMenuItem.Checked = twiddle;
+            if (twiddle == 2) twiddle = 0;
+            else twiddle = 2;
+            twiddleZToolStripMenuItem.Checked = twiddle == 1;
+            twiddleNToolStripMenuItem.Checked = twiddle == 2;
+            redrawPixels();
+        }
+
+        private void twiddleZToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (twiddle == 1) twiddle = 0;
+            else twiddle = 1;
+            twiddleZToolStripMenuItem.Checked = twiddle == 1;
+            twiddleNToolStripMenuItem.Checked = twiddle == 2;
             redrawPixels();
         }
 

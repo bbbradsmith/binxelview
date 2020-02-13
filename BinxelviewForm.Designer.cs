@@ -46,6 +46,9 @@
             this.optionsStripMenuDash2 = new System.Windows.Forms.ToolStripSeparator();
             this.verticalLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.horizontalLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.twiddleZToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.twiddleNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableTop = new System.Windows.Forms.TableLayoutPanel();
@@ -116,8 +119,6 @@
             this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pixelScroll = new System.Windows.Forms.VScrollBar();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.twiddleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.menuStripMain.SuspendLayout();
             this.tableTop.SuspendLayout();
             this.groupPacking.SuspendLayout();
@@ -228,7 +229,8 @@
             this.verticalLayoutToolStripMenuItem,
             this.horizontalLayoutToolStripMenuItem,
             this.toolStripSeparator1,
-            this.twiddleToolStripMenuItem});
+            this.twiddleZToolStripMenuItem,
+            this.twiddleNToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "&Options";
@@ -281,6 +283,25 @@
             this.horizontalLayoutToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.horizontalLayoutToolStripMenuItem.Text = "H&orizontal layout";
             this.horizontalLayoutToolStripMenuItem.Click += new System.EventHandler(this.horizontalLayoutToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(199, 6);
+            // 
+            // twiddleZToolStripMenuItem
+            // 
+            this.twiddleZToolStripMenuItem.Name = "twiddleZToolStripMenuItem";
+            this.twiddleZToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.twiddleZToolStripMenuItem.Text = "Twiddle &Z";
+            this.twiddleZToolStripMenuItem.Click += new System.EventHandler(this.twiddleZToolStripMenuItem_Click);
+            // 
+            // twiddleNToolStripMenuItem
+            // 
+            this.twiddleNToolStripMenuItem.Name = "twiddleNToolStripMenuItem";
+            this.twiddleNToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.twiddleNToolStripMenuItem.Text = "Twiddle &N";
+            this.twiddleNToolStripMenuItem.Click += new System.EventHandler(this.twiddleNToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -1255,18 +1276,6 @@
             this.pixelScroll.TabIndex = 1;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
             // 
-            // twiddleToolStripMenuItem
-            // 
-            this.twiddleToolStripMenuItem.Name = "twiddleToolStripMenuItem";
-            this.twiddleToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
-            this.twiddleToolStripMenuItem.Text = "&Twiddle";
-            this.twiddleToolStripMenuItem.Click += new System.EventHandler(this.twiddleToolStripMenuItem_Click);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(199, 6);
-            // 
             // BinxelviewForm
             // 
             this.AllowDrop = true;
@@ -1412,8 +1421,9 @@
         private System.Windows.Forms.ToolStripSeparator optionsStripMenuDash2;
         private System.Windows.Forms.ToolStripMenuItem verticalLayoutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem horizontalLayoutToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem twiddleToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem twiddleZToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem twiddleNToolStripMenuItem;
     }
 }
 
