@@ -28,6 +28,7 @@ namespace Binxelview
         Bitmap palette_bmp = new Bitmap(PALETTE_DIM, PALETTE_DIM);
         Color[] palette = new Color[PALETTE_DIM * PALETTE_DIM];
         int[] palette_raw = new int[PALETTE_DIM * PALETTE_DIM];
+        int[] twiddle_cache = null;
         Color background = SystemColors.Control;
         int background_raw = SystemColors.Control.ToArgb();
         PaletteMode palette_mode = PaletteMode.PALETTE_RGB;
@@ -44,6 +45,7 @@ namespace Binxelview
         int selected_tile = -1;
         bool snap_scroll = false;
         bool horizontal_layout = false;
+        bool twiddle = false;
 
         Random random = new Random();
 
@@ -334,7 +336,7 @@ namespace Binxelview
             int length, int w, int h,
             int pixel_stride, int row_stride, int render_stride,
             int tile_size_x, int tile_size_y, int tile_shift_x, int tile_shift_y,
-            byte* data, int* bit_stride, long* render_buffer)
+            byte* data, int* bit_stride, long* render_buffer, int* twiddle_raw)
         {
             int pos_row = pos;
             int plane_y = 0;
@@ -345,6 +347,14 @@ namespace Binxelview
                 long* render_row = render_buffer + (y * render_stride);
                 for (int x=0; x<w; ++x)
                 {
+                    if (twiddle_raw != null)
+                    {
+                        int twxy = twiddle_raw[x + (y * w)];
+                        int twy = twxy / w;
+                        int twx = twxy % w;
+                        pos_pixel = pos + (twy * row_stride) + (twx * pixel_stride);
+                    }
+
                     render_row[x] = buildPixel(pos_pixel, bpp, little_endian, length, data, bit_stride);
                     pos_pixel += pixel_stride;
                     ++plane_x;
@@ -401,6 +411,38 @@ namespace Binxelview
             if (tile_size_y == 0) tile_shift_y = 0;
             // tile stride is converted to a relative shift that is applied at the end of each tile
 
+            if (twiddle)
+            {
+                if (twiddle_cache == null || twiddle_cache.Length < (tw*th))
+                {
+                    twiddle_cache = new int[tw * th];
+                    for (int y = 0; y < th; ++y)
+                    {
+                        for (int x = 0; x < tw; ++x)
+                        {
+                            int twx = x;
+                            int twy = y;
+                            int bit = 0;
+                            int twxy = 0;
+                            while (twx > 0 || twy > 0)
+                            {
+                                twxy |=
+                                    ((twx >> bit) & 1) << (bit * 2 + 0) |
+                                    ((twy >> bit) & 1) << (bit * 2 + 1);
+                                twx &= ~(1 << bit);
+                                twy &= ~(1 << bit);
+                                bit += 1;
+                            }
+                            twiddle_cache[x + (y * tw)] = twxy;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                twiddle_cache = null;
+            }
+
             int rgx = gx;
             int rgy = gy;
             if (horizontal_layout)
@@ -417,6 +459,7 @@ namespace Binxelview
                 fixed (int* bit_stride_raw = bit_stride)
                 fixed (int* color_buffer_raw = color_buffer)
                 fixed (long* pixel_buffer_raw = pixel_buffer)
+                fixed (int* twiddle_raw = twiddle_cache)
                 {
                     for (int i=0; i < pixels_needed; ++i)
                     {
@@ -439,7 +482,8 @@ namespace Binxelview
                                 pixel_stride, row_stride, pixel_buffer_width,
                                 tile_size_x, tile_size_y, tile_shift_x, tile_shift_y,
                                 data_raw, bit_stride_raw,
-                                pixel_buffer_raw + sx + (sy * pixel_buffer_width));
+                                pixel_buffer_raw + sx + (sy * pixel_buffer_width),
+                                twiddle_raw);
                             pos += next_stride;
                         }
                     }
@@ -1637,6 +1681,13 @@ namespace Binxelview
             horizontal_layout = true;
             verticalLayoutToolStripMenuItem.Checked = false;
             horizontalLayoutToolStripMenuItem.Checked = true;
+            redrawPixels();
+        }
+
+        private void twiddleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            twiddle = !twiddle;
+            twiddleToolStripMenuItem.Checked = twiddle;
             redrawPixels();
         }
 

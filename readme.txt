@@ -128,6 +128,9 @@ To inspect extremely large files, you may wish to split them first.
 Changes
 -------
 
+1.5.0.0 (unreleased beta)
+- Twiddle option for inspecting textures stored with morton ordering of pixels.
+
 1.4.0.0 (2019-04-25)
 - Less jitter on snap scrollbar.
 - Loading palette now refreshes the pixel view.
