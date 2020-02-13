@@ -124,6 +124,10 @@ Other Notes
 Due to signed 32-bit integer precision, only the first 256MB of a file can be viewed.
 To inspect extremely large files, you may wish to split them first.
 
+The Twiddle option will rearrange the pixel X and Y within a tile to use a
+morton ordering, commonly seen in textures "twiddled" or "swizzled" for GPU cache
+coherence.
+
 
 Changes
 -------
