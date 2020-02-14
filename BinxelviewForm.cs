@@ -314,6 +314,42 @@ namespace Binxelview
             }
         }
 
+        void twiddleCacheCheck(int tw, int th)
+        {
+            // rebuild index of twiddle ordering
+            if (twiddle_cache == null || twiddle_cache.Length < (tw * th) || twiddle_cache_order != twiddle)
+            {
+                twiddle_cache_order = twiddle;
+                twiddle_cache = new int[tw * th];
+                for (int y = 0; y < th; ++y)
+                {
+                    for (int x = 0; x < tw; ++x)
+                    {
+                        int twx = x;
+                        int twy = y;
+                        int bit = 0;
+                        int twxy = 0;
+                        if (twiddle == 2) // N instead of Z order
+                        {
+                            int temp = twx;
+                            twx = twy;
+                            twy = temp;
+                        }
+                        while (twx > 0 || twy > 0) // interleaved bits = Z order / morton
+                        {
+                            twxy |=
+                                ((twx >> bit) & 1) << (bit * 2 + 0) |
+                                ((twy >> bit) & 1) << (bit * 2 + 1);
+                            twx &= ~(1 << bit);
+                            twy &= ~(1 << bit);
+                            bit += 1;
+                        }
+                        twiddle_cache[x + (y * tw)] = twxy;
+                    }
+                }
+            }
+        }
+
         unsafe long buildPixel(int pos, int bpp, bool little_endian, int length, byte* data_raw, int* bit_stride_raw)
         {
             uint p = 0;
@@ -414,37 +450,7 @@ namespace Binxelview
 
             if (twiddle != 0)
             {
-                if (twiddle_cache == null || twiddle_cache.Length < (tw*th) || twiddle_cache_order != twiddle)
-                {
-                    twiddle_cache_order = twiddle;
-                    twiddle_cache = new int[tw * th];
-                    for (int y = 0; y < th; ++y)
-                    {
-                        for (int x = 0; x < tw; ++x)
-                        {
-                            int twx = x;
-                            int twy = y;
-                            int bit = 0;
-                            int twxy = 0;
-                            if (twiddle == 2) // N instead of Z order
-                            {
-                                int temp = twx;
-                                twx = twy;
-                                twy = temp;
-                            }
-                            while (twx > 0 || twy > 0) // interleaved bits = Z order / morton
-                            {
-                                twxy |=
-                                    ((twx >> bit) & 1) << (bit * 2 + 0) |
-                                    ((twy >> bit) & 1) << (bit * 2 + 1);
-                                twx &= ~(1 << bit);
-                                twy &= ~(1 << bit);
-                                bit += 1;
-                            }
-                            twiddle_cache[x + (y * tw)] = twxy;
-                        }
-                    }
-                }
+                twiddleCacheCheck(tw,th);
             }
             else
             {
@@ -1748,6 +1754,14 @@ namespace Binxelview
 
             int row_stride = (preset.row_stride_byte * 8) + preset.row_stride_bit;
             int pixel_stride = (preset.pixel_stride_byte * 8) + preset.pixel_stride_bit;
+
+            if (twiddle != 0)
+            {
+                twiddleCacheCheck(tw, th);
+                int twoxy = twiddle_cache[ox + (oy * tw)];
+                oy = twoxy / tw;
+                ox = twoxy % th;
+            }
 
             int pos =
                 (pos_byte * 8) + pos_bit +
