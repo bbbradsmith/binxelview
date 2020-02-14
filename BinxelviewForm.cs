@@ -30,6 +30,8 @@ namespace Binxelview
         int[] palette_raw = new int[PALETTE_DIM * PALETTE_DIM];
         int[] twiddle_cache = null;
         int twiddle_cache_order = 0;
+        int twiddle_cache_w = 0;
+        int twiddle_cache_h = 0;
         Color background = SystemColors.Control;
         int background_raw = SystemColors.Control.ToArgb();
         PaletteMode palette_mode = PaletteMode.PALETTE_RGB;
@@ -317,9 +319,14 @@ namespace Binxelview
         void twiddleCacheCheck(int tw, int th)
         {
             // rebuild index of twiddle ordering
-            if (twiddle_cache == null || twiddle_cache.Length < (tw * th) || twiddle_cache_order != twiddle)
+            if (twiddle_cache == null ||
+                twiddle_cache_order != twiddle ||
+                twiddle_cache_w != tw ||
+                twiddle_cache_h != th )
             {
                 twiddle_cache_order = twiddle;
+                twiddle_cache_w = tw;
+                twiddle_cache_h = th;
                 twiddle_cache = new int[tw * th];
                 for (int y = 0; y < th; ++y)
                 {
