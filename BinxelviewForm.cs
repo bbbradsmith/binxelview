@@ -46,7 +46,7 @@ namespace Binxelview
         int next_increment_byte = 1;
         int next_increment_bit = 0;
         int selected_tile = -1;
-        bool snap_scroll = false;
+        bool snap_scroll = true;
         bool horizontal_layout = false;
         int twiddle = 0;
 

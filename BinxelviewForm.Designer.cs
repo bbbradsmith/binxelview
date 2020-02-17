@@ -258,6 +258,8 @@
             // 
             // snapScrollToNextStrideToolStripMenuItem
             // 
+            this.snapScrollToNextStrideToolStripMenuItem.Checked = true;
+            this.snapScrollToNextStrideToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.snapScrollToNextStrideToolStripMenuItem.Name = "snapScrollToNextStrideToolStripMenuItem";
             this.snapScrollToNextStrideToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
             this.snapScrollToNextStrideToolStripMenuItem.Text = "&Snap scroll to next stride";
