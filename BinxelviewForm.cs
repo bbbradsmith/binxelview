@@ -1496,7 +1496,7 @@ namespace Binxelview
             SaveFileDialog d = new SaveFileDialog();
             d.Title = "Save Image";
             d.DefaultExt = "png";
-            d.Filter = "PNG Image (*.png)|*.png|Bitmap Image (*.bmp)|*.bmp|All files (*.*)|*.*";
+            d.Filter = "PNG Image (*.png)|*.png|All files (*.*)|*.*";
             d.FileName = data_file + string.Format(".{0:X8}.{1:D1}.png", pos >> 3, pos & 7);
             if (d.ShowDialog() == DialogResult.OK)
             {
@@ -1540,7 +1540,7 @@ namespace Binxelview
             SaveFileDialog d = new SaveFileDialog();
             d.Title = "Save All Visible";
             d.DefaultExt = "png";
-            d.Filter = "PNG Image (*.png)|*.png|Bitmap Image (*.bmp)|*.bmp|All files (*.*)|*.*";
+            d.Filter = "PNG Image (*.png)|*.png|All files (*.*)|*.*";
             d.FileName = data_file + string.Format(".{0:X8}.{1:D1}.png",pos>>3,pos&7);
             if (d.ShowDialog() == DialogResult.OK)
             {
