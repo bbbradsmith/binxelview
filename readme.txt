@@ -1,8 +1,8 @@
 
 Binxelview binary image explorer
 
-Version 1.4.0.0
-2019-04-25
+Version 1.5.0.0
+2020-07-31
 Brad Smith
 
 https://github.com/bbbradsmith/binxelview
