@@ -132,7 +132,7 @@ GPU cache coherence.
 Changes
 -------
 
-1.5.0.0 (unreleased beta)
+1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.
 - Snap scroll to next stride enabled by default.
 
