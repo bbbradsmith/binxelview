@@ -784,7 +784,7 @@ namespace Binxelview
             }
 
             presets = new List<Preset>();
-            DirectoryInfo d = new DirectoryInfo(".");
+            DirectoryInfo d = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
             FileInfo[] files = d.GetFiles("*.bxp");
             foreach (FileInfo file in files)
             {
