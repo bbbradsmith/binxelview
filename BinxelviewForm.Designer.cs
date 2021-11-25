@@ -44,9 +44,11 @@
             this.optionsStripMenuDash1 = new System.Windows.Forms.ToolStripSeparator();
             this.snapScrollToNextStrideToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsStripMenuDash2 = new System.Windows.Forms.ToolStripSeparator();
+            this.gridToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsStripMenuDash3 = new System.Windows.Forms.ToolStripSeparator();
             this.verticalLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.horizontalLayoutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.optionsStripMenuDash4 = new System.Windows.Forms.ToolStripSeparator();
             this.twiddleZToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.twiddleNToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -226,9 +228,11 @@
             this.optionsStripMenuDash1,
             this.snapScrollToNextStrideToolStripMenuItem,
             this.optionsStripMenuDash2,
+            this.gridToolStripMenuItem,
+            this.optionsStripMenuDash3,
             this.verticalLayoutToolStripMenuItem,
             this.horizontalLayoutToolStripMenuItem,
-            this.toolStripSeparator1,
+            this.optionsStripMenuDash4,
             this.twiddleZToolStripMenuItem,
             this.twiddleNToolStripMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
@@ -238,7 +242,7 @@
             // decimalPositionToolStripMenuItem
             // 
             this.decimalPositionToolStripMenuItem.Name = "decimalPositionToolStripMenuItem";
-            this.decimalPositionToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.decimalPositionToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.decimalPositionToolStripMenuItem.Text = "&Decimal Position";
             this.decimalPositionToolStripMenuItem.Click += new System.EventHandler(this.decimalPositionToolStripMenuItem_Click);
             // 
@@ -247,61 +251,75 @@
             this.hexadecimalPositionToolStripMenuItem.Checked = true;
             this.hexadecimalPositionToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.hexadecimalPositionToolStripMenuItem.Name = "hexadecimalPositionToolStripMenuItem";
-            this.hexadecimalPositionToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.hexadecimalPositionToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.hexadecimalPositionToolStripMenuItem.Text = "&Hexadecimal Position";
             this.hexadecimalPositionToolStripMenuItem.Click += new System.EventHandler(this.hexadecimalPositionToolStripMenuItem_Click);
             // 
             // optionsStripMenuDash1
             // 
             this.optionsStripMenuDash1.Name = "optionsStripMenuDash1";
-            this.optionsStripMenuDash1.Size = new System.Drawing.Size(199, 6);
+            this.optionsStripMenuDash1.Size = new System.Drawing.Size(200, 6);
             // 
             // snapScrollToNextStrideToolStripMenuItem
             // 
             this.snapScrollToNextStrideToolStripMenuItem.Checked = true;
             this.snapScrollToNextStrideToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.snapScrollToNextStrideToolStripMenuItem.Name = "snapScrollToNextStrideToolStripMenuItem";
-            this.snapScrollToNextStrideToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.snapScrollToNextStrideToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.snapScrollToNextStrideToolStripMenuItem.Text = "&Snap scroll to next stride";
             this.snapScrollToNextStrideToolStripMenuItem.Click += new System.EventHandler(this.snapScrollToNextStrideToolStripMenuItem_Click);
             // 
             // optionsStripMenuDash2
             // 
             this.optionsStripMenuDash2.Name = "optionsStripMenuDash2";
-            this.optionsStripMenuDash2.Size = new System.Drawing.Size(199, 6);
+            this.optionsStripMenuDash2.Size = new System.Drawing.Size(200, 6);
+            // 
+            // gridToolStripMenuItem
+            // 
+            this.gridToolStripMenuItem.Checked = true;
+            this.gridToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.gridToolStripMenuItem.Name = "gridToolStripMenuItem";
+            this.gridToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.gridToolStripMenuItem.Text = "&Grid Padding";
+            this.gridToolStripMenuItem.Click += new System.EventHandler(this.gridToolStripMenuItem_Click);
+            // 
+            // optionsStripMenuDash3
+            // 
+            this.optionsStripMenuDash3.Name = "optionsStripMenuDash3";
+            this.optionsStripMenuDash3.Size = new System.Drawing.Size(200, 6);
             // 
             // verticalLayoutToolStripMenuItem
             // 
             this.verticalLayoutToolStripMenuItem.Checked = true;
             this.verticalLayoutToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.verticalLayoutToolStripMenuItem.Name = "verticalLayoutToolStripMenuItem";
-            this.verticalLayoutToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.verticalLayoutToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.verticalLayoutToolStripMenuItem.Text = "&Vertical layout";
             this.verticalLayoutToolStripMenuItem.Click += new System.EventHandler(this.verticalLayoutToolStripMenuItem_Click);
             // 
             // horizontalLayoutToolStripMenuItem
             // 
             this.horizontalLayoutToolStripMenuItem.Name = "horizontalLayoutToolStripMenuItem";
-            this.horizontalLayoutToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.horizontalLayoutToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.horizontalLayoutToolStripMenuItem.Text = "H&orizontal layout";
             this.horizontalLayoutToolStripMenuItem.Click += new System.EventHandler(this.horizontalLayoutToolStripMenuItem_Click);
             // 
-            // toolStripSeparator1
+            // optionsStripMenuDash4
             // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(199, 6);
+            this.optionsStripMenuDash4.Name = "optionsStripMenuDash4";
+            this.optionsStripMenuDash4.Size = new System.Drawing.Size(200, 6);
             // 
             // twiddleZToolStripMenuItem
             // 
             this.twiddleZToolStripMenuItem.Name = "twiddleZToolStripMenuItem";
-            this.twiddleZToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.twiddleZToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.twiddleZToolStripMenuItem.Text = "Twiddle &Z";
             this.twiddleZToolStripMenuItem.Click += new System.EventHandler(this.twiddleZToolStripMenuItem_Click);
             // 
             // twiddleNToolStripMenuItem
             // 
             this.twiddleNToolStripMenuItem.Name = "twiddleNToolStripMenuItem";
-            this.twiddleNToolStripMenuItem.Size = new System.Drawing.Size(202, 22);
+            this.twiddleNToolStripMenuItem.Size = new System.Drawing.Size(203, 22);
             this.twiddleNToolStripMenuItem.Text = "Twiddle &N";
             this.twiddleNToolStripMenuItem.Click += new System.EventHandler(this.twiddleNToolStripMenuItem_Click);
             // 
@@ -1420,12 +1438,14 @@
         private System.Windows.Forms.Button buttonZero;
         private System.Windows.Forms.ToolStripSeparator optionsStripMenuDash1;
         private System.Windows.Forms.ToolStripMenuItem snapScrollToNextStrideToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator optionsStripMenuDash2;
+        private System.Windows.Forms.ToolStripSeparator optionsStripMenuDash3;
         private System.Windows.Forms.ToolStripMenuItem verticalLayoutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem horizontalLayoutToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem twiddleZToolStripMenuItem;
-        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripSeparator optionsStripMenuDash4;
         private System.Windows.Forms.ToolStripMenuItem twiddleNToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator optionsStripMenuDash2;
+        private System.Windows.Forms.ToolStripMenuItem gridToolStripMenuItem;
     }
 }
 

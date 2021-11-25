@@ -20,6 +20,7 @@ namespace Binxelview
         int pos_byte = 0;
         int pos_bit = 0;
         int zoom = 2;
+        bool hidegrid = false;
 
         Preset preset;
         Preset default_preset;
@@ -955,8 +956,8 @@ namespace Binxelview
             int sx = (w + zoom - 1) / zoom;
             int sy = (h + zoom - 1) / zoom;
 
-            int padx = (preset.width == 1) ? 0 : 1;
-            int pady = (preset.height == 1) ? 0 : 1;
+            int padx = (preset.width == 1 || hidegrid) ? 0 : 1;
+            int pady = (preset.height == 1 || hidegrid) ? 0 : 1;
             int twp = padx + preset.width;
             int thp = pady + preset.height;
 
@@ -1738,6 +1739,13 @@ namespace Binxelview
             else twiddle = 1;
             twiddleZToolStripMenuItem.Checked = twiddle == 1;
             twiddleNToolStripMenuItem.Checked = twiddle == 2;
+            redrawPixels();
+        }
+
+        private void gridToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            hidegrid = !hidegrid;
+            gridToolStripMenuItem.Checked = !hidegrid;
             redrawPixels();
         }
 
