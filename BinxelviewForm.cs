@@ -784,18 +784,36 @@ namespace Binxelview
             }
 
             presets = new List<Preset>();
-            DirectoryInfo d = new DirectoryInfo(".");
-            FileInfo[] files = d.GetFiles("*.bxp");
+            DirectoryInfo d_cwd = new DirectoryInfo(".");
+            DirectoryInfo d_app = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+            FileInfo[] files_cwd = d_cwd.GetFiles("*.bxp");
+            FileInfo[] files_app = d_app.GetFiles("*.bxp");
+            FileInfo[] files = new FileInfo[files_cwd.Length+files_app.Length];
+            Array.Copy(files_cwd,0,files,0,files_cwd.Length);
+            Array.Copy(files_app,0,files,files_cwd.Length,files_app.Length);
             foreach (FileInfo file in files)
             {
                 Preset p = new Preset();
                 if (p.loadFile(file.FullName))
                 {
-                    presets.Add(p);
-                    if (p.name.ToLower()=="default")
+                    bool duplicate = false;
+                    foreach (Preset pe in presets)
                     {
-                        default_preset = p.copy();
-                        scrollRange();
+                        if (pe.name == p.name)
+                        {
+                            duplicate = true;
+                            break;
+                        }
+                    }
+
+                    if (!duplicate)
+                    {
+                        presets.Add(p);
+                        if (p.name.ToLower()=="default")
+                        {
+                            default_preset = p.copy();
+                            scrollRange();
+                        }
                     }
                 }
             }
