@@ -133,7 +133,8 @@ Changes
 -------
 
 1.6.0.0 (unreleased beta)
-- No changes yet.
+- Now loads presets from executable directory after trying current directory first.
+- Option to disable grid padding between cells.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.
