@@ -104,7 +104,9 @@ Pixel Formats
         Using an tile X size of 16 pixels, on every 16th pixel
           a stride of 8 bytes will advance to the start of the next tile.
 
-Presets can be loaded and saved. The Preset menu is populated from the current working directory.
+Presets can be loaded and saved.
+The Preset menu is populated both from the current working directory,
+and also from the directory of the executable.
 You can save a preset file "Default.bxp" to replace the default.
 
 
