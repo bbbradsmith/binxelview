@@ -92,9 +92,9 @@ Pixel Formats
 
 * Tiling
     This performs a secondary subdivision of the image into tiles.
-    A size of 0 will disable tiling on that axis.
+    The size indicates the pixel width/height of a tile. Size 0 disables tiling on that axis.
     The stride is the distance between the start of each tile pixel (X) or row (Y).
-    Example: (Atari 4BPP.bxp)
+    Example 1: (Atari 4BPP.bxp)
         Atari ST video memory stores 16 pixels in a tile.
         In 4BPP mode, each pixel has 4 bits,
           but each of these bits is stored in a separate 2-byte word.
@@ -103,6 +103,15 @@ Pixel Formats
         Using a pixel stride of 1 bit will advance through the 16 pixels one by one.
         Using an tile X size of 16 pixels, on every 16th pixel
           a stride of 8 bytes will advance to the start of the next tile.
+    Example 2: (MSX 1BPP 16px.bxp)
+        This format stores the left half of a 16x16 sprite vertically, then the right half, in 32 byte blocks.
+        BPP=1, Width=16, Height=16
+        Pixel=1 bit (A), Row=1 byte (B), Next=32 bytes
+        Tile X size=8 pixels (C), Tile X stride=16 bytes (D)
+        This means:
+          From the current row, read 8 (C) x 1BPP (A) pixels to fill the first tile.
+          Advance 16 bytes (D) from the start of the row, then read the second tile.
+          The next row will begin again 1 byte (B) from the start of the previous row.
 
 Presets can be loaded and saved.
 The Preset menu is populated both from the current working directory,
