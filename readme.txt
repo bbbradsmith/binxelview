@@ -67,8 +67,8 @@ Shift+Alt+B,I,X,R,N will retreat the position by 1 byte, bit, pixel, row, image.
 Pixel Formats
 -------------
 
-* Little Endian
-    Determines which bits of a byte have the lowest address.
+* Reverse Byte
+    Reverses the order of bits within each byte.
 * Chunky
     Bits of a pixel are taken contiguously.
     Uncheck this to allow editing of the adjacent bits table.
@@ -146,6 +146,7 @@ Changes
 1.6.0.0 (unreleased beta)
 - Now loads presets from executable directory after trying current directory first.
 - Option to disable grid padding between cells.
+- "Little Endian" renamed to "Reverse Byte" for clarity.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.

@@ -1006,7 +1006,7 @@ namespace Binxelview
 
             disable_pixel_redraw = true; // prevent Value events from redrawing pixels
 
-            checkEndian.Checked = preset.little_endian;
+            checkEndian.Checked = !preset.little_endian;
             checkChunky.Checked = preset.chunky;
             checkAutoPixel.Checked = preset.pixel_stride_auto;
             checkAutoRow.Checked = preset.row_stride_auto;
@@ -1210,7 +1210,7 @@ namespace Binxelview
 
         private void checkEndian_CheckedChanged(object sender, EventArgs e)
         {
-            preset.little_endian = checkEndian.Checked;
+            preset.little_endian = !checkEndian.Checked;
             redrawPixels();
         }
 

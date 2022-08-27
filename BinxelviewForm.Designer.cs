@@ -738,13 +738,13 @@
             // checkEndian
             // 
             this.checkEndian.AutoSize = true;
-            this.checkEndian.Checked = true;
-            this.checkEndian.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkEndian.Checked = false;
+            this.checkEndian.CheckState = System.Windows.Forms.CheckState.Unchecked;
             this.checkEndian.Location = new System.Drawing.Point(7, 19);
             this.checkEndian.Name = "checkEndian";
             this.checkEndian.Size = new System.Drawing.Size(84, 17);
             this.checkEndian.TabIndex = 1;
-            this.checkEndian.Text = "Little Endian";
+            this.checkEndian.Text = "Reverse Byte";
             this.checkEndian.UseVisualStyleBackColor = true;
             this.checkEndian.CheckedChanged += new System.EventHandler(this.checkEndian_CheckedChanged);
             // 
