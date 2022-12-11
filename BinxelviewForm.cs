@@ -1749,6 +1749,12 @@ namespace Binxelview
             redrawPixels();
         }
 
+        private void exportBinaryChunkToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            ExportForm exportForm = new ExportForm(pos_byte, !decimal_position, data);
+            exportForm.ShowDialog();
+        }
+
         private void pixelBox_MouseMove(object sender, MouseEventArgs e)
         {
             // grid settings from last redrawPixels
