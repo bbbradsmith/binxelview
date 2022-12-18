@@ -390,7 +390,7 @@
             this.groupPacking.Location = new System.Drawing.Point(172, 3);
             this.groupPacking.Name = "groupPacking";
             this.groupPacking.Size = new System.Drawing.Size(332, 227);
-            this.groupPacking.TabIndex = 0;
+            this.groupPacking.TabIndex = 2;
             this.groupPacking.TabStop = false;
             this.groupPacking.Text = "Packing";
             // 
@@ -805,7 +805,7 @@
             this.groupPalette.Location = new System.Drawing.Point(510, 3);
             this.groupPalette.Name = "groupPalette";
             this.groupPalette.Size = new System.Drawing.Size(284, 227);
-            this.groupPalette.TabIndex = 1;
+            this.groupPalette.TabIndex = 3;
             this.groupPalette.TabStop = false;
             this.groupPalette.Text = "Palette";
             // 
@@ -931,7 +931,7 @@
             this.groupPosition.Location = new System.Drawing.Point(3, 3);
             this.groupPosition.Name = "groupPosition";
             this.groupPosition.Size = new System.Drawing.Size(163, 105);
-            this.groupPosition.TabIndex = 2;
+            this.groupPosition.TabIndex = 0;
             this.groupPosition.TabStop = false;
             this.groupPosition.Text = "Position";
             // 
@@ -1069,7 +1069,7 @@
             this.groupTile.Location = new System.Drawing.Point(3, 114);
             this.groupTile.Name = "groupTile";
             this.groupTile.Size = new System.Drawing.Size(163, 116);
-            this.groupTile.TabIndex = 3;
+            this.groupTile.TabIndex = 1;
             this.groupTile.TabStop = false;
             this.groupTile.Text = "Tiling";
             // 
