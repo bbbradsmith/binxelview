@@ -677,7 +677,6 @@
             this.labelHeight.Location = new System.Drawing.Point(122, 39);
             this.labelHeight.Name = "labelHeight";
             this.labelHeight.Size = new System.Drawing.Size(51, 24);
-            this.labelHeight.TabIndex = 6;
             this.labelHeight.Text = "Height";
             this.labelHeight.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -686,7 +685,6 @@
             this.labelWidth.Location = new System.Drawing.Point(65, 39);
             this.labelWidth.Name = "labelWidth";
             this.labelWidth.Size = new System.Drawing.Size(51, 24);
-            this.labelWidth.TabIndex = 5;
             this.labelWidth.Text = "Width";
             this.labelWidth.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -695,7 +693,6 @@
             this.labelBPP.Location = new System.Drawing.Point(6, 39);
             this.labelBPP.Name = "labelBPP";
             this.labelBPP.Size = new System.Drawing.Size(51, 24);
-            this.labelBPP.TabIndex = 4;
             this.labelBPP.Text = "BPP";
             this.labelBPP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -828,7 +825,6 @@
             this.labelInfoPal.Location = new System.Drawing.Point(6, 152);
             this.labelInfoPal.Name = "labelInfoPal";
             this.labelInfoPal.Size = new System.Drawing.Size(271, 43);
-            this.labelInfoPal.TabIndex = 7;
             this.labelInfoPal.Text = "(Palette Info)";
             this.labelInfoPal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -1015,7 +1011,6 @@
             this.labelInfoPixel.Location = new System.Drawing.Point(42, 68);
             this.labelInfoPixel.Name = "labelInfoPixel";
             this.labelInfoPixel.Size = new System.Drawing.Size(115, 32);
-            this.labelInfoPixel.TabIndex = 4;
             this.labelInfoPixel.Text = "(Pixel Info)";
             this.labelInfoPixel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
