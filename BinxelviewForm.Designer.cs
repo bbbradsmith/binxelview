@@ -390,7 +390,6 @@
             this.groupPacking.Location = new System.Drawing.Point(172, 3);
             this.groupPacking.Name = "groupPacking";
             this.groupPacking.Size = new System.Drawing.Size(332, 227);
-            this.groupPacking.TabIndex = 2;
             this.groupPacking.TabStop = false;
             this.groupPacking.Text = "Packing";
             // 
@@ -805,7 +804,6 @@
             this.groupPalette.Location = new System.Drawing.Point(510, 3);
             this.groupPalette.Name = "groupPalette";
             this.groupPalette.Size = new System.Drawing.Size(284, 227);
-            this.groupPalette.TabIndex = 3;
             this.groupPalette.TabStop = false;
             this.groupPalette.Text = "Palette";
             // 
@@ -883,7 +881,6 @@
             this.bgBox.Location = new System.Drawing.Point(143, 19);
             this.bgBox.Name = "bgBox";
             this.bgBox.Size = new System.Drawing.Size(32, 32);
-            this.bgBox.TabIndex = 1;
             this.bgBox.TabStop = false;
             this.bgBox.Click += new System.EventHandler(this.bgBox_Click);
             // 
@@ -893,7 +890,6 @@
             this.paletteBox.Location = new System.Drawing.Point(6, 19);
             this.paletteBox.Name = "paletteBox";
             this.paletteBox.Size = new System.Drawing.Size(130, 130);
-            this.paletteBox.TabIndex = 0;
             this.paletteBox.TabStop = false;
             this.paletteBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.paletteBox_MouseClick);
             this.paletteBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.paletteBox_MouseMove);
@@ -931,7 +927,6 @@
             this.groupPosition.Location = new System.Drawing.Point(3, 3);
             this.groupPosition.Name = "groupPosition";
             this.groupPosition.Size = new System.Drawing.Size(163, 105);
-            this.groupPosition.TabIndex = 0;
             this.groupPosition.TabStop = false;
             this.groupPosition.Text = "Position";
             // 
@@ -1069,7 +1064,6 @@
             this.groupTile.Location = new System.Drawing.Point(3, 114);
             this.groupTile.Name = "groupTile";
             this.groupTile.Size = new System.Drawing.Size(163, 116);
-            this.groupTile.TabIndex = 1;
             this.groupTile.TabStop = false;
             this.groupTile.Text = "Tiling";
             // 
@@ -1252,7 +1246,6 @@
             this.pixelBox.Name = "pixelBox";
             this.pixelBox.Size = new System.Drawing.Size(767, 408);
             this.pixelBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pixelBox.TabIndex = 0;
             this.pixelBox.TabStop = false;
             this.pixelBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pixelBox_MouseMove);
             this.pixelBox.Resize += new System.EventHandler(this.pixelBox_Resize);
