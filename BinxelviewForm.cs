@@ -689,7 +689,7 @@ namespace Binxelview
             }
         }
 
-        bool openPalette(string path, bool image)
+        bool openPalette(string path, bool image, bool sixbit_vga)
         {
             if (preset.bpp > PALETTE_BITS)
             {
@@ -741,6 +741,13 @@ namespace Binxelview
                 int r = read_data[(i * 3) + 0];
                 int g = read_data[(i * 3) + 1];
                 int b = read_data[(i * 3) + 2];
+                if (sixbit_vga)
+                {
+                    // Convert 18-bit VGA palette to 24-bit
+                    r = r * 255 / 63;
+                    g = g * 255 / 63;
+                    b = b * 255 / 63;
+                }
                 setPalette(i, r, g, b);
             }
             return true;
@@ -1427,10 +1434,11 @@ namespace Binxelview
             d.Filter =
                 "Palette, RGB24 (*.pal)|*.pal|" +
                 "Image (*.bmp;*.gif;*.png;*.tif)|*.bmp;*.gif;*.png;*.tif|" +
+                "VGA Palette, 6-bit RGB18 (*.*)|*.*|"+
                 "All files, RGB24 (*.*)|*.*";
             if (d.ShowDialog() == DialogResult.OK)
             {
-                if (openPalette(d.FileName,d.FilterIndex==2))
+                if (openPalette(d.FileName,d.FilterIndex==2,d.FilterIndex==3))
                 {
                     preparePalette();
                     redrawPixels();
