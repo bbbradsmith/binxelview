@@ -150,6 +150,7 @@ Changes
 - "Export Binary Chunk" option added to File menu. (Contributor: damieng)
 - Tab stop organization of interface. (Contributor: Erquint)
 - Palette load option for common VGA format. (Contributor: foone)
+- Limit width to 65536 to prevent out of memory from accidentally typing huge widths.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.

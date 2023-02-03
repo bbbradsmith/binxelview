@@ -634,7 +634,7 @@
             // 
             this.numericWidth.Location = new System.Drawing.Point(65, 66);
             this.numericWidth.Maximum = new decimal(new int[] {
-            2147483647,
+            65536,
             0,
             0,
             0});
