@@ -34,6 +34,8 @@
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllVisibleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.exportBinaryChunkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.presetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -121,8 +123,6 @@
             this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pixelScroll = new System.Windows.Forms.VScrollBar();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.exportBinaryChunkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             this.tableTop.SuspendLayout();
             this.groupPacking.SuspendLayout();
@@ -195,6 +195,18 @@
             this.saveAllVisibleToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.saveAllVisibleToolStripMenuItem.Text = "&Save &All Visible";
             this.saveAllVisibleToolStripMenuItem.Click += new System.EventHandler(this.saveAllVisibleToolStripMenuItem_Click);
+            // 
+            // exportBinaryChunkToolStripMenuItem
+            // 
+            this.exportBinaryChunkToolStripMenuItem.Name = "exportBinaryChunkToolStripMenuItem";
+            this.exportBinaryChunkToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.exportBinaryChunkToolStripMenuItem.Text = "Export Binary Chunk...";
+            this.exportBinaryChunkToolStripMenuItem.Click += new System.EventHandler(this.exportBinaryChunkToolStripMenuItem_Click);
+            // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(188, 6);
             // 
             // exitToolStripMenuItem
             // 
@@ -681,6 +693,7 @@
             this.labelHeight.Location = new System.Drawing.Point(122, 39);
             this.labelHeight.Name = "labelHeight";
             this.labelHeight.Size = new System.Drawing.Size(51, 24);
+            this.labelHeight.TabIndex = 20;
             this.labelHeight.Text = "Height";
             this.labelHeight.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -689,6 +702,7 @@
             this.labelWidth.Location = new System.Drawing.Point(65, 39);
             this.labelWidth.Name = "labelWidth";
             this.labelWidth.Size = new System.Drawing.Size(51, 24);
+            this.labelWidth.TabIndex = 21;
             this.labelWidth.Text = "Width";
             this.labelWidth.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -697,6 +711,7 @@
             this.labelBPP.Location = new System.Drawing.Point(6, 39);
             this.labelBPP.Name = "labelBPP";
             this.labelBPP.Size = new System.Drawing.Size(51, 24);
+            this.labelBPP.TabIndex = 22;
             this.labelBPP.Text = "BPP";
             this.labelBPP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -739,8 +754,6 @@
             // checkEndian
             // 
             this.checkEndian.AutoSize = true;
-            this.checkEndian.Checked = false;
-            this.checkEndian.CheckState = System.Windows.Forms.CheckState.Unchecked;
             this.checkEndian.Location = new System.Drawing.Point(7, 19);
             this.checkEndian.Name = "checkEndian";
             this.checkEndian.Size = new System.Drawing.Size(90, 17);
@@ -829,6 +842,7 @@
             this.labelInfoPal.Location = new System.Drawing.Point(6, 152);
             this.labelInfoPal.Name = "labelInfoPal";
             this.labelInfoPal.Size = new System.Drawing.Size(271, 43);
+            this.labelInfoPal.TabIndex = 3;
             this.labelInfoPal.Text = "(Palette Info)";
             this.labelInfoPal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -887,6 +901,7 @@
             this.bgBox.Location = new System.Drawing.Point(143, 19);
             this.bgBox.Name = "bgBox";
             this.bgBox.Size = new System.Drawing.Size(32, 32);
+            this.bgBox.TabIndex = 5;
             this.bgBox.TabStop = false;
             this.bgBox.Click += new System.EventHandler(this.bgBox_Click);
             // 
@@ -896,6 +911,7 @@
             this.paletteBox.Location = new System.Drawing.Point(6, 19);
             this.paletteBox.Name = "paletteBox";
             this.paletteBox.Size = new System.Drawing.Size(130, 130);
+            this.paletteBox.TabIndex = 6;
             this.paletteBox.TabStop = false;
             this.paletteBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.paletteBox_MouseClick);
             this.paletteBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.paletteBox_MouseMove);
@@ -1013,6 +1029,7 @@
             this.labelInfoPixel.Location = new System.Drawing.Point(42, 68);
             this.labelInfoPixel.Name = "labelInfoPixel";
             this.labelInfoPixel.Size = new System.Drawing.Size(115, 32);
+            this.labelInfoPixel.TabIndex = 7;
             this.labelInfoPixel.Text = "(Pixel Info)";
             this.labelInfoPixel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -1071,6 +1088,7 @@
             this.groupTile.Location = new System.Drawing.Point(3, 114);
             this.groupTile.Name = "groupTile";
             this.groupTile.Size = new System.Drawing.Size(163, 116);
+            this.groupTile.TabIndex = 1;
             this.groupTile.TabStop = false;
             this.groupTile.Text = "Tiling";
             // 
@@ -1253,6 +1271,7 @@
             this.pixelBox.Name = "pixelBox";
             this.pixelBox.Size = new System.Drawing.Size(767, 408);
             this.pixelBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pixelBox.TabIndex = 0;
             this.pixelBox.TabStop = false;
             this.pixelBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pixelBox_MouseMove);
             this.pixelBox.Resize += new System.EventHandler(this.pixelBox_Resize);
@@ -1291,18 +1310,6 @@
             this.pixelScroll.TabIndex = 1;
             this.pixelScroll.TabStop = true;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
-            // 
-            // toolStripSeparator1
-            // 
-            this.toolStripSeparator1.Name = "toolStripSeparator1";
-            this.toolStripSeparator1.Size = new System.Drawing.Size(188, 6);
-            // 
-            // exportBinaryChunkToolStripMenuItem
-            // 
-            this.exportBinaryChunkToolStripMenuItem.Name = "exportBinaryChunkToolStripMenuItem";
-            this.exportBinaryChunkToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
-            this.exportBinaryChunkToolStripMenuItem.Text = "Export Binary Chunk...";
-            this.exportBinaryChunkToolStripMenuItem.Click += new System.EventHandler(this.exportBinaryChunkToolStripMenuItem_Click);
             // 
             // BinxelviewForm
             // 
