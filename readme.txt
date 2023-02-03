@@ -148,6 +148,7 @@ Changes
 - Option to disable grid padding between cells.
 - "Little Endian" renamed to "Reverse Byte" for clarity.
 - "Export Binary Chunk" option added to File menu. (Contributor: damieng)
+- Tab stop organization of interface. (Contributor: Erquint)
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.

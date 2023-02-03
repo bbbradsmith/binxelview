@@ -394,7 +394,7 @@
             this.groupPacking.Location = new System.Drawing.Point(172, 3);
             this.groupPacking.Name = "groupPacking";
             this.groupPacking.Size = new System.Drawing.Size(332, 227);
-            this.groupPacking.TabIndex = 0;
+            this.groupPacking.TabIndex = 1;
             this.groupPacking.TabStop = false;
             this.groupPacking.Text = "Packing";
             // 
@@ -403,7 +403,7 @@
             this.buttonPixel.Location = new System.Drawing.Point(6, 89);
             this.buttonPixel.Name = "buttonPixel";
             this.buttonPixel.Size = new System.Drawing.Size(53, 24);
-            this.buttonPixel.TabIndex = 24;
+            this.buttonPixel.TabIndex = 5;
             this.buttonPixel.Text = "Pi&xel";
             this.toolTip.SetToolTip(this.buttonPixel, "Left click to advance pixel\r\nRight/shift click to retreat");
             this.buttonPixel.UseVisualStyleBackColor = true;
@@ -415,7 +415,7 @@
             this.buttonRow.Location = new System.Drawing.Point(64, 89);
             this.buttonRow.Name = "buttonRow";
             this.buttonRow.Size = new System.Drawing.Size(53, 24);
-            this.buttonRow.TabIndex = 23;
+            this.buttonRow.TabIndex = 6;
             this.buttonRow.Text = "&Row";
             this.toolTip.SetToolTip(this.buttonRow, "Left click to advance row\r\nRight/shift click to retreat");
             this.buttonRow.UseVisualStyleBackColor = true;
@@ -427,7 +427,7 @@
             this.buttonNext.Location = new System.Drawing.Point(121, 89);
             this.buttonNext.Name = "buttonNext";
             this.buttonNext.Size = new System.Drawing.Size(53, 24);
-            this.buttonNext.TabIndex = 22;
+            this.buttonNext.TabIndex = 7;
             this.buttonNext.Text = "&Next";
             this.toolTip.SetToolTip(this.buttonNext, "Left click to advance next image\r\nRight/shift click to retreat");
             this.buttonNext.UseVisualStyleBackColor = true;
@@ -442,7 +442,7 @@
             this.checkAutoNext.Location = new System.Drawing.Point(122, 168);
             this.checkAutoNext.Name = "checkAutoNext";
             this.checkAutoNext.Size = new System.Drawing.Size(48, 17);
-            this.checkAutoNext.TabIndex = 21;
+            this.checkAutoNext.TabIndex = 16;
             this.checkAutoNext.Text = "Auto";
             this.checkAutoNext.UseVisualStyleBackColor = true;
             this.checkAutoNext.CheckedChanged += new System.EventHandler(this.checkAutoNext_CheckedChanged);
@@ -455,7 +455,7 @@
             this.checkAutoRow.Location = new System.Drawing.Point(65, 168);
             this.checkAutoRow.Name = "checkAutoRow";
             this.checkAutoRow.Size = new System.Drawing.Size(48, 17);
-            this.checkAutoRow.TabIndex = 20;
+            this.checkAutoRow.TabIndex = 15;
             this.checkAutoRow.Text = "Auto";
             this.checkAutoRow.UseVisualStyleBackColor = true;
             this.checkAutoRow.CheckedChanged += new System.EventHandler(this.checkAutoRow_CheckedChanged);
@@ -468,7 +468,7 @@
             this.checkAutoPixel.Location = new System.Drawing.Point(9, 168);
             this.checkAutoPixel.Name = "checkAutoPixel";
             this.checkAutoPixel.Size = new System.Drawing.Size(48, 17);
-            this.checkAutoPixel.TabIndex = 19;
+            this.checkAutoPixel.TabIndex = 14;
             this.checkAutoPixel.Text = "Auto";
             this.checkAutoPixel.UseVisualStyleBackColor = true;
             this.checkAutoPixel.CheckedChanged += new System.EventHandler(this.checkAutoPixel_CheckedChanged);
@@ -478,7 +478,7 @@
             this.buttonSavePreset.Location = new System.Drawing.Point(122, 191);
             this.buttonSavePreset.Name = "buttonSavePreset";
             this.buttonSavePreset.Size = new System.Drawing.Size(51, 24);
-            this.buttonSavePreset.TabIndex = 18;
+            this.buttonSavePreset.TabIndex = 19;
             this.buttonSavePreset.Text = "Save...";
             this.buttonSavePreset.UseVisualStyleBackColor = true;
             this.buttonSavePreset.Click += new System.EventHandler(this.buttonSavePreset_Click);
@@ -488,7 +488,7 @@
             this.buttonLoadPreset.Location = new System.Drawing.Point(65, 191);
             this.buttonLoadPreset.Name = "buttonLoadPreset";
             this.buttonLoadPreset.Size = new System.Drawing.Size(51, 24);
-            this.buttonLoadPreset.TabIndex = 9;
+            this.buttonLoadPreset.TabIndex = 18;
             this.buttonLoadPreset.Text = "Load...";
             this.buttonLoadPreset.UseVisualStyleBackColor = true;
             this.buttonLoadPreset.Click += new System.EventHandler(this.buttonLoadPreset_Click);
@@ -498,7 +498,7 @@
             this.buttonDefaultPreset.Location = new System.Drawing.Point(7, 191);
             this.buttonDefaultPreset.Name = "buttonDefaultPreset";
             this.buttonDefaultPreset.Size = new System.Drawing.Size(51, 24);
-            this.buttonDefaultPreset.TabIndex = 9;
+            this.buttonDefaultPreset.TabIndex = 17;
             this.buttonDefaultPreset.Text = "Default";
             this.buttonDefaultPreset.UseVisualStyleBackColor = true;
             this.buttonDefaultPreset.Click += new System.EventHandler(this.buttonDefaultPreset_Click);
@@ -519,7 +519,7 @@
             -2147483648});
             this.numericRowStrideBit.Name = "numericRowStrideBit";
             this.numericRowStrideBit.Size = new System.Drawing.Size(51, 20);
-            this.numericRowStrideBit.TabIndex = 17;
+            this.numericRowStrideBit.TabIndex = 12;
             this.numericRowStrideBit.ValueChanged += new System.EventHandler(this.numericRowStrideBit_ValueChanged);
             // 
             // numericNextStrideBit
@@ -538,7 +538,7 @@
             -2147483648});
             this.numericNextStrideBit.Name = "numericNextStrideBit";
             this.numericNextStrideBit.Size = new System.Drawing.Size(51, 20);
-            this.numericNextStrideBit.TabIndex = 16;
+            this.numericNextStrideBit.TabIndex = 13;
             this.numericNextStrideBit.ValueChanged += new System.EventHandler(this.numericNextStrideBit_ValueChanged);
             // 
             // numericPixelStrideBit
@@ -558,7 +558,7 @@
             -2147483648});
             this.numericPixelStrideBit.Name = "numericPixelStrideBit";
             this.numericPixelStrideBit.Size = new System.Drawing.Size(51, 20);
-            this.numericPixelStrideBit.TabIndex = 15;
+            this.numericPixelStrideBit.TabIndex = 11;
             this.numericPixelStrideBit.ValueChanged += new System.EventHandler(this.numericPixelStrideBit_ValueChanged);
             // 
             // numericRowStrideByte
@@ -576,7 +576,7 @@
             -2147483648});
             this.numericRowStrideByte.Name = "numericRowStrideByte";
             this.numericRowStrideByte.Size = new System.Drawing.Size(51, 20);
-            this.numericRowStrideByte.TabIndex = 14;
+            this.numericRowStrideByte.TabIndex = 9;
             this.numericRowStrideByte.Value = new decimal(new int[] {
             8,
             0,
@@ -599,7 +599,7 @@
             -2147483648});
             this.numericNextStrideByte.Name = "numericNextStrideByte";
             this.numericNextStrideByte.Size = new System.Drawing.Size(51, 20);
-            this.numericNextStrideByte.TabIndex = 13;
+            this.numericNextStrideByte.TabIndex = 10;
             this.numericNextStrideByte.Value = new decimal(new int[] {
             8,
             0,
@@ -622,7 +622,7 @@
             -2147483648});
             this.numericPixelStrideByte.Name = "numericPixelStrideByte";
             this.numericPixelStrideByte.Size = new System.Drawing.Size(51, 20);
-            this.numericPixelStrideByte.TabIndex = 9;
+            this.numericPixelStrideByte.TabIndex = 8;
             this.numericPixelStrideByte.Value = new decimal(new int[] {
             1,
             0,
@@ -645,7 +645,7 @@
             0});
             this.numericWidth.Name = "numericWidth";
             this.numericWidth.Size = new System.Drawing.Size(51, 20);
-            this.numericWidth.TabIndex = 8;
+            this.numericWidth.TabIndex = 3;
             this.numericWidth.Value = new decimal(new int[] {
             8,
             0,
@@ -668,7 +668,7 @@
             0});
             this.numericHeight.Name = "numericHeight";
             this.numericHeight.Size = new System.Drawing.Size(51, 20);
-            this.numericHeight.TabIndex = 7;
+            this.numericHeight.TabIndex = 4;
             this.numericHeight.Value = new decimal(new int[] {
             1,
             0,
@@ -681,7 +681,6 @@
             this.labelHeight.Location = new System.Drawing.Point(122, 39);
             this.labelHeight.Name = "labelHeight";
             this.labelHeight.Size = new System.Drawing.Size(51, 24);
-            this.labelHeight.TabIndex = 6;
             this.labelHeight.Text = "Height";
             this.labelHeight.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -690,7 +689,6 @@
             this.labelWidth.Location = new System.Drawing.Point(65, 39);
             this.labelWidth.Name = "labelWidth";
             this.labelWidth.Size = new System.Drawing.Size(51, 24);
-            this.labelWidth.TabIndex = 5;
             this.labelWidth.Text = "Width";
             this.labelWidth.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -699,7 +697,6 @@
             this.labelBPP.Location = new System.Drawing.Point(6, 39);
             this.labelBPP.Name = "labelBPP";
             this.labelBPP.Size = new System.Drawing.Size(51, 24);
-            this.labelBPP.TabIndex = 4;
             this.labelBPP.Text = "BPP";
             this.labelBPP.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -718,7 +715,7 @@
             0});
             this.numericBPP.Name = "numericBPP";
             this.numericBPP.Size = new System.Drawing.Size(51, 20);
-            this.numericBPP.TabIndex = 3;
+            this.numericBPP.TabIndex = 2;
             this.numericBPP.Value = new decimal(new int[] {
             8,
             0,
@@ -734,7 +731,7 @@
             this.checkChunky.Location = new System.Drawing.Point(98, 19);
             this.checkChunky.Name = "checkChunky";
             this.checkChunky.Size = new System.Drawing.Size(62, 17);
-            this.checkChunky.TabIndex = 2;
+            this.checkChunky.TabIndex = 1;
             this.checkChunky.Text = "Chunky";
             this.checkChunky.UseVisualStyleBackColor = true;
             this.checkChunky.CheckedChanged += new System.EventHandler(this.checkChunky_CheckedChanged);
@@ -742,10 +739,12 @@
             // checkEndian
             // 
             this.checkEndian.AutoSize = true;
+            this.checkEndian.Checked = false;
+            this.checkEndian.CheckState = System.Windows.Forms.CheckState.Unchecked;
             this.checkEndian.Location = new System.Drawing.Point(7, 19);
             this.checkEndian.Name = "checkEndian";
             this.checkEndian.Size = new System.Drawing.Size(90, 17);
-            this.checkEndian.TabIndex = 1;
+            this.checkEndian.TabIndex = 0;
             this.checkEndian.Text = "Reverse Byte";
             this.checkEndian.UseVisualStyleBackColor = true;
             this.checkEndian.CheckedChanged += new System.EventHandler(this.checkEndian_CheckedChanged);
@@ -767,7 +766,7 @@
             this.dataGridPixel.Name = "dataGridPixel";
             this.dataGridPixel.RowHeadersVisible = false;
             this.dataGridPixel.Size = new System.Drawing.Size(147, 196);
-            this.dataGridPixel.TabIndex = 0;
+            this.dataGridPixel.TabIndex = 20;
             this.dataGridPixel.CellValidating += new System.Windows.Forms.DataGridViewCellValidatingEventHandler(this.dataGridPixel_CellValidating);
             this.dataGridPixel.CellValueChanged += new System.Windows.Forms.DataGridViewCellEventHandler(this.dataGridPixel_CellValueChanged);
             // 
@@ -810,7 +809,7 @@
             this.groupPalette.Location = new System.Drawing.Point(510, 3);
             this.groupPalette.Name = "groupPalette";
             this.groupPalette.Size = new System.Drawing.Size(284, 227);
-            this.groupPalette.TabIndex = 1;
+            this.groupPalette.TabIndex = 2;
             this.groupPalette.TabStop = false;
             this.groupPalette.Text = "Palette";
             // 
@@ -819,7 +818,7 @@
             this.buttonGrey.Location = new System.Drawing.Point(238, 57);
             this.buttonGrey.Name = "buttonGrey";
             this.buttonGrey.Size = new System.Drawing.Size(39, 24);
-            this.buttonGrey.TabIndex = 8;
+            this.buttonGrey.TabIndex = 2;
             this.buttonGrey.Text = "Grey";
             this.buttonGrey.UseVisualStyleBackColor = true;
             this.buttonGrey.Click += new System.EventHandler(this.buttonGrey_Click);
@@ -830,7 +829,6 @@
             this.labelInfoPal.Location = new System.Drawing.Point(6, 152);
             this.labelInfoPal.Name = "labelInfoPal";
             this.labelInfoPal.Size = new System.Drawing.Size(271, 43);
-            this.labelInfoPal.TabIndex = 7;
             this.labelInfoPal.Text = "(Palette Info)";
             this.labelInfoPal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -839,7 +837,7 @@
             this.buttonSavePal.Location = new System.Drawing.Point(213, 87);
             this.buttonSavePal.Name = "buttonSavePal";
             this.buttonSavePal.Size = new System.Drawing.Size(64, 24);
-            this.buttonSavePal.TabIndex = 6;
+            this.buttonSavePal.TabIndex = 4;
             this.buttonSavePal.Text = "Save...";
             this.buttonSavePal.UseVisualStyleBackColor = true;
             this.buttonSavePal.Click += new System.EventHandler(this.buttonSavePal_Click);
@@ -849,7 +847,7 @@
             this.buttonLoadPal.Location = new System.Drawing.Point(143, 87);
             this.buttonLoadPal.Name = "buttonLoadPal";
             this.buttonLoadPal.Size = new System.Drawing.Size(64, 24);
-            this.buttonLoadPal.TabIndex = 5;
+            this.buttonLoadPal.TabIndex = 3;
             this.buttonLoadPal.Text = "Load...";
             this.buttonLoadPal.UseVisualStyleBackColor = true;
             this.buttonLoadPal.Click += new System.EventHandler(this.buttonLoadPal_Click);
@@ -859,7 +857,7 @@
             this.buttonRGBPal.Location = new System.Drawing.Point(192, 57);
             this.buttonRGBPal.Name = "buttonRGBPal";
             this.buttonRGBPal.Size = new System.Drawing.Size(40, 24);
-            this.buttonRGBPal.TabIndex = 4;
+            this.buttonRGBPal.TabIndex = 1;
             this.buttonRGBPal.Text = "RGB";
             this.buttonRGBPal.UseVisualStyleBackColor = true;
             this.buttonRGBPal.Click += new System.EventHandler(this.buttonRGBPal_Click);
@@ -869,7 +867,7 @@
             this.buttonRandomPal.Location = new System.Drawing.Point(143, 57);
             this.buttonRandomPal.Name = "buttonRandomPal";
             this.buttonRandomPal.Size = new System.Drawing.Size(43, 24);
-            this.buttonRandomPal.TabIndex = 3;
+            this.buttonRandomPal.TabIndex = 0;
             this.buttonRandomPal.Text = "Rand";
             this.buttonRandomPal.UseVisualStyleBackColor = true;
             this.buttonRandomPal.Click += new System.EventHandler(this.buttonRandomPal_Click);
@@ -889,7 +887,6 @@
             this.bgBox.Location = new System.Drawing.Point(143, 19);
             this.bgBox.Name = "bgBox";
             this.bgBox.Size = new System.Drawing.Size(32, 32);
-            this.bgBox.TabIndex = 1;
             this.bgBox.TabStop = false;
             this.bgBox.Click += new System.EventHandler(this.bgBox_Click);
             // 
@@ -899,7 +896,6 @@
             this.paletteBox.Location = new System.Drawing.Point(6, 19);
             this.paletteBox.Name = "paletteBox";
             this.paletteBox.Size = new System.Drawing.Size(130, 130);
-            this.paletteBox.TabIndex = 0;
             this.paletteBox.TabStop = false;
             this.paletteBox.MouseClick += new System.Windows.Forms.MouseEventHandler(this.paletteBox_MouseClick);
             this.paletteBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.paletteBox_MouseMove);
@@ -920,7 +916,7 @@
             this.tablePosPlane.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tablePosPlane.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tablePosPlane.Size = new System.Drawing.Size(169, 233);
-            this.tablePosPlane.TabIndex = 3;
+            this.tablePosPlane.TabIndex = 0;
             // 
             // groupPosition
             // 
@@ -937,7 +933,7 @@
             this.groupPosition.Location = new System.Drawing.Point(3, 3);
             this.groupPosition.Name = "groupPosition";
             this.groupPosition.Size = new System.Drawing.Size(163, 105);
-            this.groupPosition.TabIndex = 2;
+            this.groupPosition.TabIndex = 0;
             this.groupPosition.TabStop = false;
             this.groupPosition.Text = "Position";
             // 
@@ -946,7 +942,7 @@
             this.buttonZero.Location = new System.Drawing.Point(6, 67);
             this.buttonZero.Name = "buttonZero";
             this.buttonZero.Size = new System.Drawing.Size(36, 34);
-            this.buttonZero.TabIndex = 9;
+            this.buttonZero.TabIndex = 6;
             this.buttonZero.Text = "&0";
             this.toolTip.SetToolTip(this.buttonZero, "Return position to 0");
             this.buttonZero.UseVisualStyleBackColor = true;
@@ -957,7 +953,7 @@
             this.buttonBitPos.Location = new System.Drawing.Point(6, 42);
             this.buttonBitPos.Name = "buttonBitPos";
             this.buttonBitPos.Size = new System.Drawing.Size(36, 22);
-            this.buttonBitPos.TabIndex = 9;
+            this.buttonBitPos.TabIndex = 2;
             this.buttonBitPos.Text = "B&it";
             this.toolTip.SetToolTip(this.buttonBitPos, "Left click to advance bit\r\nRight/shift click to retreat");
             this.buttonBitPos.UseVisualStyleBackColor = true;
@@ -969,7 +965,7 @@
             this.buttonZoom.Location = new System.Drawing.Point(114, 18);
             this.buttonZoom.Name = "buttonZoom";
             this.buttonZoom.Size = new System.Drawing.Size(44, 22);
-            this.buttonZoom.TabIndex = 8;
+            this.buttonZoom.TabIndex = 4;
             this.buttonZoom.Text = "&Zoom";
             this.toolTip.SetToolTip(this.buttonZoom, "Left click to increse zoom\r\nRight/shift click to decrease");
             this.buttonZoom.UseVisualStyleBackColor = true;
@@ -981,7 +977,7 @@
             this.buttonBytePos.Location = new System.Drawing.Point(6, 18);
             this.buttonBytePos.Name = "buttonBytePos";
             this.buttonBytePos.Size = new System.Drawing.Size(36, 22);
-            this.buttonBytePos.TabIndex = 7;
+            this.buttonBytePos.TabIndex = 0;
             this.buttonBytePos.Text = "&Byte";
             this.toolTip.SetToolTip(this.buttonBytePos, "Left click to advance byte\r\nRight/shift click to retreat");
             this.buttonBytePos.UseVisualStyleBackColor = true;
@@ -1017,7 +1013,6 @@
             this.labelInfoPixel.Location = new System.Drawing.Point(42, 68);
             this.labelInfoPixel.Name = "labelInfoPixel";
             this.labelInfoPixel.Size = new System.Drawing.Size(115, 32);
-            this.labelInfoPixel.TabIndex = 4;
             this.labelInfoPixel.Text = "(Pixel Info)";
             this.labelInfoPixel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
@@ -1037,7 +1032,7 @@
             -2147483648});
             this.numericPosBit.Name = "numericPosBit";
             this.numericPosBit.Size = new System.Drawing.Size(70, 20);
-            this.numericPosBit.TabIndex = 2;
+            this.numericPosBit.TabIndex = 3;
             this.numericPosBit.ValueChanged += new System.EventHandler(this.numericPosBit_ValueChanged);
             // 
             // numericPosByte
@@ -1056,7 +1051,7 @@
             -2147483648});
             this.numericPosByte.Name = "numericPosByte";
             this.numericPosByte.Size = new System.Drawing.Size(70, 20);
-            this.numericPosByte.TabIndex = 0;
+            this.numericPosByte.TabIndex = 1;
             this.numericPosByte.ValueChanged += new System.EventHandler(this.numericPosByte_ValueChanged);
             // 
             // groupTile
@@ -1076,7 +1071,6 @@
             this.groupTile.Location = new System.Drawing.Point(3, 114);
             this.groupTile.Name = "groupTile";
             this.groupTile.Size = new System.Drawing.Size(163, 116);
-            this.groupTile.TabIndex = 3;
             this.groupTile.TabStop = false;
             this.groupTile.Text = "Tiling";
             // 
@@ -1117,7 +1111,7 @@
             0});
             this.numericTileSizeY.Name = "numericTileSizeY";
             this.numericTileSizeY.Size = new System.Drawing.Size(51, 20);
-            this.numericTileSizeY.TabIndex = 24;
+            this.numericTileSizeY.TabIndex = 1;
             this.numericTileSizeY.ValueChanged += new System.EventHandler(this.numericTileSizeY_ValueChanged);
             // 
             // numericTileStrideBitY
@@ -1136,7 +1130,7 @@
             -2147483648});
             this.numericTileStrideBitY.Name = "numericTileStrideBitY";
             this.numericTileStrideBitY.Size = new System.Drawing.Size(51, 20);
-            this.numericTileStrideBitY.TabIndex = 23;
+            this.numericTileStrideBitY.TabIndex = 5;
             this.numericTileStrideBitY.ValueChanged += new System.EventHandler(this.numericTileStrideBitY_ValueChanged);
             // 
             // numericTileStrideByteY
@@ -1154,7 +1148,7 @@
             -2147483648});
             this.numericTileStrideByteY.Name = "numericTileStrideByteY";
             this.numericTileStrideByteY.Size = new System.Drawing.Size(51, 20);
-            this.numericTileStrideByteY.TabIndex = 22;
+            this.numericTileStrideByteY.TabIndex = 3;
             this.numericTileStrideByteY.ValueChanged += new System.EventHandler(this.numericTileStrideByteY_ValueChanged);
             // 
             // labelTileX
@@ -1176,7 +1170,7 @@
             0});
             this.numericTileSizeX.Name = "numericTileSizeX";
             this.numericTileSizeX.Size = new System.Drawing.Size(51, 20);
-            this.numericTileSizeX.TabIndex = 20;
+            this.numericTileSizeX.TabIndex = 0;
             this.numericTileSizeX.ValueChanged += new System.EventHandler(this.numericTileSizeX_ValueChanged);
             // 
             // numericTileStrideBitX
@@ -1195,7 +1189,7 @@
             -2147483648});
             this.numericTileStrideBitX.Name = "numericTileStrideBitX";
             this.numericTileStrideBitX.Size = new System.Drawing.Size(51, 20);
-            this.numericTileStrideBitX.TabIndex = 19;
+            this.numericTileStrideBitX.TabIndex = 4;
             this.numericTileStrideBitX.ValueChanged += new System.EventHandler(this.numericTileStrideBitX_ValueChanged);
             // 
             // numericTileStrideByteX
@@ -1213,7 +1207,7 @@
             -2147483648});
             this.numericTileStrideByteX.Name = "numericTileStrideByteX";
             this.numericTileStrideByteX.Size = new System.Drawing.Size(51, 20);
-            this.numericTileStrideByteX.TabIndex = 18;
+            this.numericTileStrideByteX.TabIndex = 2;
             this.numericTileStrideByteX.ValueChanged += new System.EventHandler(this.numericTileStrideByteX_ValueChanged);
             // 
             // tableBase
@@ -1259,7 +1253,6 @@
             this.pixelBox.Name = "pixelBox";
             this.pixelBox.Size = new System.Drawing.Size(767, 408);
             this.pixelBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
-            this.pixelBox.TabIndex = 0;
             this.pixelBox.TabStop = false;
             this.pixelBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pixelBox_MouseMove);
             this.pixelBox.Resize += new System.EventHandler(this.pixelBox_Resize);
@@ -1296,6 +1289,7 @@
             this.pixelScroll.Name = "pixelScroll";
             this.pixelScroll.Size = new System.Drawing.Size(24, 414);
             this.pixelScroll.TabIndex = 1;
+            this.pixelScroll.TabStop = true;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
             // 
             // toolStripSeparator1
