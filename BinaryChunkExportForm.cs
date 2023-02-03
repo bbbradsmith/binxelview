@@ -4,11 +4,11 @@ using System.Windows.Forms;
 
 namespace Binxelview
 {
-    public partial class ExportForm : Form
+    public partial class BinaryChunkExportForm : Form
     {
         byte[] data;
 
-        public ExportForm(int startPosition, bool hex, byte[] data)
+        public BinaryChunkExportForm(int startPosition, bool hex, byte[] data)
         {
             InitializeComponent();
 
@@ -24,7 +24,14 @@ namespace Binxelview
             {
                 using (Stream binaryExportFile = File.OpenWrite(saveBinaryFileDialog.FileName))
                 {
-                    binaryExportFile.Write(data, (int)startNumericUpDown.Value, (int)lengthNumericUpDown.Value);
+                    int start = (int)startNumericUpDown.Value;
+                    int length = (int)lengthNumericUpDown.Value;
+                    if (start < 0) start = 0;
+                    if ((start+length) > data.Length) length = data.Length-start;
+                    if (length > 0)
+                    {
+                        binaryExportFile.Write(data, (int)startNumericUpDown.Value, (int)lengthNumericUpDown.Value);
+                    }
                 }
                 Close();
             }

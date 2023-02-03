@@ -1751,7 +1751,7 @@ namespace Binxelview
 
         private void exportBinaryChunkToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            ExportForm exportForm = new ExportForm(pos_byte, !decimal_position, data);
+            BinaryChunkExportForm exportForm = new BinaryChunkExportForm(pos_byte, !decimal_position, data);
             exportForm.ShowDialog();
         }
 

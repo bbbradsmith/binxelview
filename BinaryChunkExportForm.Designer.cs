@@ -1,6 +1,6 @@
 ﻿namespace Binxelview
 {
-    partial class ExportForm
+    partial class BinaryChunkExportForm
     {
         /// <summary>
         /// Required designer variable.
@@ -106,7 +106,7 @@
             this.saveBinaryFileDialog.Filter = "Binary files|*.bin|All files|*.*";
             this.saveBinaryFileDialog.Title = "Save Binary Chunk";
             // 
-            // ExportForm
+            // BinaryChunkExportForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -119,7 +119,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "ExportForm";
+            this.Name = "BinaryChunkExportForm";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Export Binary Chunk";
