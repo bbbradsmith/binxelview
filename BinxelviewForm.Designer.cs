@@ -394,6 +394,7 @@
             this.groupPacking.Location = new System.Drawing.Point(172, 3);
             this.groupPacking.Name = "groupPacking";
             this.groupPacking.Size = new System.Drawing.Size(332, 227);
+            this.groupPacking.TabIndex = 1;
             this.groupPacking.TabStop = false;
             this.groupPacking.Text = "Packing";
             // 
@@ -808,6 +809,7 @@
             this.groupPalette.Location = new System.Drawing.Point(510, 3);
             this.groupPalette.Name = "groupPalette";
             this.groupPalette.Size = new System.Drawing.Size(284, 227);
+            this.groupPalette.TabIndex = 2;
             this.groupPalette.TabStop = false;
             this.groupPalette.Text = "Palette";
             // 
@@ -914,7 +916,7 @@
             this.tablePosPlane.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tablePosPlane.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tablePosPlane.Size = new System.Drawing.Size(169, 233);
-            this.tablePosPlane.TabIndex = 3;
+            this.tablePosPlane.TabIndex = 0;
             // 
             // groupPosition
             // 
@@ -931,6 +933,7 @@
             this.groupPosition.Location = new System.Drawing.Point(3, 3);
             this.groupPosition.Name = "groupPosition";
             this.groupPosition.Size = new System.Drawing.Size(163, 105);
+            this.groupPosition.TabIndex = 0;
             this.groupPosition.TabStop = false;
             this.groupPosition.Text = "Position";
             // 
@@ -1286,6 +1289,7 @@
             this.pixelScroll.Name = "pixelScroll";
             this.pixelScroll.Size = new System.Drawing.Size(24, 414);
             this.pixelScroll.TabIndex = 1;
+            this.pixelScroll.TabStop = true;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
             // 
             // toolStripSeparator1
