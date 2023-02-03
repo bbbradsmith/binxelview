@@ -144,7 +144,9 @@ Changes
 -------
 
 1.6.0.0 (unreleased beta)
-- Now loads presets from executable directory after trying current directory first.
+- GB CHR 8px preset. (Contributor: Lord-Nightmare)
+- ZX Spectrum preset. (Contributor: damieng)
+- Now loads presets from executable directory after trying current directory first. (Contributor: damieng)
 - Option to disable grid padding between cells.
 - "Little Endian" renamed to "Reverse Byte" for clarity.
 - "Export Binary Chunk" option added to File menu. (Contributor: damieng)
