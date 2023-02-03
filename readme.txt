@@ -3,7 +3,7 @@ Binxelview binary image explorer
 
 Version 1.5.0.0
 2020-07-31
-Brad Smith
+Brad Smith et al.
 
 https://github.com/bbbradsmith/binxelview
 http://rainwarrior.ca
@@ -147,6 +147,7 @@ Changes
 - Now loads presets from executable directory after trying current directory first.
 - Option to disable grid padding between cells.
 - "Little Endian" renamed to "Reverse Byte" for clarity.
+- "Export Binary Chunk" option added to File menu. (Contributor: damieng)
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.
@@ -178,7 +179,7 @@ Changes
 License
 -------
 
-This program was written by Brad Smith.
+This program was written by Brad Smith, with contributions from other authors.
 It is made freely available under the the terms of the Creative Commons Attribution license:
 https://creativecommons.org/licenses/by/4.0/
 

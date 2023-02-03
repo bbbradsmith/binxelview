@@ -121,6 +121,8 @@
             this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pixelScroll = new System.Windows.Forms.VScrollBar();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+            this.exportBinaryChunkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             this.tableTop.SuspendLayout();
             this.groupPacking.SuspendLayout();
@@ -173,6 +175,8 @@
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
             this.saveAllVisibleToolStripMenuItem,
+            this.exportBinaryChunkToolStripMenuItem,
+            this.toolStripSeparator1,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -181,21 +185,21 @@
             // openToolStripMenuItem
             // 
             this.openToolStripMenuItem.Name = "openToolStripMenuItem";
-            this.openToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.openToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.openToolStripMenuItem.Text = "&Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
             // 
             // saveAllVisibleToolStripMenuItem
             // 
             this.saveAllVisibleToolStripMenuItem.Name = "saveAllVisibleToolStripMenuItem";
-            this.saveAllVisibleToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAllVisibleToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.saveAllVisibleToolStripMenuItem.Text = "&Save &All Visible";
             this.saveAllVisibleToolStripMenuItem.Click += new System.EventHandler(this.saveAllVisibleToolStripMenuItem_Click);
             // 
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.exitToolStripMenuItem.Text = "E&xit";
             this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
             // 
@@ -738,7 +742,7 @@
             this.checkEndian.CheckState = System.Windows.Forms.CheckState.Unchecked;
             this.checkEndian.Location = new System.Drawing.Point(7, 19);
             this.checkEndian.Name = "checkEndian";
-            this.checkEndian.Size = new System.Drawing.Size(84, 17);
+            this.checkEndian.Size = new System.Drawing.Size(90, 17);
             this.checkEndian.TabIndex = 0;
             this.checkEndian.Text = "Reverse Byte";
             this.checkEndian.UseVisualStyleBackColor = true;
@@ -1284,6 +1288,18 @@
             this.pixelScroll.TabIndex = 1;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
             // 
+            // toolStripSeparator1
+            // 
+            this.toolStripSeparator1.Name = "toolStripSeparator1";
+            this.toolStripSeparator1.Size = new System.Drawing.Size(188, 6);
+            // 
+            // exportBinaryChunkToolStripMenuItem
+            // 
+            this.exportBinaryChunkToolStripMenuItem.Name = "exportBinaryChunkToolStripMenuItem";
+            this.exportBinaryChunkToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.exportBinaryChunkToolStripMenuItem.Text = "Export Binary Chunk...";
+            this.exportBinaryChunkToolStripMenuItem.Click += new System.EventHandler(this.exportBinaryChunkToolStripMenuItem_Click);
+            // 
             // BinxelviewForm
             // 
             this.AllowDrop = true;
@@ -1434,6 +1450,8 @@
         private System.Windows.Forms.ToolStripMenuItem twiddleNToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator optionsStripMenuDash2;
         private System.Windows.Forms.ToolStripMenuItem gridToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem exportBinaryChunkToolStripMenuItem;
+        private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
     }
 }
 
