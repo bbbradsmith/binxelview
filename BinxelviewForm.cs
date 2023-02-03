@@ -747,6 +747,10 @@ namespace Binxelview
                     r = r * 255 / 63;
                     g = g * 255 / 63;
                     b = b * 255 / 63;
+                    // Clamp, in case the data isn't entirely valid
+                    if (r > 255) r = 255;
+                    if (g > 255) g = 255;
+                    if (b > 255) b = 255;
                 }
                 setPalette(i, r, g, b);
             }
