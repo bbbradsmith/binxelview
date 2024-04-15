@@ -153,6 +153,7 @@ Changes
 - Tab stop organization of interface. (Contributor: Erquint)
 - Palette load option for common VGA format. (Contributor: foone)
 - Limit width to 65536 to prevent out of memory from accidentally typing huge widths.
+- SNES 8BPP preset. (Contributor: ButThouMust)
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.
