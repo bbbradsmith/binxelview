@@ -22,7 +22,7 @@ more work would follow with other appropriate tools.
 
 
 Unstable preview builds:
-https://ci.appveyor.com/project/bbbradsmith/binxelview/branch/master/artifacts
+https://nightly.link/bbbradsmith/binxelview/workflows/build/master
 
 
 Requirements
