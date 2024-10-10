@@ -123,6 +123,7 @@
             this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pixelScroll = new System.Windows.Forms.VScrollBar();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.positionToPixelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             this.tableTop.SuspendLayout();
             this.groupPacking.SuspendLayout();
@@ -1280,22 +1281,23 @@
             // 
             this.contextMenuPixel.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.saveImageToolStripMenuItem,
-            this.saveAllToolStripMenuItem});
+            this.saveAllToolStripMenuItem,
+            this.positionToPixelToolStripMenuItem});
             this.contextMenuPixel.Name = "contextMenuPixel";
-            this.contextMenuPixel.Size = new System.Drawing.Size(153, 48);
+            this.contextMenuPixel.Size = new System.Drawing.Size(181, 92);
             // 
             // saveImageToolStripMenuItem
             // 
             this.saveImageToolStripMenuItem.Enabled = false;
             this.saveImageToolStripMenuItem.Name = "saveImageToolStripMenuItem";
-            this.saveImageToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveImageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveImageToolStripMenuItem.Text = "&Save &Image";
             this.saveImageToolStripMenuItem.Click += new System.EventHandler(this.saveImageContextItem_Click);
             // 
             // saveAllToolStripMenuItem
             // 
             this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
-            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
             this.saveAllToolStripMenuItem.Text = "Save &All Visible";
             this.saveAllToolStripMenuItem.Click += new System.EventHandler(this.saveAllVisibleContextItem_Click);
             // 
@@ -1310,6 +1312,13 @@
             this.pixelScroll.TabIndex = 1;
             this.pixelScroll.TabStop = true;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
+            // 
+            // positionToPixelToolStripMenuItem
+            // 
+            this.positionToPixelToolStripMenuItem.Name = "positionToPixelToolStripMenuItem";
+            this.positionToPixelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.positionToPixelToolStripMenuItem.Text = "&Position to Pixel";
+            this.positionToPixelToolStripMenuItem.Click += new System.EventHandler(this.positionToPixelToolContextItem_Click);
             // 
             // BinxelviewForm
             // 
@@ -1463,6 +1472,7 @@
         private System.Windows.Forms.ToolStripMenuItem gridToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportBinaryChunkToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem positionToPixelToolStripMenuItem;
     }
 }
 

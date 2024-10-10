@@ -47,6 +47,7 @@ namespace Binxelview
         int next_increment_byte = 1;
         int next_increment_bit = 0;
         int selected_tile = -1;
+        long selected_pos = -1;
         bool snap_scroll = true;
         bool horizontal_layout = false;
         int twiddle = 0;
@@ -1603,6 +1604,16 @@ namespace Binxelview
             }
         }
 
+        private void positionToPixelToolContextItem_Click(object sender, EventArgs e)
+        {
+            if (selected_pos >= 0 && selected_pos < (data.Length * (long)8))
+            {
+                pos_byte = selected_pos >> 3;
+                pos_bit = (int)(selected_pos & 7);
+                updatePos(true);
+            }
+        }
+
         private void pixelBox_Resize(object sender, EventArgs e)
         {
             redrawPixels();
@@ -1783,6 +1794,7 @@ namespace Binxelview
             // find tile X / Y
 
             selected_tile = -1;
+            selected_pos = -1;
             saveImageToolStripMenuItem.Enabled = false;
 
             int tw = preset.width;
@@ -1844,6 +1856,7 @@ namespace Binxelview
             // give info
 
             selected_tile = tile;
+            selected_pos = pos;
             saveImageToolStripMenuItem.Enabled = true;
 
             labelInfoPixel.Text = String.Format("{0:D}+{1:D1} = {2:D}\n{0:X8}+{1:D1} = {2:X}", (int)(pos>>3), (int)(pos&7), p);
