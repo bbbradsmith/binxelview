@@ -33,12 +33,13 @@
             this.menuStripMain = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.openToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reloadFileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllVisibleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.exportBinaryChunkToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
             this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.presetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reloadPresetsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.presetStripMenuDash = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.decimalPositionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -121,9 +122,9 @@
             this.contextMenuPixel = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.saveImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.positionToPixelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pixelScroll = new System.Windows.Forms.VScrollBar();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.positionToPixelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             this.tableTop.SuspendLayout();
             this.groupPacking.SuspendLayout();
@@ -175,6 +176,7 @@
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.openToolStripMenuItem,
+            this.reloadFileToolStripMenuItem,
             this.saveAllVisibleToolStripMenuItem,
             this.exportBinaryChunkToolStripMenuItem,
             this.toolStripSeparator1,
@@ -189,6 +191,13 @@
             this.openToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
             this.openToolStripMenuItem.Text = "&Open...";
             this.openToolStripMenuItem.Click += new System.EventHandler(this.openToolStripMenuItem_Click);
+            // 
+            // reloadFileToolStripMenuItem
+            // 
+            this.reloadFileToolStripMenuItem.Name = "reloadFileToolStripMenuItem";
+            this.reloadFileToolStripMenuItem.Size = new System.Drawing.Size(191, 22);
+            this.reloadFileToolStripMenuItem.Text = "&Reload";
+            this.reloadFileToolStripMenuItem.Click += new System.EventHandler(this.reloadFileToolStripMenuItem_Click);
             // 
             // saveAllVisibleToolStripMenuItem
             // 
@@ -219,23 +228,23 @@
             // presetToolStripMenuItem
             // 
             this.presetToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.reloadToolStripMenuItem,
+            this.reloadPresetsToolStripMenuItem,
             this.presetStripMenuDash});
             this.presetToolStripMenuItem.Name = "presetToolStripMenuItem";
             this.presetToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
             this.presetToolStripMenuItem.Text = "&Preset";
             // 
-            // reloadToolStripMenuItem
+            // reloadPresetsToolStripMenuItem
             // 
-            this.reloadToolStripMenuItem.Name = "reloadToolStripMenuItem";
-            this.reloadToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
-            this.reloadToolStripMenuItem.Text = "&Reload";
-            this.reloadToolStripMenuItem.Click += new System.EventHandler(this.reloadToolStripMenuItem_Click);
+            this.reloadPresetsToolStripMenuItem.Name = "reloadPresetsToolStripMenuItem";
+            this.reloadPresetsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reloadPresetsToolStripMenuItem.Text = "&Reload";
+            this.reloadPresetsToolStripMenuItem.Click += new System.EventHandler(this.reloadPresetsToolStripMenuItem_Click);
             // 
             // presetStripMenuDash
             // 
             this.presetStripMenuDash.Name = "presetStripMenuDash";
-            this.presetStripMenuDash.Size = new System.Drawing.Size(107, 6);
+            this.presetStripMenuDash.Size = new System.Drawing.Size(177, 6);
             // 
             // optionsToolStripMenuItem
             // 
@@ -1284,22 +1293,29 @@
             this.saveAllToolStripMenuItem,
             this.positionToPixelToolStripMenuItem});
             this.contextMenuPixel.Name = "contextMenuPixel";
-            this.contextMenuPixel.Size = new System.Drawing.Size(181, 92);
+            this.contextMenuPixel.Size = new System.Drawing.Size(160, 70);
             // 
             // saveImageToolStripMenuItem
             // 
             this.saveImageToolStripMenuItem.Enabled = false;
             this.saveImageToolStripMenuItem.Name = "saveImageToolStripMenuItem";
-            this.saveImageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveImageToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.saveImageToolStripMenuItem.Text = "&Save &Image";
             this.saveImageToolStripMenuItem.Click += new System.EventHandler(this.saveImageContextItem_Click);
             // 
             // saveAllToolStripMenuItem
             // 
             this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
-            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.saveAllToolStripMenuItem.Text = "Save &All Visible";
             this.saveAllToolStripMenuItem.Click += new System.EventHandler(this.saveAllVisibleContextItem_Click);
+            // 
+            // positionToPixelToolStripMenuItem
+            // 
+            this.positionToPixelToolStripMenuItem.Name = "positionToPixelToolStripMenuItem";
+            this.positionToPixelToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.positionToPixelToolStripMenuItem.Text = "&Position to Pixel";
+            this.positionToPixelToolStripMenuItem.Click += new System.EventHandler(this.positionToPixelToolContextItem_Click);
             // 
             // pixelScroll
             // 
@@ -1312,13 +1328,6 @@
             this.pixelScroll.TabIndex = 1;
             this.pixelScroll.TabStop = true;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
-            // 
-            // positionToPixelToolStripMenuItem
-            // 
-            this.positionToPixelToolStripMenuItem.Name = "positionToPixelToolStripMenuItem";
-            this.positionToPixelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.positionToPixelToolStripMenuItem.Text = "&Position to Pixel";
-            this.positionToPixelToolStripMenuItem.Click += new System.EventHandler(this.positionToPixelToolContextItem_Click);
             // 
             // BinxelviewForm
             // 
@@ -1425,7 +1434,7 @@
         private System.Windows.Forms.NumericUpDown numericPosBit;
         private System.Windows.Forms.NumericUpDown numericPosByte;
         private System.Windows.Forms.NumericUpDown numericZoom;
-        private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reloadPresetsToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator presetStripMenuDash;
         private System.Windows.Forms.DataGridViewTextBoxColumn order;
         private System.Windows.Forms.DataGridViewTextBoxColumn offByte;
@@ -1473,6 +1482,7 @@
         private System.Windows.Forms.ToolStripMenuItem exportBinaryChunkToolStripMenuItem;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem positionToPixelToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reloadFileToolStripMenuItem;
     }
 }
 

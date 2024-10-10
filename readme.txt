@@ -156,6 +156,7 @@ Changes
 - SNES 8BPP preset. (Contributor: ButThouMust)
 - Maximum file size increased from 256MB to 2GB.
 - Right click context menu option to move position to the selected pixel.
+- File menu reload option.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.

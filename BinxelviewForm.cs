@@ -16,6 +16,7 @@ namespace Binxelview
         const int PALETTE_DIM = 128; // should match paletteBox size
 
         byte[] data = {};
+        string data_path = "";
         string data_file = "";
         long pos_byte = 0;
         int pos_bit = 0;
@@ -652,6 +653,7 @@ namespace Binxelview
             pos_bit = 0;
             updatePos();
             scrollRange();
+            data_path = path;
             data_file = Path.GetFileName(path);
             this.Text = "Binxelview (" + data_file + ")";
             redrawPixels();
@@ -1117,6 +1119,14 @@ namespace Binxelview
             }
         }
 
+        private void reloadFileToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (data_path.Length > 0)
+            {
+                openFile(data_path);
+            }
+        }
+
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
@@ -1165,7 +1175,7 @@ namespace Binxelview
             MessageBox.Show(about, "Binxelview");
         }
 
-        private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
+        private void reloadPresetsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             reloadPresets();
         }
