@@ -1927,5 +1927,21 @@ namespace Binxelview
                 redrawPixels();
             }
         }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            // global hotkeys
+            switch (keyData)
+            {
+                case Keys.Control | Keys.O:
+                    openToolStripMenuItem_Click(this, null);
+                    return true;
+                case Keys.Control | Keys.R:
+                    reloadFileToolStripMenuItem_Click(this, null);
+                    return true;
+                default:
+                    return base.ProcessCmdKey(ref msg, keyData);
+            }
+        }
     }
 }

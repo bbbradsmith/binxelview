@@ -129,6 +129,15 @@ Custom palettes are 24-bit RGB triples (8 bits for each component).
 Click on a colour in the palette box to edit it.
 
 
+Hotkeys
+-------
+
+The following global hotkeys may be used:
+
+Ctrl+O - Open a new file.
+Ctrl+R - Reload the current file.
+
+
 Other Notes
 -----------
 
@@ -157,6 +166,7 @@ Changes
 - Maximum file size increased from 256MB to 2GB.
 - Right click context menu option to move position to the selected pixel.
 - File menu reload option.
+- Added global Ctrl hotkeys.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.
