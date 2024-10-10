@@ -1038,12 +1038,12 @@
             this.numericPosBit.ForeColor = System.Drawing.SystemColors.MenuHighlight;
             this.numericPosBit.Location = new System.Drawing.Point(42, 43);
             this.numericPosBit.Maximum = new decimal(new int[] {
-            2147438647,
+            2147483647,
             0,
             0,
             0});
             this.numericPosBit.Minimum = new decimal(new int[] {
-            2147438648,
+            2147483647,
             0,
             0,
             -2147483648});
@@ -1057,12 +1057,12 @@
             this.numericPosByte.Hexadecimal = true;
             this.numericPosByte.Location = new System.Drawing.Point(42, 19);
             this.numericPosByte.Maximum = new decimal(new int[] {
-            2147438647,
+            2147483647,
             0,
             0,
             0});
             this.numericPosByte.Minimum = new decimal(new int[] {
-            2147438648,
+            -2147483648,
             0,
             0,
             -2147483648});

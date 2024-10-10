@@ -132,7 +132,7 @@ Click on a colour in the palette box to edit it.
 Other Notes
 -----------
 
-Due to signed 32-bit integer precision, only the first 256MB of a file can be viewed.
+Due to signed 32-bit integer limitations of C sharp, files must be less than 2GB in size.
 To inspect extremely large files, you may wish to split them first.
 
 The Twiddle options will rearrange the pixel X and Y within a tile to use a
@@ -154,6 +154,7 @@ Changes
 - Palette load option for common VGA format. (Contributor: foone)
 - Limit width to 65536 to prevent out of memory from accidentally typing huge widths.
 - SNES 8BPP preset. (Contributor: ButThouMust)
+- Maximum file size increased from 256MB to 2GB.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.

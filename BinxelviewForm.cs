@@ -17,7 +17,7 @@ namespace Binxelview
 
         byte[] data = {};
         string data_file = "";
-        int pos_byte = 0;
+        long pos_byte = 0;
         int pos_bit = 0;
         int zoom = 2;
         bool hidegrid = false;
@@ -358,18 +358,18 @@ namespace Binxelview
             }
         }
 
-        unsafe long buildPixel(int pos, int bpp, bool little_endian, int length, byte* data_raw, int* bit_stride_raw)
+        unsafe long buildPixel(long pos, int bpp, bool little_endian, int length, byte* data_raw, int* bit_stride_raw)
         {
             uint p = 0;
             for (int b = 0; b < bpp; ++b)
             {
-                int bpos = pos + bit_stride_raw[b];
-                int dpos_byte = bpos >> 3;
+                long bpos = pos + bit_stride_raw[b];
+                long dpos_byte = bpos >> 3;
                 if (dpos_byte < 0 || dpos_byte >= length)
                 {
                     return -1;
                 }
-                int dpos_bit = bpos & 7;
+                int dpos_bit = (int)(bpos & 7);
                 if (!little_endian) dpos_bit = 7 - dpos_bit;
                 p |= (uint)((data_raw[dpos_byte] >> dpos_bit) & 1) << b;
             }
@@ -377,18 +377,18 @@ namespace Binxelview
         }
 
         unsafe void renderTile(
-            int pos, int bpp, bool little_endian,
+            long pos, int bpp, bool little_endian,
             int length, int w, int h,
             int pixel_stride, int row_stride, int render_stride,
             int tile_size_x, int tile_size_y, int tile_shift_x, int tile_shift_y,
             byte* data, int* bit_stride, long* render_buffer, int* twiddle_raw)
         {
-            int pos_row = pos;
+            long pos_row = pos;
             int plane_y = 0;
             for (int y=0; y<h; ++y)
             {
                 int plane_x = 0;
-                int pos_pixel = pos_row;
+                long pos_pixel = pos_row;
                 long* render_row = render_buffer + (y * render_stride);
                 for (int x=0; x<w; ++x)
                 {
@@ -419,7 +419,7 @@ namespace Binxelview
             }
         }
 
-        void renderGrid(int pos, int gx, int gy, int padx, int pady, int minx, int miny, bool color)
+        void renderGrid(long pos, int gx, int gy, int padx, int pady, int minx, int miny, bool color)
         {
             // prepares pixel_buffer
             int tw = preset.width;
@@ -1085,9 +1085,9 @@ namespace Binxelview
             if (update_scroll)
             {
                 pixelScroll.Value =
-                    (pos_byte < pixelScroll.Minimum) ? pixelScroll.Minimum :
-                    (pos_byte > pixelScroll.Maximum) ? pixelScroll.Maximum :
-                    pos_byte;
+                    ((int)pos_byte < pixelScroll.Minimum) ? pixelScroll.Minimum :
+                    ((int)pos_byte > pixelScroll.Maximum) ? pixelScroll.Maximum :
+                    (int)pos_byte;
             }
         }
 
@@ -1473,7 +1473,7 @@ namespace Binxelview
 
         private void numericPosByte_ValueChanged(object sender, EventArgs e)
         {
-            pos_byte = (int)numericPosByte.Value;
+            pos_byte = (long)numericPosByte.Value;
             updatePos();
             redrawPixels();
         }
@@ -1521,7 +1521,7 @@ namespace Binxelview
                 return;
             }
 
-            int pos = (pos_byte * 8) + pos_bit;
+            long pos = (pos_byte * 8) + pos_bit;
             pos += selected_tile * ((preset.next_stride_byte * 8) + preset.next_stride_bit);
 
             SaveFileDialog d = new SaveFileDialog();
@@ -1566,7 +1566,7 @@ namespace Binxelview
 
         private void saveAllVisibleToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            int pos = (pos_byte * 8) + pos_bit;
+            long pos = (pos_byte * 8) + pos_bit;
 
             SaveFileDialog d = new SaveFileDialog();
             d.Title = "Save All Visible";
@@ -1814,7 +1814,7 @@ namespace Binxelview
                 ox = twoxy % th;
             }
 
-            int pos =
+            long pos =
                 (pos_byte * 8) + pos_bit +
                 (((preset.next_stride_byte * 8) + preset.next_stride_bit) * tile) +
                 (row_stride * oy) +
@@ -1856,21 +1856,21 @@ namespace Binxelview
                 int next_stride = preset.next_stride_bit + (preset.next_stride_byte * 8);
                 if (next_stride < 0) next_stride = -next_stride;
                 if (next_stride == 0) next_stride = 8;
-                int old_pos = (pos_byte * 8) + pos_bit;
+                long old_pos = (pos_byte * 8) + pos_bit;
 
-                int snap_old = old_pos / next_stride;
-                int snap_off = old_pos % next_stride;
+                long snap_old = old_pos / next_stride;
+                long snap_off = old_pos % next_stride;
 
-                int target_pos = e.NewValue * 8;
-                int snap_new = target_pos / next_stride;
-                int new_pos = (snap_new * next_stride) + snap_off;
+                long target_pos = (long)(e.NewValue) * 8;
+                long snap_new = (long)target_pos / next_stride;
+                long new_pos = (snap_new * next_stride) + snap_off;
 
                 pos_byte = new_pos / 8;
-                pos_bit = new_pos % 8;
+                pos_bit = (int)(new_pos % 8);
             }
             else
             {
-                pos_byte = e.NewValue;
+                pos_byte = (long)e.NewValue;
             }
 
             updatePos(false);

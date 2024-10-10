@@ -8,7 +8,7 @@ namespace Binxelview
     {
         byte[] data;
 
-        public BinaryChunkExportForm(int startPosition, bool hex, byte[] data)
+        public BinaryChunkExportForm(long startPosition, bool hex, byte[] data)
         {
             InitializeComponent();
 
@@ -22,15 +22,22 @@ namespace Binxelview
         {
             if (saveBinaryFileDialog.ShowDialog() == DialogResult.OK)
             {
-                using (Stream binaryExportFile = File.OpenWrite(saveBinaryFileDialog.FileName))
+                long start = (long)startNumericUpDown.Value;
+                long length = (long)lengthNumericUpDown.Value;
+                if (start < 0) start = 0;
+                if ((start+length) > data.Length) length = data.Length-start;
+                if (start > 0x7FFFFFFF || length > 0x7FFFFFFF)
                 {
-                    int start = (int)startNumericUpDown.Value;
-                    int length = (int)lengthNumericUpDown.Value;
-                    if (start < 0) start = 0;
-                    if ((start+length) > data.Length) length = data.Length-start;
-                    if (length > 0)
+                    MessageBox.Show("Start address and length must be less than 2,147,483,648. (2^31)", "32-bit range error!");
+                }
+                else
+                {
+                    using (Stream binaryExportFile = File.OpenWrite(saveBinaryFileDialog.FileName))
                     {
-                        binaryExportFile.Write(data, (int)startNumericUpDown.Value, (int)lengthNumericUpDown.Value);
+                        if (length > 0)
+                        {
+                            binaryExportFile.Write(data, (int)start, (int)length);
+                        }
                     }
                 }
                 Close();
