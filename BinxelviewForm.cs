@@ -1074,6 +1074,7 @@ namespace Binxelview
                 if (cols.Length < 1)
                 {
                     palette_error = "Image does not contain a palette.";
+                    img.Dispose();
                     return false;
                 }
 
@@ -1083,6 +1084,7 @@ namespace Binxelview
                     Color c = cols[i];
                     setPalette(i, c.R, c.G, c.B);
                 }
+                img.Dispose();
                 return true;
             }
 
