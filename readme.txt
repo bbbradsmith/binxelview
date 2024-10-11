@@ -241,6 +241,7 @@ Changes
 - Command line arguments for options.
 - Default palette ability.
 - Fix image loaded as palette not releasing file handle.
+- Remember last used file type filter from the load palette dialog.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.

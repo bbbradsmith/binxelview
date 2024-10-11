@@ -33,6 +33,7 @@ namespace Binxelview
         int next_increment_bit = 0;
         int selected_tile = -1;
         long selected_pos = -1;
+        int selected_palette_filter = 0;
 
         Preset preset;
         Preset default_preset;
@@ -1684,8 +1685,10 @@ namespace Binxelview
                 "Image (*.bmp;*.gif;*.png;*.tif)|*.bmp;*.gif;*.png;*.tif|" +
                 "VGA Palette, 6-bit RGB18 (*.vga;*.*)|*.vga;*.*|"+
                 "All files, RGB24 (*.*)|*.*";
+            d.FilterIndex = selected_palette_filter;
             if (d.ShowDialog() == DialogResult.OK)
             {
+                selected_palette_filter = d.FilterIndex; // remember last used filter
                 if (loadPalette(d.FileName,d.FilterIndex==2,d.FilterIndex==3))
                 {
                     refreshPalette();
