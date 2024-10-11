@@ -128,6 +128,17 @@ otherwise an automatic RGB or Greyscale palette can be applied.
 Custom palettes are 24-bit RGB triples (8 bits for each component).
 Click on a colour in the palette box to edit it.
 
+If you are able to view a block of palette data in a file, you can quickly copy it to the palette.
+Right click on the first pixel of the block, and the palette will be generated with the colour of
+each pixel starting with that one. Note that this assumes contiguous pixel data, and will not account
+for row stride, next stride, or tiling. (Stride for row and next should be auto, tiling values should be 0.)
+
+For example, using the 24BPP preset, you can view a saved palette file as coloured pixels.
+Right clicking on the first pixel, you can "load" this palette directly from the file.
+Similarly, the VGA Palette preset may be able to find palettes in a format commonly found in DOS games.
+After transferring the palette, you will need to select another preset to view other data in the file
+using that palette.
+
 
 Hotkeys
 -------
@@ -169,6 +180,9 @@ Changes
 - Added global Ctrl hotkeys.
 - Added Cubehelix automatic palette option: https://people.phy.cam.ac.uk/dag9/CUBEHELIX/
 - Automatic palette modes are now a dropdown list.
+- Right click context menu option to copy to the palette starting from the selected pixel.
+- PS1 15BPP and 4BPP presets. (Contributor: HeyItsLollie)
+- VGA Palette preset.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.

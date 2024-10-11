@@ -381,6 +381,21 @@ namespace Binxelview
             return (long)p;
         }
 
+        long readPixel(long pos) // slow/safe version of buildPixel, for convenient single pixel queries
+        {
+            prepareBitStride();
+            long p;
+            unsafe
+            {
+                fixed (byte* data_raw = data)
+                fixed (int* bit_stride_raw = bit_stride)
+                {
+                    p = buildPixel(pos, preset.bpp, preset.little_endian, data.Length, data_raw, bit_stride_raw);
+                }
+            }
+            return p;
+        }
+
         unsafe void renderTile(
             long pos, int bpp, bool little_endian,
             int length, int w, int h,
@@ -768,8 +783,10 @@ namespace Binxelview
         {
             autoPaletteSetup();
             // disable these if BPP is too high to use an actual palette
-            buttonLoadPal.Enabled = preset.bpp <= PALETTE_BITS;
-            buttonSavePal.Enabled = preset.bpp <= PALETTE_BITS;
+            bool palenable = preset.bpp <= PALETTE_BITS;
+            buttonLoadPal.Enabled = palenable;
+            buttonSavePal.Enabled = palenable;
+            pixelsToPaletteToolStripMenuItem.Enabled = palenable;
             redrawPalette();
         }
 
@@ -1679,6 +1696,34 @@ namespace Binxelview
             }
         }
 
+        private void pixelsToPaletteToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            long read_pos = selected_pos;
+            if (read_pos < 0) return;
+            // extract new palette
+            Color[] new_pal = new Color[PALETTE_DIM*PALETTE_DIM];
+            int count = 0;
+            for (int i=0; i<(PALETTE_DIM*PALETTE_DIM); ++i)
+            {
+                long p = readPixel(read_pos);
+                if (p < 0) break;
+                Color c = getPalette((int)p); // can't modify the new palette because we read it here
+                new_pal[i] = c;
+                ++count;
+                read_pos += preset.pixel_stride_bit;
+                read_pos += preset.pixel_stride_byte * 8;
+            }
+            // replace old palette
+            for (int i=0; i<count; ++i)
+            {
+                palette_mode = PaletteMode.PALETTE_CUSTOM;
+                Color c = new_pal[i];
+                setPalette(i,c.R,c.G,c.B);
+            }
+            refreshPalette();
+            redrawPixels();
+        }
+
         private void pixelBox_Resize(object sender, EventArgs e)
         {
             redrawPixels();
@@ -1845,6 +1890,12 @@ namespace Binxelview
 
         private void pixelBox_MouseMove(object sender, MouseEventArgs e)
         {
+            // clear selection
+            selected_tile = -1;
+            selected_pos = -1;
+            saveImageToolStripMenuItem.Enabled = false;
+            pixelsToPaletteToolStripMenuItem.Enabled = false;
+
             // grid settings from last redrawPixels
             int padx = pixel_padx;
             int pady = pixel_pady;
@@ -1857,10 +1908,6 @@ namespace Binxelview
             int y = e.Y / zoom;
 
             // find tile X / Y
-
-            selected_tile = -1;
-            selected_pos = -1;
-            saveImageToolStripMenuItem.Enabled = false;
 
             int tw = preset.width;
             int th = preset.height;
@@ -1906,24 +1953,16 @@ namespace Binxelview
                 pos += (oy / preset.tile_size_y) * ((preset.tile_stride_byte_y * 8) + preset.tile_stride_bit_y - (preset.tile_size_y * row_stride));
             }
 
-            prepareBitStride();
-            long p = -1;
-            unsafe
-            {
-                fixed (byte* data_raw = data)
-                fixed (int* bit_stride_raw = bit_stride)
-                {
-                    p = buildPixel(pos, preset.bpp, preset.little_endian, data.Length, data_raw, bit_stride_raw);
-                }
-            }
+            long p = readPixel(pos);
             if (p < 0) return;
 
-            // give info
-
+            // record selection
             selected_tile = tile;
             selected_pos = pos;
             saveImageToolStripMenuItem.Enabled = true;
+            pixelsToPaletteToolStripMenuItem.Enabled = true;
 
+            // pixel info
             labelInfoPixel.Text = String.Format("{0:D}+{1:D1} = {2:D}\n{0:X8}+{1:D1} = {2:X}", (int)(pos>>3), (int)(pos&7), p);
         }
 
