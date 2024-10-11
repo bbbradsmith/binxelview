@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace Binxelview
 {
@@ -16,6 +17,10 @@ namespace Binxelview
             startNumericUpDown.Value = startPosition;
             startNumericUpDown.Hexadecimal = hex;
             lengthNumericUpDown.Hexadecimal = hex;
+            if (startNumericUpDown.Hexadecimal)
+                startNumericUpDown.Font = new Font(startNumericUpDown.Font, FontStyle.Bold);
+            if (lengthNumericUpDown.Hexadecimal)
+                lengthNumericUpDown.Font = new Font(lengthNumericUpDown.Font, FontStyle.Bold);
         }
 
         private void saveButton_Click(object sender, EventArgs e)

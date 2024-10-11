@@ -15,43 +15,6 @@ namespace Binxelview
         const int PALETTE_BITS = 14; // maximum bits to fill 128 x 128 square
         const int PALETTE_DIM = 128; // should match paletteBox size
 
-        byte[] data = {};
-        string data_path = "";
-        string data_file = "";
-        long pos_byte = 0;
-        int pos_bit = 0;
-        int zoom = 2;
-        bool hidegrid = false;
-
-        Preset preset;
-        Preset default_preset;
-        List<Preset> presets;
-
-        Bitmap palette_bmp = new Bitmap(PALETTE_DIM, PALETTE_DIM);
-        Color[] palette = new Color[PALETTE_DIM * PALETTE_DIM];
-        int[] palette_raw = new int[PALETTE_DIM * PALETTE_DIM];
-        int[] twiddle_cache = null;
-        int twiddle_cache_order = 0;
-        int twiddle_cache_w = 0;
-        int twiddle_cache_h = 0;
-        Color background = SystemColors.Control;
-        int background_raw = SystemColors.Control.ToArgb();
-        PaletteMode palette_mode = PaletteMode.PALETTE_RGB;
-        string palette_error = "";
-
-        Bitmap pixel_bmp = null;
-        bool disable_pixel_redraw = false;
-        bool decimal_position = false;
-        int next_increment_byte = 1;
-        int next_increment_bit = 0;
-        int selected_tile = -1;
-        long selected_pos = -1;
-        bool snap_scroll = true;
-        bool horizontal_layout = false;
-        int twiddle = 0;
-
-        Random random = new Random();
-
         enum PaletteMode
         {
             PALETTE_CUSTOM = 0, // entries below are same order as comboBoxPalette.Items
@@ -60,6 +23,44 @@ namespace Binxelview
             PALETTE_GREY,
             PALETTE_CUBEHELIX,
         };
+
+        byte[] data = {};
+        string data_path = "";
+        string data_file = "";
+        long pos_byte = 0;
+        int pos_bit = 0;
+        int next_increment_byte = 1;
+        int next_increment_bit = 0;
+        int selected_tile = -1;
+        long selected_pos = -1;
+
+        Preset preset;
+        Preset default_preset;
+        List<Preset> presets;
+
+        Bitmap palette_bmp = new Bitmap(PALETTE_DIM, PALETTE_DIM);
+        Bitmap pixel_bmp = null;
+        Color[] palette = new Color[PALETTE_DIM * PALETTE_DIM];
+        int[] palette_raw = new int[PALETTE_DIM * PALETTE_DIM]; // int version of palette
+        string palette_error = "";
+        int background_raw = SystemColors.Control.ToArgb(); // int version of background setting
+        int[] twiddle_cache = null;
+        int twiddle_cache_order = 0;
+        int twiddle_cache_w = 0;
+        int twiddle_cache_h = 0;
+        bool disable_pixel_redraw = false; // used to temporarily block redraws during repeated updates
+        Font posfont_regular, posfont_bold;
+        Random random = new Random();
+
+        // settings
+        int zoom = 2;
+        bool hidegrid = false;
+        Color background = SystemColors.Control;
+        PaletteMode palette_mode = PaletteMode.PALETTE_RGB;
+        bool decimal_position = false;
+        bool snap_scroll = true;
+        bool horizontal_layout = false;
+        int twiddle = 0;
 
         //
         // Preset
@@ -1193,6 +1194,9 @@ namespace Binxelview
 
         private void BinxelviewForm_Load(object sender, EventArgs e)
         {
+            posfont_regular = new Font(numericPosByte.Font, FontStyle.Regular);
+            posfont_bold = new Font(numericPosByte.Font, FontStyle.Bold);
+
             // initialize Auto palette selection
             comboBoxPalette.SelectedIndex = (int)PaletteMode.PALETTE_RGB - 1;
 
@@ -1212,6 +1216,7 @@ namespace Binxelview
             refreshPalette();
             bgBox.BackColor = background;
             redrawPixels();
+            numericPosByte.Font = decimal_position ? posfont_regular : posfont_bold;
         }
 
         private void BinxelviewForm_DragDrop(object sender, DragEventArgs e)
@@ -1578,6 +1583,7 @@ namespace Binxelview
             decimalPositionToolStripMenuItem.Checked = true;
             hexadecimalPositionToolStripMenuItem.Checked = false;
             decimal_position = true;
+            numericPosByte.Font = posfont_regular;
             updatePos();
         }
 
@@ -1586,6 +1592,7 @@ namespace Binxelview
             decimalPositionToolStripMenuItem.Checked = false;
             hexadecimalPositionToolStripMenuItem.Checked = true;
             decimal_position = false;
+            numericPosByte.Font = posfont_bold;
             updatePos();
         }
 

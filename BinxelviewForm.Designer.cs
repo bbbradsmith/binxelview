@@ -122,9 +122,9 @@
             this.saveImageToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.positionToPixelToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.pixelsToPaletteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pixelScroll = new System.Windows.Forms.VScrollBar();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.pixelsToPaletteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             this.tableTop.SuspendLayout();
             this.groupPacking.SuspendLayout();
@@ -1290,29 +1290,36 @@
             this.positionToPixelToolStripMenuItem,
             this.pixelsToPaletteToolStripMenuItem});
             this.contextMenuPixel.Name = "contextMenuPixel";
-            this.contextMenuPixel.Size = new System.Drawing.Size(181, 114);
+            this.contextMenuPixel.Size = new System.Drawing.Size(160, 92);
             // 
             // saveImageToolStripMenuItem
             // 
             this.saveImageToolStripMenuItem.Enabled = false;
             this.saveImageToolStripMenuItem.Name = "saveImageToolStripMenuItem";
-            this.saveImageToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveImageToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.saveImageToolStripMenuItem.Text = "&Save &Image";
             this.saveImageToolStripMenuItem.Click += new System.EventHandler(this.saveImageContextItem_Click);
             // 
             // saveAllToolStripMenuItem
             // 
             this.saveAllToolStripMenuItem.Name = "saveAllToolStripMenuItem";
-            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.saveAllToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.saveAllToolStripMenuItem.Text = "Save &All Visible";
             this.saveAllToolStripMenuItem.Click += new System.EventHandler(this.saveAllVisibleContextItem_Click);
             // 
             // positionToPixelToolStripMenuItem
             // 
             this.positionToPixelToolStripMenuItem.Name = "positionToPixelToolStripMenuItem";
-            this.positionToPixelToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.positionToPixelToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
             this.positionToPixelToolStripMenuItem.Text = "&Position to Pixel";
             this.positionToPixelToolStripMenuItem.Click += new System.EventHandler(this.positionToPixelToolContextItem_Click);
+            // 
+            // pixelsToPaletteToolStripMenuItem
+            // 
+            this.pixelsToPaletteToolStripMenuItem.Name = "pixelsToPaletteToolStripMenuItem";
+            this.pixelsToPaletteToolStripMenuItem.Size = new System.Drawing.Size(159, 22);
+            this.pixelsToPaletteToolStripMenuItem.Text = "Pi&xels to Palette";
+            this.pixelsToPaletteToolStripMenuItem.Click += new System.EventHandler(this.pixelsToPaletteToolStripMenuItem_Click);
             // 
             // pixelScroll
             // 
@@ -1325,13 +1332,6 @@
             this.pixelScroll.TabIndex = 1;
             this.pixelScroll.TabStop = true;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
-            // 
-            // pixelsToPaletteToolStripMenuItem
-            // 
-            this.pixelsToPaletteToolStripMenuItem.Name = "pixelsToPaletteToolStripMenuItem";
-            this.pixelsToPaletteToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.pixelsToPaletteToolStripMenuItem.Text = "Pi&xels to Palette";
-            this.pixelsToPaletteToolStripMenuItem.Click += new System.EventHandler(this.pixelsToPaletteToolStripMenuItem_Click);
             // 
             // BinxelviewForm
             // 

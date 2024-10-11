@@ -40,12 +40,12 @@
             // 
             // startLabel
             // 
-            this.startLabel.AutoSize = true;
-            this.startLabel.Location = new System.Drawing.Point(13, 12);
+            this.startLabel.Location = new System.Drawing.Point(12, 10);
             this.startLabel.Name = "startLabel";
-            this.startLabel.Size = new System.Drawing.Size(70, 13);
+            this.startLabel.Size = new System.Drawing.Size(71, 20);
             this.startLabel.TabIndex = 1;
             this.startLabel.Text = "Start Address";
+            this.startLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // startNumericUpDown
             // 
@@ -56,7 +56,7 @@
             0,
             0});
             this.startNumericUpDown.Name = "startNumericUpDown";
-            this.startNumericUpDown.Size = new System.Drawing.Size(64, 20);
+            this.startNumericUpDown.Size = new System.Drawing.Size(102, 20);
             this.startNumericUpDown.TabIndex = 3;
             // 
             // lengthNumericUpDown
@@ -73,7 +73,7 @@
             0,
             0});
             this.lengthNumericUpDown.Name = "lengthNumericUpDown";
-            this.lengthNumericUpDown.Size = new System.Drawing.Size(64, 20);
+            this.lengthNumericUpDown.Size = new System.Drawing.Size(102, 20);
             this.lengthNumericUpDown.TabIndex = 5;
             this.lengthNumericUpDown.Value = new decimal(new int[] {
             1024,
@@ -83,18 +83,18 @@
             // 
             // label1
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(13, 38);
+            this.label1.Location = new System.Drawing.Point(12, 36);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(40, 13);
+            this.label1.Size = new System.Drawing.Size(71, 20);
             this.label1.TabIndex = 6;
             this.label1.Text = "Length";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // saveButton
             // 
-            this.saveButton.Location = new System.Drawing.Point(78, 66);
+            this.saveButton.Location = new System.Drawing.Point(58, 66);
             this.saveButton.Name = "saveButton";
-            this.saveButton.Size = new System.Drawing.Size(75, 25);
+            this.saveButton.Size = new System.Drawing.Size(87, 25);
             this.saveButton.TabIndex = 7;
             this.saveButton.Text = "Save";
             this.saveButton.UseVisualStyleBackColor = true;
@@ -110,7 +110,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(175, 103);
+            this.ClientSize = new System.Drawing.Size(203, 103);
             this.Controls.Add(this.saveButton);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lengthNumericUpDown);
@@ -126,7 +126,6 @@
             ((System.ComponentModel.ISupportInitialize)(this.startNumericUpDown)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.lengthNumericUpDown)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 

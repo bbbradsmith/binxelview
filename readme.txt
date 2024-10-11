@@ -153,7 +153,7 @@ Other Notes
 -----------
 
 Due to signed 32-bit integer limitations of C sharp, files must be less than 2GB in size.
-To inspect extremely large files, you may wish to split them first.
+To inspect extremely large files, you may have to split them first.
 
 The Twiddle options will rearrange the pixel X and Y within a tile to use a
 Morton (Z/N) ordering, commonly seen in square textures "twiddled" or "swizzled" for
@@ -183,6 +183,7 @@ Changes
 - Right click context menu option to copy to the palette starting from the selected pixel.
 - PS1 15BPP and 4BPP presets. (Contributor: HeyItsLollie)
 - VGA Palette preset.
+- Indicate hexadecimal position with bold font.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.
