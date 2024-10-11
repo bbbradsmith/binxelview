@@ -167,6 +167,8 @@ Changes
 - Right click context menu option to move position to the selected pixel.
 - File menu reload option.
 - Added global Ctrl hotkeys.
+- Added Cubehelix automatic palette option: https://people.phy.cam.ac.uk/dag9/CUBEHELIX/
+- Automatic palette modes are now a dropdown list.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.
