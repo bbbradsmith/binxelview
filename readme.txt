@@ -160,6 +160,56 @@ Morton (Z/N) ordering, commonly seen in square textures "twiddled" or "swizzled"
 GPU cache coherence.
 
 
+Command Line Options
+--------------------
+
+To open a file, just add that file's path to the command line.
+
+Options can be set with a command line argument beginning with '-',
+followed by the option name, an '=' separator, and the value for the option.
+If a space is required in the value, you should enclose the entire argument in quotes.
+
+  "-presetfile=C:\mypreset.bxp"
+    Replaces the default preset with one from a file.
+
+  "-preset=Atari ST 4BPP"
+    Chooses a named preset from your preset library instead of the default.
+
+  "-pal=C:\red.pal"
+    Loads a palette file.
+    If the extension is .BMP .GIF .PNG or .TIF it will load it as an palette from an image.
+    If the extension is .VGA it will load it as 6-bit RGB18 format.
+    Otherwise it will load it as RGB24.
+
+  -autopal=Greyscale
+    Chooses an automatic palette, one of:
+      RGB - RGB with the current preset BPP, bits evenly divided with G >= R >= B, red as the highest bits.
+      Random - Every colour is randomized.
+      Greyscale - Gradient from black to white.
+      Cubehelix - Smooth gradient with rotating hue, created by Dave Green. See: https://people.phy.cam.ac.uk/dag9/CUBEHELIX/
+
+  -background=FF0088
+    Set the Background grid colour, uses a 6 digit hexadecimal RRGGBB value.
+
+  -zoom=3
+    Set the Zoom value.
+
+  -grid=1
+    Set the Grid Padding option (1 on, 0 off).
+
+  -hexpos=1
+    Set the Position byte display to use hexadecimal (1 hexadecimal, 0 decimal).
+
+  -snapscroll=1
+    Set the "Snap scroll to next stride" option (1 on, 0 off).
+
+  -horizontal=1
+    Set the layout option (1 horizontal, 0 vertical).
+
+  -twiddle=1
+    Set the twiddle option (0 off, 1 twiddle Z, 2 twiddle N).
+
+
 Changes
 -------
 
@@ -178,12 +228,13 @@ Changes
 - Right click context menu option to move position to the selected pixel.
 - File menu reload option.
 - Added global Ctrl hotkeys.
-- Added Cubehelix automatic palette option: https://people.phy.cam.ac.uk/dag9/CUBEHELIX/
+- Added Cubehelix automatic palette option.
 - Automatic palette modes are now a dropdown list.
 - Right click context menu option to copy to the palette starting from the selected pixel.
 - PS1 15BPP and 4BPP presets. (Contributor: HeyItsLollie)
 - VGA Palette preset.
 - Indicate hexadecimal position with bold font.
+- Command line arguments for options.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.

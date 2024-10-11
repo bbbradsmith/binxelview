@@ -289,6 +289,130 @@ namespace Binxelview
         };
 
         //
+        // Options
+        //
+
+        string parseOption(string optline)
+        {
+            int eqpos = optline.IndexOf("=");
+            if (eqpos < 0) return "No = in option: "+optline;
+            string opt = optline.Substring(0,eqpos).ToUpperInvariant();
+            string val = optline.Substring(eqpos+1);
+            string valu = val.ToUpperInvariant();
+
+            if (opt == "PRESETFILE") // load preset file to replace default
+            {
+                Preset p = new Preset();
+                if (!p.loadFile(val)) return "Could not load preset file: "+val+"\n"+Preset.last_error;
+                default_preset = p;
+                preset = default_preset.copy();
+                return "";
+            }
+            if (opt == "PRESET") // select named preset from the library
+            {
+                foreach (Preset p in presets)
+                {
+                    if (val == p.name)
+                    {
+                        preset = p.copy();
+                        return "";
+                    }
+                }
+                return "Preset not found in loaded presets: "+val;
+            }
+            if (opt == "PAL") // load palette file
+            {
+                bool image =
+                    valu.EndsWith(".BMP") ||
+                    valu.EndsWith(".GIF") ||
+                    valu.EndsWith(".PNG") ||
+                    valu.EndsWith(".TIF");
+                bool vga =
+                    valu.EndsWith(".VGA");
+                if (!openPalette(val,image,vga)) return "Could not load palette file: "+val+"\n"+palette_error;
+                return "";
+            }
+            if (opt == "AUTOPAL")
+            {
+                if      (valu == "RGB"      ) { palette_mode = PaletteMode.PALETTE_RGB;       }
+                else if (valu == "RANDOM"   ) { palette_mode = PaletteMode.PALETTE_RANDOM;    }
+                else if (valu == "GREYSCALE") { palette_mode = PaletteMode.PALETTE_GREY;      }
+                else if (valu == "CUBEHELIX") { palette_mode = PaletteMode.PALETTE_CUBEHELIX; }
+                else return "Unknown autopal value: "+val;
+                comboBoxPalette.SelectedIndex = (int)palette_mode - 1;
+                return "";
+            }
+            if (opt == "BACKGROUND")
+            {
+                int v;
+                if (!int.TryParse(val,System.Globalization.NumberStyles.HexNumber, System.Globalization.CultureInfo.CurrentCulture, out v))
+                    return "Could not parse hex color for background: "+val;
+                background_raw = (v & 0x00FFFFFF) | unchecked((int)0xFF000000);
+                background = Color.FromArgb(background_raw);
+                return "";
+            }
+            if (opt == "ZOOM")
+            {
+                int v;
+                if (!int.TryParse(val,out v)) return "Could not parse integer for zoom: "+val;
+                if (v < 1) return "Zoom must be 1 or greater: "+val;
+                zoom = v;
+                numericZoom.Value = v;
+                return "";
+            }
+            if (opt == "GRID")
+            {
+                int v;
+                if (!int.TryParse(val,out v)) return "Could not parse integer for grid: "+val;
+                if (v != 0 && v != 1) return "Grid value must be 0 or 1: "+val;
+                hidegrid = (v == 0);
+                gridToolStripMenuItem.Checked = !hidegrid;
+                return "";
+            }
+            if (opt == "HEXPOS")
+            {
+                int v;
+                if (!int.TryParse(val,out v)) return "Could not parse integer for hexpos: "+val;
+                if (v != 0 && v != 1) return "Hexpos value must be 0 or 1: "+val;
+                decimal_position = (v == 0);
+                decimalPositionToolStripMenuItem.Checked = decimal_position;
+                hexadecimalPositionToolStripMenuItem.Checked = !decimal_position;
+                numericPosByte.Font = decimal_position ? posfont_regular : posfont_bold;
+                return "";
+            }
+            if (opt == "SNAPSCROLL")
+            {
+                int v;
+                if (!int.TryParse(val,out v)) return "Could not parse integer for snapscroll: "+val;
+                if (v != 0 && v != 1) return "Snapscroll value must be 0 or 1: "+val;
+                snap_scroll = (v != 0);
+                snapScrollToNextStrideToolStripMenuItem.Checked = snap_scroll;
+                return "";
+            }
+            if (opt == "HORIZONTAL")
+            {
+                int v;
+                if (!int.TryParse(val,out v)) return "Could not parse integer for horizontal: "+val;
+                if (v != 0 && v != 1) return "Horizontal value must be 0 or 1: "+val;
+                horizontal_layout = (v != 0);
+                verticalLayoutToolStripMenuItem.Checked = !horizontal_layout;
+                horizontalLayoutToolStripMenuItem.Checked = horizontal_layout;
+                return "";
+            }
+            if (opt == "TWIDDLE")
+            {
+                int v;
+                if (!int.TryParse(val,out v)) return "Could not parse integer for twiddle: "+val;
+                if (v <  0 || v > 2) return "Twiddle value must be 0, 1 or 2: "+val;
+                twiddle = v;
+                twiddleZToolStripMenuItem.Checked = twiddle == 1;
+                twiddleNToolStripMenuItem.Checked = twiddle == 2;
+                return "";
+            }
+            return "Invalid option: "+optline;
+        }
+
+        //
         // Pixel building
         //
 
@@ -744,11 +868,7 @@ namespace Binxelview
         {
             if (preset.bpp <= PALETTE_BITS) return palette[x];
             int p = autoPaletteRaw(x);
-            int b = (p >>  0) & 0xFF;
-            int g = (p >>  8) & 0xFF;
-            int r = (p >> 16) & 0xFF;
-            int a = (p >> 24) & 0xFF;
-            return Color.FromArgb(a,r,g,b);
+            return Color.FromArgb(p);
         }
 
         void randomPalette()
@@ -850,7 +970,7 @@ namespace Binxelview
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to open file:\n" + path + "\n\n" + ex.ToString(), "File open error!");
+                MessageBox.Show("Unable to open file:\n" + path + "\n\n" + ex.ToString(), "Binxelview");
                 return false;
             }
             data = read_data;
@@ -925,11 +1045,6 @@ namespace Binxelview
 
         bool openPalette(string path, bool image, bool sixbit_vga)
         {
-            if (preset.bpp > PALETTE_BITS)
-            {
-                palette_error = String.Format("Custom palettes are limited to {0} BPP.",PALETTE_BITS);
-                return false;
-            }
             palette_mode = PaletteMode.PALETTE_CUSTOM;
 
             if (image)
@@ -951,7 +1066,7 @@ namespace Binxelview
                     palette_error = "Image does not contain a palette.";
                     return false;
                 }
-                for (int i=0; (i<(1<<preset.bpp)) && (i<cols.Length); ++i)
+                for (int i=0; (i<(PALETTE_DIM*PALETTE_DIM)) && (i<cols.Length); ++i)
                 {
                     Color c = cols[i];
                     setPalette(i, c.R, c.G, c.B);
@@ -970,7 +1085,7 @@ namespace Binxelview
                 return false;
             }
 
-            for (int i=0; (i<(1<<preset.bpp)) && (((i*3)+2)<read_data.Length); ++i)
+            for (int i=0; (i<(PALETTE_DIM*PALETTE_DIM)) && (((i*3)+2)<read_data.Length); ++i)
             {
                 int r = read_data[(i * 3) + 0];
                 int g = read_data[(i * 3) + 1];
@@ -1200,16 +1315,35 @@ namespace Binxelview
             // initialize Auto palette selection
             comboBoxPalette.SelectedIndex = (int)PaletteMode.PALETTE_RGB - 1;
 
-            // open file from the command line
-            string[] args = Environment.GetCommandLineArgs();
-            if (args.Length > 1)
-            {
-                openFile(args[1]);
-            }
-
+            // setup presets
             default_preset.empty();
             reloadPresets(); // loads "Default" preset if it exists
             preset = default_preset.copy();
+
+            // open file from the command line
+            string[] args = Environment.GetCommandLineArgs();
+            string arg_err = "";
+            for (int i=1; i<args.Length; ++i)
+            {
+                string arg = args[i];
+                if (!arg.StartsWith("-")) // anything that doesn't start with - is the file to open
+                {
+                    openFile(arg);
+                }
+                else // anything that starts with - or -- is an option
+                {
+                    string sarg = arg.Substring(1);
+                    if (sarg.StartsWith("-")) sarg = sarg.Substring(1);
+                    string opt_err = parseOption(sarg);
+                    if (opt_err.Length > 0 && arg_err.Length > 0) arg_err += "\n";
+                    arg_err += opt_err;
+                }
+            }
+            if (arg_err.Length > 0)
+            {
+                MessageBox.Show("Command line error:\n" + arg_err,"Binxelview");
+            }
+
             scrollRange();
             redrawPreset();
             autoPalette();
@@ -1288,7 +1422,7 @@ namespace Binxelview
                 }
                 else
                 {
-                    MessageBox.Show("Unable to load preset:\n" + d.FileName + "\n\n" + Preset.last_error, "Preset load error!");
+                    MessageBox.Show("Unable to load preset:\n" + d.FileName + "\n\n" + Preset.last_error, "Binxelview");
                 }
             }
         }
@@ -1303,7 +1437,7 @@ namespace Binxelview
             {
                 if (!preset.saveFile(d.FileName))
                 {
-                    MessageBox.Show("Unable to save preset:\n" + d.FileName + "\n\n" + Preset.last_error, "Preset save error!");
+                    MessageBox.Show("Unable to save preset:\n" + d.FileName + "\n\n" + Preset.last_error, "Binxelview");
                 }
                 else
                 {
@@ -1537,7 +1671,7 @@ namespace Binxelview
                 }
                 else
                 {
-                    MessageBox.Show("Unable to load palette:\n" + d.FileName + "\n\n" + palette_error, "Palette load error!");
+                    MessageBox.Show("Unable to load palette:\n" + d.FileName + "\n\n" + palette_error, "Binxelview");
                 }
             }
         }
@@ -1554,7 +1688,7 @@ namespace Binxelview
             {
                 if (!savePalette(d.FileName))
                 {
-                    MessageBox.Show("Unable to save palette:\n" + d.FileName + "\n\n" + palette_error, "Palette save error!");
+                    MessageBox.Show("Unable to save palette:\n" + d.FileName + "\n\n" + palette_error, "Binxelview");
                 }
             }
         }
@@ -1607,7 +1741,7 @@ namespace Binxelview
 
             if (selected_tile < 0) // shouldn't happen, but giving an error just in case
             {
-                MessageBox.Show("No image selected?", "Image save error!");
+                MessageBox.Show("No image selected?", "Binxelview");
                 return;
             }
 
@@ -1642,7 +1776,7 @@ namespace Binxelview
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), "Image save error!");
+                    MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), "Binxelview");
                 }
 
                 redrawPixels();
@@ -1686,7 +1820,7 @@ namespace Binxelview
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), "Image save error!");
+                    MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), "Binxelview");
                 }
 
                 redrawPixels();
