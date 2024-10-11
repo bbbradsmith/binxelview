@@ -1010,7 +1010,7 @@
             // 
             this.numericZoom.Location = new System.Drawing.Point(115, 43);
             this.numericZoom.Maximum = new decimal(new int[] {
-            16,
+            32,
             0,
             0,
             0});
@@ -1290,34 +1290,34 @@
             this.positionToPixelContextItem,
             this.pixelsToPaletteContextItem});
             this.contextMenuPixel.Name = "contextMenuPixel";
-            this.contextMenuPixel.Size = new System.Drawing.Size(181, 114);
+            this.contextMenuPixel.Size = new System.Drawing.Size(160, 92);
             // 
             // saveImageContextItem
             // 
             this.saveImageContextItem.Enabled = false;
             this.saveImageContextItem.Name = "saveImageContextItem";
-            this.saveImageContextItem.Size = new System.Drawing.Size(180, 22);
+            this.saveImageContextItem.Size = new System.Drawing.Size(159, 22);
             this.saveImageContextItem.Text = "&Save &Image";
             this.saveImageContextItem.Click += new System.EventHandler(this.saveImageContextItem_Click);
             // 
             // saveAllContextItem
             // 
             this.saveAllContextItem.Name = "saveAllContextItem";
-            this.saveAllContextItem.Size = new System.Drawing.Size(180, 22);
+            this.saveAllContextItem.Size = new System.Drawing.Size(159, 22);
             this.saveAllContextItem.Text = "Save &All Visible";
             this.saveAllContextItem.Click += new System.EventHandler(this.saveAllVisibleContextItem_Click);
             // 
             // positionToPixelContextItem
             // 
             this.positionToPixelContextItem.Name = "positionToPixelContextItem";
-            this.positionToPixelContextItem.Size = new System.Drawing.Size(180, 22);
+            this.positionToPixelContextItem.Size = new System.Drawing.Size(159, 22);
             this.positionToPixelContextItem.Text = "&Position to Pixel";
             this.positionToPixelContextItem.Click += new System.EventHandler(this.positionToPixelToolContextItem_Click);
             // 
             // pixelsToPaletteContextItem
             // 
             this.pixelsToPaletteContextItem.Name = "pixelsToPaletteContextItem";
-            this.pixelsToPaletteContextItem.Size = new System.Drawing.Size(180, 22);
+            this.pixelsToPaletteContextItem.Size = new System.Drawing.Size(159, 22);
             this.pixelsToPaletteContextItem.Text = "Pi&xels to Palette";
             this.pixelsToPaletteContextItem.Click += new System.EventHandler(this.pixelsToPaletteContextItem_Click);
             // 

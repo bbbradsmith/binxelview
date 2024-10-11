@@ -14,6 +14,7 @@ namespace Binxelview
         const int PRESET_VERSION = 2;
         const int PALETTE_BITS = 14; // maximum bits to fill 128 x 128 square
         const int PALETTE_DIM = 128; // should match paletteBox size
+        const int ZOOM_MAX = 32;
 
         enum PaletteMode
         {
@@ -1618,8 +1619,8 @@ namespace Binxelview
             {
                 ++zoom;
             }
-            if (zoom < numericZoom.Minimum) zoom = (int)numericZoom.Minimum; // TODO replace with ZOOM_MIN ZOOM_MAX
-            if (zoom > numericZoom.Maximum) zoom = (int)numericZoom.Maximum;
+            if (zoom < 1) zoom = 1;
+            if (zoom > ZOOM_MAX) zoom = ZOOM_MAX;
             redrawOptions();
             redrawPixels();
 
@@ -1628,7 +1629,7 @@ namespace Binxelview
         {
             if (e.Button != MouseButtons.Right) return;
             --zoom;
-            if (zoom < numericZoom.Minimum) zoom = (int)numericZoom.Minimum; // TODO replace with ZOOM_MIN ZOOM_MAX
+            if (zoom < 1) zoom = 1;
             redrawOptions();
             redrawPixels();
         }
@@ -2291,6 +2292,8 @@ namespace Binxelview
             posfont_regular = new Font(numericPosByte.Font, FontStyle.Regular);
             posfont_bold = new Font(numericPosByte.Font, FontStyle.Bold);
             comboBoxPalette.SelectedIndex = (int)PaletteMode.PALETTE_RGB - 1;
+            numericZoom.Minimum = 1;
+            numericZoom.Maximum = ZOOM_MAX;
 
             // set default options
             defaultOption();
