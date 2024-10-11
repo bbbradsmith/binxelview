@@ -86,12 +86,11 @@
             this.offByte = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.offBit = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.groupPalette = new System.Windows.Forms.GroupBox();
-            this.buttonGrey = new System.Windows.Forms.Button();
+            this.comboBoxPalette = new System.Windows.Forms.ComboBox();
+            this.buttonAutoPal = new System.Windows.Forms.Button();
             this.labelInfoPal = new System.Windows.Forms.Label();
             this.buttonSavePal = new System.Windows.Forms.Button();
             this.buttonLoadPal = new System.Windows.Forms.Button();
-            this.buttonRGBPal = new System.Windows.Forms.Button();
-            this.buttonRandomPal = new System.Windows.Forms.Button();
             this.bgLabel = new System.Windows.Forms.Label();
             this.bgBox = new System.Windows.Forms.PictureBox();
             this.paletteBox = new System.Windows.Forms.PictureBox();
@@ -237,14 +236,14 @@
             // reloadPresetsToolStripMenuItem
             // 
             this.reloadPresetsToolStripMenuItem.Name = "reloadPresetsToolStripMenuItem";
-            this.reloadPresetsToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reloadPresetsToolStripMenuItem.Size = new System.Drawing.Size(110, 22);
             this.reloadPresetsToolStripMenuItem.Text = "&Reload";
             this.reloadPresetsToolStripMenuItem.Click += new System.EventHandler(this.reloadPresetsToolStripMenuItem_Click);
             // 
             // presetStripMenuDash
             // 
             this.presetStripMenuDash.Name = "presetStripMenuDash";
-            this.presetStripMenuDash.Size = new System.Drawing.Size(177, 6);
+            this.presetStripMenuDash.Size = new System.Drawing.Size(107, 6);
             // 
             // optionsToolStripMenuItem
             // 
@@ -819,12 +818,11 @@
             // 
             this.groupPalette.AutoSize = true;
             this.groupPalette.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            this.groupPalette.Controls.Add(this.buttonGrey);
+            this.groupPalette.Controls.Add(this.comboBoxPalette);
+            this.groupPalette.Controls.Add(this.buttonAutoPal);
             this.groupPalette.Controls.Add(this.labelInfoPal);
             this.groupPalette.Controls.Add(this.buttonSavePal);
             this.groupPalette.Controls.Add(this.buttonLoadPal);
-            this.groupPalette.Controls.Add(this.buttonRGBPal);
-            this.groupPalette.Controls.Add(this.buttonRandomPal);
             this.groupPalette.Controls.Add(this.bgLabel);
             this.groupPalette.Controls.Add(this.bgBox);
             this.groupPalette.Controls.Add(this.paletteBox);
@@ -836,15 +834,32 @@
             this.groupPalette.TabStop = false;
             this.groupPalette.Text = "Palette";
             // 
-            // buttonGrey
+            // comboBoxPalette
             // 
-            this.buttonGrey.Location = new System.Drawing.Point(238, 57);
-            this.buttonGrey.Name = "buttonGrey";
-            this.buttonGrey.Size = new System.Drawing.Size(39, 24);
-            this.buttonGrey.TabIndex = 2;
-            this.buttonGrey.Text = "Grey";
-            this.buttonGrey.UseVisualStyleBackColor = true;
-            this.buttonGrey.Click += new System.EventHandler(this.buttonGrey_Click);
+            this.comboBoxPalette.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.comboBoxPalette.FormattingEnabled = true;
+            this.comboBoxPalette.ImeMode = System.Windows.Forms.ImeMode.Off;
+            this.comboBoxPalette.ItemHeight = 13;
+            this.comboBoxPalette.Items.AddRange(new object[] {
+            "RGB",
+            "Random",
+            "Greyscale",
+            "Cubehelix"});
+            this.comboBoxPalette.Location = new System.Drawing.Point(193, 58);
+            this.comboBoxPalette.Name = "comboBoxPalette";
+            this.comboBoxPalette.Size = new System.Drawing.Size(83, 21);
+            this.comboBoxPalette.TabIndex = 8;
+            this.comboBoxPalette.SelectedIndexChanged += new System.EventHandler(this.comboBoxPalette_SelectedIndexChanged);
+            // 
+            // buttonAutoPal
+            // 
+            this.buttonAutoPal.Location = new System.Drawing.Point(143, 57);
+            this.buttonAutoPal.Name = "buttonAutoPal";
+            this.buttonAutoPal.Size = new System.Drawing.Size(43, 24);
+            this.buttonAutoPal.TabIndex = 7;
+            this.buttonAutoPal.Text = "Auto";
+            this.buttonAutoPal.UseVisualStyleBackColor = true;
+            this.buttonAutoPal.Click += new System.EventHandler(this.buttonAutoPal_Click);
             // 
             // labelInfoPal
             // 
@@ -875,26 +890,6 @@
             this.buttonLoadPal.Text = "Load...";
             this.buttonLoadPal.UseVisualStyleBackColor = true;
             this.buttonLoadPal.Click += new System.EventHandler(this.buttonLoadPal_Click);
-            // 
-            // buttonRGBPal
-            // 
-            this.buttonRGBPal.Location = new System.Drawing.Point(192, 57);
-            this.buttonRGBPal.Name = "buttonRGBPal";
-            this.buttonRGBPal.Size = new System.Drawing.Size(40, 24);
-            this.buttonRGBPal.TabIndex = 1;
-            this.buttonRGBPal.Text = "RGB";
-            this.buttonRGBPal.UseVisualStyleBackColor = true;
-            this.buttonRGBPal.Click += new System.EventHandler(this.buttonRGBPal_Click);
-            // 
-            // buttonRandomPal
-            // 
-            this.buttonRandomPal.Location = new System.Drawing.Point(143, 57);
-            this.buttonRandomPal.Name = "buttonRandomPal";
-            this.buttonRandomPal.Size = new System.Drawing.Size(43, 24);
-            this.buttonRandomPal.TabIndex = 0;
-            this.buttonRandomPal.Text = "Rand";
-            this.buttonRandomPal.UseVisualStyleBackColor = true;
-            this.buttonRandomPal.Click += new System.EventHandler(this.buttonRandomPal_Click);
             // 
             // bgLabel
             // 
@@ -1404,12 +1399,9 @@
         private System.Windows.Forms.PictureBox paletteBox;
         private System.Windows.Forms.Button buttonSavePal;
         private System.Windows.Forms.Button buttonLoadPal;
-        private System.Windows.Forms.Button buttonRGBPal;
-        private System.Windows.Forms.Button buttonRandomPal;
         private System.Windows.Forms.Label bgLabel;
         private System.Windows.Forms.PictureBox bgBox;
         private System.Windows.Forms.Label labelInfoPal;
-        private System.Windows.Forms.Button buttonGrey;
         private System.Windows.Forms.GroupBox groupPosition;
         private System.Windows.Forms.DataGridView dataGridPixel;
         private System.Windows.Forms.NumericUpDown numericWidth;
@@ -1483,6 +1475,8 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
         private System.Windows.Forms.ToolStripMenuItem positionToPixelToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reloadFileToolStripMenuItem;
+        private System.Windows.Forms.Button buttonAutoPal;
+        private System.Windows.Forms.ComboBox comboBoxPalette;
     }
 }
 

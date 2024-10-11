@@ -37,9 +37,6 @@ namespace Binxelview
         Color background = SystemColors.Control;
         int background_raw = SystemColors.Control.ToArgb();
         PaletteMode palette_mode = PaletteMode.PALETTE_RGB;
-        int palette_rshift=0, palette_gshift=0, palette_bshift=0;
-        int palette_rmask=1,  palette_gmask=1,  palette_bmask=1;
-        long palette_greymask;
         string palette_error = "";
 
         Bitmap pixel_bmp = null;
@@ -57,12 +54,16 @@ namespace Binxelview
 
         enum PaletteMode
         {
-            PALETTE_CUSTOM,
+            PALETTE_CUSTOM = 0, // entries below are same order as comboBoxPalette.Items
             PALETTE_RGB,
-            PALETTE_GREY
+            PALETTE_RANDOM,
+            PALETTE_GREY,
+            PALETTE_CUBEHELIX,
         };
 
+        //
         // Preset
+        //
 
         struct Preset
         {
@@ -286,7 +287,9 @@ namespace Binxelview
             }
         };
 
+        //
         // Pixel building
+        //
 
         int[] bit_stride = new int[MAX_BPP];
         long[] pixel_buffer = null;
@@ -631,7 +634,194 @@ namespace Binxelview
             return b;
         }
 
-        // Other code
+        //
+        // Palette
+        //
+
+        // internal range values for automatic palette generation
+        int palette_rshift=0, palette_gshift=0, palette_bshift=0;
+        int palette_rmask=1,  palette_gmask=1,  palette_bmask=1;
+        long palette_greymask;
+
+        void setPalette(int i, int r, int g, int b) // set a palette colour
+        {
+            palette[i] = Color.FromArgb(255, r, g, b);
+            palette_raw[i] = palette[i].ToArgb();
+        }
+
+        void autoPaletteSetup() // setup range values for automatic palettes
+        {
+            // greyscale range
+            palette_greymask = (1L << preset.bpp) - 1L;
+
+            // RGB range
+            int rb = preset.bpp / 3; // assign least bits to blue
+            int rr = (preset.bpp - rb) / 2;
+            int rg = preset.bpp - (rr + rb); // assign most bits to green
+            palette_rshift = 0;
+            palette_gshift = rr;
+            palette_bshift = rr + rg;
+            palette_rmask = (1 << rr) - 1;
+            palette_gmask = (1 << rg) - 1;
+            palette_bmask = (1 << rb) - 1;
+            if (palette_rmask < 1) palette_rmask = 1;
+            if (palette_gmask < 1) palette_gmask = 1;
+            if (palette_bmask < 1) palette_bmask = 1;
+        }
+
+        unsafe int cubeHelix(long x)
+        {
+            // Dave Green's cubehelix as described and implemented here:
+            // https://people.phy.cam.ac.uk/dag9/CUBEHELIX/
+            // https://people.phy.cam.ac.uk/dag9/CUBEHELIX/cubetry.html
+            double fract = (double)x / (double)palette_greymask;
+            const double start = 0.5; // starting colour
+            const double rotations = -2.0; // hue cycles across gradient, default was -1.5
+            const double saturation = 1.8; // default was 1.0
+            //const double gamma = 1.0; // gamma of 1.0 assumed 
+            double angle = 2.0 * Math.PI * ((start / 3.0) + 1.0 + (rotations * fract));
+            double sin = Math.Sin(angle);
+            double cos = Math.Cos(angle);
+            //fract = Math.Pow(fract, gamma); // gamma of 1.0 assumed
+            double amp = 255.0 * saturation * fract * ((1.0 - fract) / 2.0);
+            fract *= 255.0;
+            double rf = fract + amp * (-0.14861 * cos +1.78277 * sin);
+            double gf = fract + amp * (-0.29227 * cos -0.90649 * sin);
+            double bf = fract + amp * (+1.97294 * cos +0.00000 * sin);
+            rf = (rf >= 0.0) ? rf : 0.0;
+            gf = (gf >= 0.0) ? gf : 0.0;
+            bf = (bf >= 0.0) ? bf : 0.0;
+            int r = (rf < 255.0) ? (int)rf : 255;
+            int g = (gf < 255.0) ? (int)gf : 255;
+            int b = (bf < 255.0) ? (int)bf : 255;
+            return b | (g << 8) | (r << 16) | unchecked((int)0xFF000000);
+        }
+
+        unsafe int autoPaletteRaw(long x) // generated palettes
+        {
+            switch (palette_mode)
+            {
+                default:
+                case PaletteMode.PALETTE_RGB:
+                    int ix = (int)x;
+                    int r = (((ix >> palette_rshift) & palette_rmask) * 255) / palette_rmask;
+                    int g = (((ix >> palette_gshift) & palette_gmask) * 255) / palette_gmask;
+                    int b = (((ix >> palette_bshift) & palette_bmask) * 255) / palette_bmask;
+                    return b | (g << 8) | (r << 16) | unchecked((int)0xFF000000);
+                case PaletteMode.PALETTE_GREY:
+                    long lx = (x >= 0) ? x : (x + (1L << 32));
+                    int grey = (int)((lx * 255L) / palette_greymask);
+                    return grey | (grey << 8) | (grey << 16) | unchecked((int)0xFF000000);
+                case PaletteMode.PALETTE_CUBEHELIX:
+                    return cubeHelix(x);
+            }
+        }
+
+        unsafe int getPaletteRaw(long x)
+        {
+            if (x < 0) return background_raw;
+            if (preset.bpp <= PALETTE_BITS) return palette_raw[x];
+            return autoPaletteRaw(x);
+        }
+
+        Color getPalette(int x)
+        {
+            if (preset.bpp <= PALETTE_BITS) return palette[x];
+            int p = autoPaletteRaw(x);
+            int b = (p >>  0) & 0xFF;
+            int g = (p >>  8) & 0xFF;
+            int r = (p >> 16) & 0xFF;
+            int a = (p >> 24) & 0xFF;
+            return Color.FromArgb(a,r,g,b);
+        }
+
+        void randomPalette()
+        {
+            // randomizes the entire palette, not just the current used area,
+            // and does not switch to custom palette mode.
+            for (int i = 0; i < (PALETTE_DIM * PALETTE_DIM); ++i)
+            {
+                setPalette(i,
+                    random.Next() & 255,
+                    random.Next() & 255,
+                    random.Next() & 255);
+            }
+        }
+
+        void autoPalette() // regenerate automatic palettes
+        {
+            autoPaletteSetup();
+            if (palette_mode == PaletteMode.PALETTE_CUSTOM) return;
+            if (palette_mode == PaletteMode.PALETTE_RANDOM) { randomPalette(); return; }
+            if (preset.bpp > PALETTE_BITS) return;
+            for (int i=0; i < (1 << preset.bpp); ++i)
+            {
+                int p = autoPaletteRaw(i);
+                int b = (p >>  0) & 0xFF;
+                int g = (p >>  8) & 0xFF;
+                int r = (p >> 16) & 0xFF;
+                setPalette(i,r,g,b);
+            }
+        }
+
+        void refreshPalette()
+        {
+            autoPaletteSetup();
+            // disable these if BPP is too high to use an actual palette
+            buttonLoadPal.Enabled = preset.bpp <= PALETTE_BITS;
+            buttonSavePal.Enabled = preset.bpp <= PALETTE_BITS;
+            redrawPalette();
+        }
+
+        //
+        // Position and Scroll
+        //
+
+        void scrollRange()
+        {
+            if (pixelScroll.Value > data.Length) pixelScroll.Value = data.Length;
+            pixelScroll.Maximum = data.Length;
+
+            next_increment_byte = preset.next_stride_byte * ((preset.height == 1) ? 16 : 1);
+            next_increment_bit = preset.next_stride_bit * ((preset.height == 1) ? 16 : 1);
+            int nb = next_increment_bit / 8;
+            next_increment_byte += nb;
+            next_increment_bit -= nb * 8;
+
+            pixelScroll.LargeChange = (next_increment_byte >= 0) ? next_increment_byte : -next_increment_byte;
+
+            pixelScroll.SmallChange = 1;
+            if (snap_scroll)
+            {
+                pixelScroll.SmallChange = pixelScroll.LargeChange;
+            }
+        }
+
+        void updatePos(bool update_scroll = true)
+        {
+            numericPosByte.Hexadecimal = (pos_byte >= 0) && !decimal_position;
+            numericPosByte.Value = pos_byte;
+            numericPosBit.Value = pos_bit;
+            if (update_scroll)
+            {
+                pixelScroll.Value =
+                    ((int)pos_byte < pixelScroll.Minimum) ? pixelScroll.Minimum :
+                    ((int)pos_byte > pixelScroll.Maximum) ? pixelScroll.Maximum :
+                    (int)pos_byte;
+            }
+        }
+
+        void normalizePos()
+        {
+            int nb = pos_bit / 8;
+            pos_byte += nb;
+            pos_bit -= nb * 8;
+            updatePos();
+        }
+
+        //
+        // Files
+        //
 
         bool openFile(string path)
         {
@@ -660,35 +850,58 @@ namespace Binxelview
             return true;
         }
 
-        void setPalette(int i, int r, int g, int b)
+        void reloadPresets()
         {
-            palette[i] = Color.FromArgb(255, r, g, b);
-            palette_raw[i] = palette[i].ToArgb();
-        }
-
-        void paletteCustom()
-        {
-            if (palette_mode != PaletteMode.PALETTE_CUSTOM)
+            // remove everything but Reload and separator
+            while (presetToolStripMenuItem.DropDownItems.Count > 2)
             {
-                for (int i = 0; i < (1 << preset.bpp); ++i)
-                {
-                    Color c = getPalette(i);
-                    setPalette(i,c.R,c.G,c.B);
-                }
-                palette_mode = PaletteMode.PALETTE_CUSTOM;
+                presetToolStripMenuItem.DropDownItems.RemoveAt(2);
             }
-        }
 
-        void randomPalette()
-        {
-            // randomizes the entire palette, not just the current used area,
-            // and does not switch to custom palette mode.
-            for (int i = 0; i < (PALETTE_DIM * PALETTE_DIM); ++i)
+            presets = new List<Preset>();
+            DirectoryInfo d_cwd = new DirectoryInfo(".");
+            DirectoryInfo d_app = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+            FileInfo[] files_cwd = d_cwd.GetFiles("*.bxp");
+            FileInfo[] files_app = d_app.GetFiles("*.bxp");
+            FileInfo[] files = new FileInfo[files_cwd.Length+files_app.Length];
+            Array.Copy(files_cwd,0,files,0,files_cwd.Length);
+            Array.Copy(files_app,0,files,files_cwd.Length,files_app.Length);
+            foreach (FileInfo file in files)
             {
-                setPalette(i,
-                    random.Next() & 255,
-                    random.Next() & 255,
-                    random.Next() & 255);
+                Preset p = new Preset();
+                if (p.loadFile(file.FullName))
+                {
+                    bool duplicate = false;
+                    foreach (Preset pe in presets)
+                    {
+                        if (pe.name == p.name)
+                        {
+                            duplicate = true;
+                            break;
+                        }
+                    }
+
+                    if (!duplicate)
+                    {
+                        presets.Add(p);
+                        if (p.name.ToLower()=="default")
+                        {
+                            default_preset = p.copy();
+                            scrollRange();
+                        }
+                    }
+                }
+            }
+            presets.Sort((x, y) => x.name.CompareTo(y.name));
+
+            for (int i = 0; i < presets.Count; ++i)
+            {
+                ToolStripMenuItem item = new ToolStripMenuItem();
+                item.Name = presets[i].name;
+                item.Text = presets[i].name;
+                item.Tag = i;
+                item.Click += presetMenu_Select;
+                presetToolStripMenuItem.DropDownItems.Add(item);
             }
         }
 
@@ -699,7 +912,7 @@ namespace Binxelview
                 palette_error = String.Format("Custom palettes are limited to {0} BPP.",PALETTE_BITS);
                 return false;
             }
-            paletteCustom();
+            palette_mode = PaletteMode.PALETTE_CUSTOM;
 
             if (image)
             {
@@ -767,7 +980,6 @@ namespace Binxelview
                 palette_error = String.Format("Custom palettes are limited to {0} BPP.", PALETTE_BITS);
                 return false;
             }
-            paletteCustom();
 
             byte[] write_data = new byte[(1 << preset.bpp) * 3];
             for (int i=0; i<(1<<preset.bpp); ++i)
@@ -790,167 +1002,9 @@ namespace Binxelview
             return true;
         }
 
-        void reloadPresets()
-        {
-            // remove everything but Reload and separator
-            while (presetToolStripMenuItem.DropDownItems.Count > 2)
-            {
-                presetToolStripMenuItem.DropDownItems.RemoveAt(2);
-            }
-
-            presets = new List<Preset>();
-            DirectoryInfo d_cwd = new DirectoryInfo(".");
-            DirectoryInfo d_app = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-            FileInfo[] files_cwd = d_cwd.GetFiles("*.bxp");
-            FileInfo[] files_app = d_app.GetFiles("*.bxp");
-            FileInfo[] files = new FileInfo[files_cwd.Length+files_app.Length];
-            Array.Copy(files_cwd,0,files,0,files_cwd.Length);
-            Array.Copy(files_app,0,files,files_cwd.Length,files_app.Length);
-            foreach (FileInfo file in files)
-            {
-                Preset p = new Preset();
-                if (p.loadFile(file.FullName))
-                {
-                    bool duplicate = false;
-                    foreach (Preset pe in presets)
-                    {
-                        if (pe.name == p.name)
-                        {
-                            duplicate = true;
-                            break;
-                        }
-                    }
-
-                    if (!duplicate)
-                    {
-                        presets.Add(p);
-                        if (p.name.ToLower()=="default")
-                        {
-                            default_preset = p.copy();
-                            scrollRange();
-                        }
-                    }
-                }
-            }
-            presets.Sort((x, y) => x.name.CompareTo(y.name));
-
-            for (int i = 0; i < presets.Count; ++i)
-            {
-                ToolStripMenuItem item = new ToolStripMenuItem();
-                item.Name = presets[i].name;
-                item.Text = presets[i].name;
-                item.Tag = i;
-                item.Click += presetMenu_Select;
-                presetToolStripMenuItem.DropDownItems.Add(item);
-            }
-        }
-
-        void scrollRange()
-        {
-            if (pixelScroll.Value > data.Length) pixelScroll.Value = data.Length;
-            pixelScroll.Maximum = data.Length;
-
-            next_increment_byte = preset.next_stride_byte * ((preset.height == 1) ? 16 : 1);
-            next_increment_bit = preset.next_stride_bit * ((preset.height == 1) ? 16 : 1);
-            int nb = next_increment_bit / 8;
-            next_increment_byte += nb;
-            next_increment_bit -= nb * 8;
-
-            pixelScroll.LargeChange = (next_increment_byte >= 0) ? next_increment_byte : -next_increment_byte;
-
-            pixelScroll.SmallChange = 1;
-            if (snap_scroll)
-            {
-                pixelScroll.SmallChange = pixelScroll.LargeChange;
-            }
-        }
-
-        void preparePalette()
-        {
-            palette_greymask = (1L << preset.bpp) - 1L;
-
-            int rb = preset.bpp / 3; // assign least bits to blue
-            int rr = (preset.bpp - rb) / 2;
-            int rg = preset.bpp - (rr + rb); // assign most bits to green
-            palette_rshift = 0;
-            palette_gshift = rr;
-            palette_bshift = rr + rg;
-            palette_rmask = (1 << rr) - 1;
-            palette_gmask = (1 << rg) - 1;
-            palette_bmask = (1 << rb) - 1;
-            if (palette_rmask < 1) palette_rmask = 1;
-            if (palette_gmask < 1) palette_gmask = 1;
-            if (palette_bmask < 1) palette_bmask = 1;
-
-            if (palette_mode == PaletteMode.PALETTE_CUSTOM && preset.bpp > PALETTE_BITS)
-            {
-                palette_mode = PaletteMode.PALETTE_RGB;
-            }
-
-            buttonRandomPal.Enabled = preset.bpp <= PALETTE_BITS;
-            buttonLoadPal.Enabled = preset.bpp <= PALETTE_BITS;
-            buttonSavePal.Enabled = preset.bpp <= PALETTE_BITS;
-
-            redrawPalette();
-        }
-
-        Color getPalette(int x)
-        {
-            switch (palette_mode)
-            {
-                default:
-                case PaletteMode.PALETTE_CUSTOM:
-                    return palette[x];
-                case PaletteMode.PALETTE_GREY:
-                    long lx = (x >= 0) ? x : (x + (1L << 32));
-                    int grey = (int)((lx * 255L) / palette_greymask);
-                    return Color.FromArgb(255, grey, grey, grey);
-                case PaletteMode.PALETTE_RGB:
-                    int r = (((x >> palette_rshift) & palette_rmask) * 255) / palette_rmask;
-                    int g = (((x >> palette_gshift) & palette_gmask) * 255) / palette_gmask;
-                    int b = (((x >> palette_bshift) & palette_bmask) * 255) / palette_bmask;
-                    return Color.FromArgb(255, r, g, b);
-            }
-        }
-
-        unsafe int getPaletteRaw(long x)
-        {
-            if (x < 0) return background_raw;
-            switch (palette_mode)
-            {
-                default:
-                case PaletteMode.PALETTE_CUSTOM:
-                    return palette_raw[x];
-                case PaletteMode.PALETTE_GREY:
-                    long lx = (x >= 0) ? x : (x + (1L << 32));
-                    int grey = (int)((lx * 255L) / palette_greymask);
-                    return grey | (grey << 8) | (grey << 16) | unchecked((int)0xFF000000);
-                case PaletteMode.PALETTE_RGB:
-                    int ix = (int)x;
-                    int r = (((ix >> palette_rshift) & palette_rmask) * 255) / palette_rmask;
-                    int g = (((ix >> palette_gshift) & palette_gmask) * 255) / palette_gmask;
-                    int b = (((ix >> palette_bshift) & palette_bmask) * 255) / palette_bmask;
-                    return b | (g << 8) | (r << 16) | unchecked((int)0xFF000000);
-            }
-        }
-
-        void redrawPalette()
-        {
-            int bx = preset.bpp / 2;
-            int by = preset.bpp - bx;
-            for (int y = 0; y < PALETTE_DIM; ++y)
-            {
-                for (int x = 0; x < PALETTE_DIM; ++x)
-                {
-                    int px = (x * (1 << bx)) / PALETTE_DIM;
-                    int py = (y * (1 << by)) / PALETTE_DIM;
-                    Color c = getPalette(px + (py * (1 << bx)));
-                    palette_bmp.SetPixel(x, y, c);
-                }
-            }
-            paletteBox.Image = palette_bmp;
-            paletteBox.Refresh();
-        }
+        //
+        // Redraws
+        //
 
         void redrawPixels()
         {
@@ -1070,39 +1124,27 @@ namespace Binxelview
             disable_pixel_redraw = false;
         }
 
-        void presetMenu_Select(object sender, EventArgs e)
+        void redrawPalette()
         {
-            ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            int index = (int)item.Tag;
-            preset = presets[index].copy();
-            scrollRange();
-            redrawPreset();
-            preparePalette();
-        }
-
-        void updatePos(bool update_scroll = true)
-        {
-            numericPosByte.Hexadecimal = (pos_byte >= 0) && !decimal_position;
-            numericPosByte.Value = pos_byte;
-            numericPosBit.Value = pos_bit;
-            if (update_scroll)
+            int bx = preset.bpp / 2;
+            int by = preset.bpp - bx;
+            for (int y = 0; y < PALETTE_DIM; ++y)
             {
-                pixelScroll.Value =
-                    ((int)pos_byte < pixelScroll.Minimum) ? pixelScroll.Minimum :
-                    ((int)pos_byte > pixelScroll.Maximum) ? pixelScroll.Maximum :
-                    (int)pos_byte;
+                for (int x = 0; x < PALETTE_DIM; ++x)
+                {
+                    int px = (x * (1 << bx)) / PALETTE_DIM;
+                    int py = (y * (1 << by)) / PALETTE_DIM;
+                    Color c = getPalette(px + (py * (1 << bx)));
+                    palette_bmp.SetPixel(x, y, c);
+                }
             }
+            paletteBox.Image = palette_bmp;
+            paletteBox.Refresh();
         }
 
-        void normalizePos()
-        {
-            int nb = pos_bit / 8;
-            pos_byte += nb;
-            pos_bit -= nb * 8;
-            updatePos();
-        }
-
+        //
         // Forms designer linked code
+        //
 
         public BinxelviewForm()
         {
@@ -1134,7 +1176,8 @@ namespace Binxelview
 
         private void BinxelviewForm_Load(object sender, EventArgs e)
         {
-            randomPalette();
+            // initialize Auto palette selection
+            comboBoxPalette.SelectedIndex = (int)PaletteMode.PALETTE_RGB - 1;
 
             // open file from the command line
             string[] args = Environment.GetCommandLineArgs();
@@ -1148,7 +1191,8 @@ namespace Binxelview
             preset = default_preset.copy();
             scrollRange();
             redrawPreset();
-            preparePalette();
+            autoPalette();
+            refreshPalette();
             bgBox.BackColor = background;
             redrawPixels();
         }
@@ -1175,6 +1219,18 @@ namespace Binxelview
             MessageBox.Show(about, "Binxelview");
         }
 
+        void presetMenu_Select(object sender, EventArgs e)
+        {
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            int index = (int)item.Tag;
+            int old_bpp = preset.bpp;
+            preset = presets[index].copy();
+            scrollRange();
+            redrawPreset();
+            if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
+            refreshPalette();
+        }
+
         private void reloadPresetsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             reloadPresets();
@@ -1182,9 +1238,11 @@ namespace Binxelview
 
         private void buttonDefaultPreset_Click(object sender, EventArgs e)
         {
+            int old_bpp = preset.bpp;
             preset = default_preset.copy();
             scrollRange();
-            preparePalette();
+            if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
+            refreshPalette();
             redrawPreset();
         }
 
@@ -1199,9 +1257,11 @@ namespace Binxelview
                 Preset p = new Preset();
                 if (p.loadFile(d.FileName))
                 {
+                    int old_bpp = preset.bpp;
                     preset = p;
                     scrollRange();
-                    preparePalette();
+                    if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
+                    refreshPalette();
                     redrawPreset();
                 }
                 else
@@ -1245,8 +1305,10 @@ namespace Binxelview
 
         private void numericBPP_ValueChanged(object sender, EventArgs e)
         {
+            int old_bpp = preset.bpp;
             preset.bpp = (int)numericBPP.Value;
-            preparePalette();
+            if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
+            refreshPalette();
             redrawPreset();
             redrawPixels();
         }
@@ -1365,28 +1427,21 @@ namespace Binxelview
             redrawPixels();
         }
 
-        private void buttonRandomPal_Click(object sender, EventArgs e)
+        private void buttonAutoPal_Click(object sender, EventArgs e)
         {
-            if (preset.bpp > PALETTE_BITS) return;
-
-            palette_mode = PaletteMode.PALETTE_CUSTOM;
-            randomPalette();
-            preparePalette();
+            palette_mode = (PaletteMode)(comboBoxPalette.SelectedIndex + 1);
+            autoPalette();
+            refreshPalette();
             redrawPixels();
         }
 
-        private void buttonRGBPal_Click(object sender, EventArgs e)
+        private void comboBoxPalette_SelectedIndexChanged(object sender, EventArgs e)
         {
-            palette_mode = PaletteMode.PALETTE_RGB;
-            preparePalette();
-            redrawPixels();
-        }
-
-        private void buttonGrey_Click(object sender, EventArgs e)
-        {
-            palette_mode = PaletteMode.PALETTE_GREY;
-            preparePalette();
-            redrawPixels();
+            // generate new palette if we were previously using an automatic palette
+            if (palette_mode != PaletteMode.PALETTE_CUSTOM)
+            {
+                buttonAutoPal_Click(sender, e);
+            }
         }
 
         private void paletteBox_MouseMove(object sender, MouseEventArgs e)
@@ -1404,7 +1459,6 @@ namespace Binxelview
         private void paletteBox_MouseClick(object sender, MouseEventArgs e)
         {
             if (preset.bpp > PALETTE_BITS) return;
-            paletteCustom();
 
             int bx = preset.bpp / 2;
             int by = preset.bpp - bx;
@@ -1419,10 +1473,11 @@ namespace Binxelview
             d.AllowFullOpen = true;
             if (d.ShowDialog() == DialogResult.OK)
             {
+                palette_mode = PaletteMode.PALETTE_CUSTOM;
                 setPalette(index, d.Color.R, d.Color.G, d.Color.B);
                 redrawPixels();
             }
-            preparePalette();
+            refreshPalette();
         }
 
         private void bgBox_Click(object sender, EventArgs e)
@@ -1455,7 +1510,7 @@ namespace Binxelview
             {
                 if (openPalette(d.FileName,d.FilterIndex==2,d.FilterIndex==3))
                 {
-                    preparePalette();
+                    refreshPalette();
                     redrawPixels();
                 }
                 else
@@ -1927,6 +1982,10 @@ namespace Binxelview
                 redrawPixels();
             }
         }
+
+        //
+        // Other Form overrides
+        //
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
         {
