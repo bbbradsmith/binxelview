@@ -739,7 +739,7 @@ namespace Binxelview
             return autoPaletteRaw(x);
         }
 
-        Color getPalette(int x)
+        Color getPalette(long x)
         {
             if (preset.bpp <= PALETTE_BITS) return palette[x];
             int p = autoPaletteRaw(x);
@@ -1149,8 +1149,8 @@ namespace Binxelview
             {
                 for (int x = 0; x < PALETTE_DIM; ++x)
                 {
-                    int px = (x * (1 << bx)) / PALETTE_DIM;
-                    int py = (y * (1 << by)) / PALETTE_DIM;
+                    long px = ((long)x * (1 << bx)) / PALETTE_DIM;
+                    long py = ((long)y * (1 << by)) / PALETTE_DIM;
                     Color c = getPalette(px + (py * (1 << bx)));
                     palette_bmp.SetPixel(x, y, c);
                 }
@@ -1465,9 +1465,9 @@ namespace Binxelview
         {
             int bx = preset.bpp / 2;
             int by = preset.bpp - bx;
-            int px = (e.X * (1 << bx)) / PALETTE_DIM;
-            int py = (e.Y * (1 << by)) / PALETTE_DIM;
-            int index = px + (py * (1 << bx));
+            long px = ((long)e.X * (1 << bx)) / PALETTE_DIM;
+            long py = ((long)e.Y * (1 << by)) / PALETTE_DIM;
+            long index = px + (py * (1 << bx));
             Color c = getPalette(index);
             int ch = (c.R << 16) | (c.G << 8) | c.B;
             labelInfoPal.Text = String.Format("{0:D} = {1:D},{2:D},{3:D}\n{4:X2} = {5:X6}",(uint)index,c.R,c.G,c.B,(uint)index,ch);
@@ -1479,9 +1479,9 @@ namespace Binxelview
 
             int bx = preset.bpp / 2;
             int by = preset.bpp - bx;
-            int px = (e.X * (1 << bx)) / PALETTE_DIM;
-            int py = (e.Y * (1 << by)) / PALETTE_DIM;
-            int index = px + (py * (1 << bx));
+            long px = ((long)e.X * (1 << bx)) / PALETTE_DIM;
+            long py = ((long)e.Y * (1 << by)) / PALETTE_DIM;
+            long index = px + (py * (1 << bx));
             Color c = getPalette(index);
 
             ColorDialog d = new ColorDialog();
@@ -1491,7 +1491,7 @@ namespace Binxelview
             if (d.ShowDialog() == DialogResult.OK)
             {
                 palette_mode = PaletteMode.PALETTE_CUSTOM;
-                setPalette(index, d.Color.R, d.Color.G, d.Color.B);
+                setPalette((int)index, d.Color.R, d.Color.G, d.Color.B);
                 redrawPixels();
             }
             refreshPalette();
@@ -1707,7 +1707,7 @@ namespace Binxelview
             {
                 long p = readPixel(read_pos);
                 if (p < 0) break;
-                Color c = getPalette((int)p); // can't modify the new palette because we read it here
+                Color c = getPalette(p); // can't modify the new palette because we read it here
                 new_pal[i] = c;
                 ++count;
                 read_pos += preset.pixel_stride_bit;
