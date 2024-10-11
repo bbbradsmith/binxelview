@@ -172,6 +172,7 @@ To open a file, just add that file's path to the command line.
 Options can be set with a command line argument beginning with '-',
 followed by the option name, an '=' separator, and the value for the option.
 If a space is required in the value, you should enclose the entire argument in quotes.
+Paths can be either absolute or relative to the current working directory.
 
   "-presetfile=C:\mypreset.bxp"
     Replaces the default preset with one from a file.
@@ -179,12 +180,16 @@ If a space is required in the value, you should enclose the entire argument in q
   "-preset=Atari ST 4BPP"
     Chooses a named preset from your preset library instead of the default.
 
-  "-pal=C:\red.pal"
-    Loads a palette file.
+  "-pal=my palettes\red.pal"
+    Loads a palette file. If -paltype is not used (see below) it will detect the type by the file extension.
     If the extension is .BMP .GIF .PNG or .TIF it will load it as an palette from an image.
     If the extension is .VGA it will load it as 6-bit RGB18 format.
     If the extension is .RIFF it will load it as a Microsoft RIFF palette.
     Otherwise it will load it as RGB24.
+
+  -paltype=1
+    Overrides the extension check for the next -pal option. (Must be used before -pal.)
+    0 = RGB24, 1 = Image, 2 = VGA, 3 = RIFF, -1 = Use extension.
 
   -autopal=Greyscale
     Chooses an automatic palette, one of:

@@ -34,6 +34,8 @@ namespace Binxelview
         int selected_tile = -1;
         long selected_pos = -1;
         int selected_palette_filter = 0;
+        int option_palette_type;
+        string palette_path = "";
 
         Preset preset;
         Preset default_preset;
@@ -54,14 +56,17 @@ namespace Binxelview
         Random random = new Random();
 
         // settings
-        int zoom = 2;
-        bool hidegrid = false;
-        Color background = SystemColors.Control;
-        PaletteMode palette_mode = PaletteMode.PALETTE_RGB;
-        bool decimal_position = false;
-        bool snap_scroll = true;
-        bool horizontal_layout = false;
-        int twiddle = 0;
+        int zoom;
+        bool hidegrid;
+        Color background;
+        PaletteMode palette_mode;
+        bool decimal_position;
+        bool snap_scroll;
+        bool horizontal_layout;
+        int twiddle; // Twiddle probably belongs in preset, but its use is very rare, and I didn't want it to take up panel space.
+                     // If something more important needs a PRESET_VERSION 3, we should add it then to the preset.
+                     // We could maybe place rare options like this into an "advanced" menu on the menu bar,
+                     // instead of requiring UI panel space for it.
 
         //
         // Preset
@@ -293,7 +298,19 @@ namespace Binxelview
         // Options
         //
 
-        string parseOption(string optline)
+        void defaultOption()
+        {
+            zoom = 2;
+            hidegrid = false;
+            background = SystemColors.Control;
+            palette_mode = PaletteMode.PALETTE_RGB;
+            decimal_position = false;
+            snap_scroll = true;
+            horizontal_layout = false;
+            twiddle = 0;
+        }
+
+        string parseOption(string optline, string base_path, bool ini_file)
         {
             int eqpos = optline.IndexOf("=");
             if (eqpos < 0) return "No = in option: "+optline;
@@ -303,8 +320,10 @@ namespace Binxelview
 
             if (opt == "PRESETFILE") // load preset file to replace default
             {
+                string path = val;
+                if (!Path.IsPathRooted(path)) path = Path.Combine(base_path,path);
                 Preset p = new Preset();
-                if (!p.loadFile(val)) return "Could not load preset file: "+val+"\n"+Preset.last_error;
+                if (!p.loadFile(path)) return "Could not load preset file: "+path+"\n"+Preset.last_error;
                 default_preset = p;
                 preset = default_preset.copy();
                 return "";
@@ -321,8 +340,18 @@ namespace Binxelview
                 }
                 return "Preset not found in loaded presets: "+val;
             }
+            if (opt == "PALTYPE") // override next PAL file type detection, use before PAL
+            {
+                int v;
+                if (!int.TryParse(val,out v)) return "Could not parse integer for paltype: "+val;
+                option_palette_type = v;
+                return "";
+            }
             if (opt == "PAL") // load palette file
             {
+                string path = val;
+                if (!Path.IsPathRooted(path)) path = Path.Combine(base_path,path);
+
                 int paltype = 0;
                 if (
                     valu.EndsWith(".BMP") ||
@@ -332,7 +361,12 @@ namespace Binxelview
                     paltype = 1;
                 if (valu.EndsWith(".VGA")) paltype = 2;
                 if (valu.EndsWith(".RIFF")) paltype = 3;
-                if (!loadPalette(val,paltype)) return "Could not load palette file: "+val+"\n"+palette_error;
+                if (option_palette_type != -1)
+                {
+                    paltype = option_palette_type;
+                    option_palette_type = -1;
+                }
+                if (!loadPalette(path,paltype)) return "Could not load palette file: "+path+"\n"+palette_error;
                 return "";
             }
             if (opt == "AUTOPAL")
@@ -342,7 +376,6 @@ namespace Binxelview
                 else if (valu == "GREYSCALE") { palette_mode = PaletteMode.PALETTE_GREY;      }
                 else if (valu == "CUBEHELIX") { palette_mode = PaletteMode.PALETTE_CUBEHELIX; }
                 else return "Unknown autopal value: "+val;
-                comboBoxPalette.SelectedIndex = (int)palette_mode - 1;
                 return "";
             }
             if (opt == "BACKGROUND")
@@ -360,7 +393,6 @@ namespace Binxelview
                 if (!int.TryParse(val,out v)) return "Could not parse integer for zoom: "+val;
                 if (v < 1) return "Zoom must be 1 or greater: "+val;
                 zoom = v;
-                numericZoom.Value = v;
                 return "";
             }
             if (opt == "GRID")
@@ -369,7 +401,6 @@ namespace Binxelview
                 if (!int.TryParse(val,out v)) return "Could not parse integer for grid: "+val;
                 if (v != 0 && v != 1) return "Grid value must be 0 or 1: "+val;
                 hidegrid = (v == 0);
-                gridToolStripMenuItem.Checked = !hidegrid;
                 return "";
             }
             if (opt == "HEXPOS")
@@ -378,9 +409,6 @@ namespace Binxelview
                 if (!int.TryParse(val,out v)) return "Could not parse integer for hexpos: "+val;
                 if (v != 0 && v != 1) return "Hexpos value must be 0 or 1: "+val;
                 decimal_position = (v == 0);
-                decimalPositionToolStripMenuItem.Checked = decimal_position;
-                hexadecimalPositionToolStripMenuItem.Checked = !decimal_position;
-                numericPosByte.Font = decimal_position ? posfont_regular : posfont_bold;
                 return "";
             }
             if (opt == "SNAPSCROLL")
@@ -389,7 +417,6 @@ namespace Binxelview
                 if (!int.TryParse(val,out v)) return "Could not parse integer for snapscroll: "+val;
                 if (v != 0 && v != 1) return "Snapscroll value must be 0 or 1: "+val;
                 snap_scroll = (v != 0);
-                snapScrollToNextStrideToolStripMenuItem.Checked = snap_scroll;
                 return "";
             }
             if (opt == "HORIZONTAL")
@@ -398,8 +425,6 @@ namespace Binxelview
                 if (!int.TryParse(val,out v)) return "Could not parse integer for horizontal: "+val;
                 if (v != 0 && v != 1) return "Horizontal value must be 0 or 1: "+val;
                 horizontal_layout = (v != 0);
-                verticalLayoutToolStripMenuItem.Checked = !horizontal_layout;
-                horizontalLayoutToolStripMenuItem.Checked = horizontal_layout;
                 return "";
             }
             if (opt == "TWIDDLE")
@@ -408,8 +433,6 @@ namespace Binxelview
                 if (!int.TryParse(val,out v)) return "Could not parse integer for twiddle: "+val;
                 if (v <  0 || v > 2) return "Twiddle value must be 0, 1 or 2: "+val;
                 twiddle = v;
-                twiddleZToolStripMenuItem.Checked = twiddle == 1;
-                twiddleNToolStripMenuItem.Checked = twiddle == 2;
                 return "";
             }
             return "Invalid option: "+optline;
@@ -784,7 +807,7 @@ namespace Binxelview
         // internal range values for automatic palette generation
         int palette_rshift=0, palette_gshift=0, palette_bshift=0;
         int palette_rmask=1,  palette_gmask=1,  palette_bmask=1;
-        long palette_greymask;
+        long palette_greymax;
 
         void setPalette(int i, int r, int g, int b) // set a palette colour
         {
@@ -795,7 +818,7 @@ namespace Binxelview
         void autoPaletteSetup() // setup range values for automatic palettes
         {
             // greyscale range
-            palette_greymask = (1L << preset.bpp) - 1L;
+            palette_greymax = (1L << preset.bpp) - 1L;
 
             // RGB range
             int rb = preset.bpp / 3; // assign least bits to blue
@@ -816,8 +839,7 @@ namespace Binxelview
         {
             // Dave Green's cubehelix as described and implemented here:
             // https://people.phy.cam.ac.uk/dag9/CUBEHELIX/
-            // https://people.phy.cam.ac.uk/dag9/CUBEHELIX/cubetry.html
-            double fract = (double)x / (double)palette_greymask;
+            double fract = (double)x / (double)palette_greymax;
             const double start = 0.5; // starting colour
             const double rotations = -2.0; // hue cycles across gradient, default was -1.5
             const double saturation = 1.8; // default was 1.0
@@ -853,7 +875,7 @@ namespace Binxelview
                     return b | (g << 8) | (r << 16) | unchecked((int)0xFF000000);
                 case PaletteMode.PALETTE_GREY:
                     long lx = (x >= 0) ? x : (x + (1L << 32));
-                    int grey = (int)((lx * 255L) / palette_greymask);
+                    int grey = (int)((lx * 255L) / palette_greymax);
                     return grey | (grey << 8) | (grey << 16) | unchecked((int)0xFF000000);
                 case PaletteMode.PALETTE_CUBEHELIX:
                     return cubeHelix(x);
@@ -885,6 +907,7 @@ namespace Binxelview
                     random.Next() & 255,
                     random.Next() & 255);
             }
+            palette_path = "";
         }
 
         void autoPalette() // regenerate automatic palettes
@@ -893,6 +916,7 @@ namespace Binxelview
             if (palette_mode == PaletteMode.PALETTE_CUSTOM) return;
             if (palette_mode == PaletteMode.PALETTE_RANDOM) { randomPalette(); return; }
             if (preset.bpp > PALETTE_BITS) return;
+            palette_path = "";
             for (int i=0; i < (1 << preset.bpp); ++i)
             {
                 int p = autoPaletteRaw(i);
@@ -901,17 +925,6 @@ namespace Binxelview
                 int r = (p >> 16) & 0xFF;
                 setPalette(i,r,g,b);
             }
-        }
-
-        void refreshPalette()
-        {
-            autoPaletteSetup();
-            // disable these if BPP is too high to use an actual palette
-            bool palenable = preset.bpp <= PALETTE_BITS;
-            buttonLoadPal.Enabled = palenable;
-            buttonSavePal.Enabled = palenable;
-            pixelsToPaletteToolStripMenuItem.Enabled = palenable;
-            redrawPalette();
         }
 
         //
@@ -958,6 +971,29 @@ namespace Binxelview
             pos_byte += nb;
             pos_bit -= nb * 8;
             updatePos();
+        }
+
+        void advanceClick(int inc_byte, int inc_bit)
+        {
+            if ((Control.ModifierKeys & Keys.Shift) != 0)
+            {
+                pos_byte -= inc_byte;
+                pos_bit -= inc_bit;
+            }
+            else
+            {
+                pos_byte += inc_byte;
+                pos_bit += inc_bit;
+            }
+            normalizePos();
+        }
+
+        void advanceMouseDown(MouseEventArgs e, int inc_byte, int inc_bit)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            pos_byte -= inc_byte;
+            pos_bit -= inc_bit;
+            normalizePos();
         }
 
         //
@@ -1092,6 +1128,8 @@ namespace Binxelview
                     setPalette(i, c.R, c.G, c.B);
                 }
                 img.Dispose();
+
+                palette_path = Path.GetFullPath(path);
                 return true;
             }
 
@@ -1191,6 +1229,8 @@ namespace Binxelview
                 }
                 setPalette(i, r, g, b);
             }
+
+            palette_path = Path.GetFullPath(path);
             return true;
         }
 
@@ -1293,6 +1333,7 @@ namespace Binxelview
                 preset.next_stride_bit = bits & 7;
             }
 
+            bool old_disable_pixel_redraw = disable_pixel_redraw;
             disable_pixel_redraw = true; // prevent Value events from redrawing pixels
 
             checkEndian.Checked = !preset.little_endian;
@@ -1342,11 +1383,18 @@ namespace Binxelview
             dataGridPixel.FirstDisplayedScrollingRowIndex = old_scroll;
             dataGridPixel.Enabled = !preset.chunky;
 
-            disable_pixel_redraw = false;
+            disable_pixel_redraw = old_disable_pixel_redraw; // restore pixel redraw
         }
 
         void redrawPalette()
         {
+            autoPaletteSetup();
+            // disable these if BPP is too high to use an actual palette
+            bool palenable = preset.bpp <= PALETTE_BITS;
+            buttonLoadPal.Enabled = palenable;
+            buttonSavePal.Enabled = palenable;
+            pixelsToPaletteContextItem.Enabled = palenable;
+
             int bx = preset.bpp / 2;
             int by = preset.bpp - bx;
             for (int y = 0; y < PALETTE_DIM; ++y)
@@ -1363,16 +1411,28 @@ namespace Binxelview
             paletteBox.Refresh();
         }
 
-        //
-        // Forms designer linked code
-        //
-
-        public BinxelviewForm()
+        void redrawOptions() // make sure the UI state matches current options
         {
-            InitializeComponent();
+            numericZoom.Value = zoom;
+            gridOptionsMenuItem.Checked = !hidegrid;
+            decimalPositionOptionsMenuItem.Checked = decimal_position;
+            hexadecimalPositionOptionsMenuItem.Checked = !decimal_position;
+            numericPosByte.Font = decimal_position ? posfont_regular : posfont_bold;
+            snapScrollToNextStrideOptionsMenuItem.Checked = snap_scroll;
+            if (palette_mode != PaletteMode.PALETTE_CUSTOM)
+                comboBoxPalette.SelectedIndex = (int)palette_mode - 1;
+            verticalLayoutOptionsMenuItem.Checked = !horizontal_layout;
+            horizontalLayoutOptionsMenuItem.Checked = horizontal_layout;
+            twiddleZOptionsMenuItem.Checked = twiddle == 1;
+            twiddleNOptionsMenuItem.Checked = twiddle == 2;
+            bgBox.BackColor = background;
         }
 
-        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        //
+        // Menu (Design Linked)
+        //
+
+        private void openFileMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog d = new OpenFileDialog();
             d.Title = "Load Binary File";
@@ -1382,7 +1442,7 @@ namespace Binxelview
             }
         }
 
-        private void reloadFileToolStripMenuItem_Click(object sender, EventArgs e)
+        private void reloadFileMenuItem_Click(object sender, EventArgs e)
         {
             if (data_path.Length > 0)
             {
@@ -1390,77 +1450,131 @@ namespace Binxelview
             }
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void saveAllVisibleFileMenuItem_Click(object sender, EventArgs e)
+        {
+            long pos = (pos_byte * 8) + pos_bit;
+
+            SaveFileDialog d = new SaveFileDialog();
+            d.Title = "Save All Visible";
+            d.DefaultExt = "png";
+            d.Filter = "PNG Image (*.png)|*.png|All files (*.*)|*.*";
+            d.FileName = data_file + string.Format(".{0:X8}.{1:D1}.png",pos>>3,pos&7);
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                int w = pixel_gx * pixel_twp + pixel_padx;
+                int h = pixel_gy * pixel_thp + pixel_pady;
+                renderGrid(pos, pixel_gx, pixel_gy, pixel_padx, pixel_pady, w, h, true);
+
+                Bitmap b;
+                if (preset.bpp <= 8)
+                {
+                    b = renderGridIndexToBitmap();
+                }
+                else
+                {
+                    b = new Bitmap(w, h, PixelFormat.Format32bppArgb);
+                    renderGridColorToBitmap(b, 1);
+                }
+
+                try
+                {
+                    b.Save(d.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), "Binxelview");
+                }
+
+                redrawPixels();
+            }
+        }
+
+        private void exportBinaryChunkFileMenuItem_Click(object sender, EventArgs e)
+        {
+            BinaryChunkExportForm exportForm = new BinaryChunkExportForm(pos_byte, !decimal_position, data);
+            exportForm.ShowDialog();
+        }
+
+        private void exitFileMenuItem_Click(object sender, EventArgs e)
         {
             this.Close();
         }
-
-        private void BinxelviewForm_Load(object sender, EventArgs e)
+        private void reloadPresetsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            posfont_regular = new Font(numericPosByte.Font, FontStyle.Regular);
-            posfont_bold = new Font(numericPosByte.Font, FontStyle.Bold);
+            reloadPresets();
+        }
 
-            // initialize Auto palette selection
-            comboBoxPalette.SelectedIndex = (int)PaletteMode.PALETTE_RGB - 1;
-
-            // setup presets
-            default_preset.empty();
-            reloadPresets(); // loads "Default" preset if it exists
-            preset = default_preset.copy();
-
-            // load default palette if it exists
-            DirectoryInfo dir_cwd = new DirectoryInfo(".");
-            DirectoryInfo dir_app = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-            string pal_cwd = Path.Combine(dir_cwd.ToString(),"default.pal");
-            string pal_app = Path.Combine(dir_app.ToString(),"default.pal");
-            bool success = true;
-            if      (File.Exists(pal_cwd)) { success = loadPalette(pal_cwd,0); }
-            else if (File.Exists(pal_app)) { success = loadPalette(pal_app,0); }
-            if (!success)  MessageBox.Show("Error opening default palette:\n" + palette_error,"Binxelview");
-
-            // parse the command line options
-            string[] args = Environment.GetCommandLineArgs();
-            string arg_err = "";
-            for (int i=1; i<args.Length; ++i)
-            {
-                string arg = args[i];
-                if (!arg.StartsWith("-")) // anything that doesn't start with - is the file to open
-                {
-                    openFile(arg);
-                }
-                else // anything that starts with - or -- is an option
-                {
-                    string sarg = arg.Substring(1);
-                    if (sarg.StartsWith("-")) sarg = sarg.Substring(1);
-                    string opt_err = parseOption(sarg);
-                    if (opt_err.Length > 0 && arg_err.Length > 0) arg_err += "\n";
-                    arg_err += opt_err;
-                }
-            }
-            if (arg_err.Length > 0) MessageBox.Show("Command line error:\n" + arg_err,"Binxelview");
-
-            scrollRange();
+        void presetMenu_Select(object sender, EventArgs e) // clicking on a generated preset menu item
+        {
+            ToolStripMenuItem item = (ToolStripMenuItem)sender;
+            int index = (int)item.Tag;
+            int old_bpp = preset.bpp;
+            preset = presets[index].copy();
+            if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
+            redrawPalette();
             redrawPreset();
-            autoPalette();
-            refreshPalette();
-            bgBox.BackColor = background;
+            scrollRange();
+        }
+
+        private void decimalPositionOptionsMenuItem_Click(object sender, EventArgs e)
+        {
+            decimal_position = true;
+            redrawOptions();
+            updatePos();
+        }
+
+        private void hexadecimalPositionOptionsMenuItem_Click(object sender, EventArgs e)
+        {
+            decimal_position = false;
+            redrawOptions();
+            updatePos();
+        }
+
+        private void snapScrollToNextStrideOptionsMenuItem_Click(object sender, EventArgs e)
+        {
+            snap_scroll = !snap_scroll;
+            redrawOptions();
+            scrollRange();
+        }
+
+        private void gridOptionsMenuItem_Click(object sender, EventArgs e)
+        {
+            hidegrid = !hidegrid;
+            redrawOptions();
             redrawPixels();
-            numericPosByte.Font = decimal_position ? posfont_regular : posfont_bold;
         }
 
-        private void BinxelviewForm_DragDrop(object sender, DragEventArgs e)
+        private void verticalLayoutOptionsMenuItem_Click(object sender, EventArgs e)
         {
-            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
-            foreach (string file in files) openFile(file);
+            horizontal_layout = false;
+            redrawOptions();
+            redrawPixels();
         }
 
-        private void BinxelviewForm_DragEnter(object sender, DragEventArgs e)
+        private void horizontalLayoutOptionsMenuItem_Click(object sender, EventArgs e)
         {
-            e.Effect = (e.Data.GetDataPresent(DataFormats.FileDrop)) ?
-                DragDropEffects.Copy : DragDropEffects.None;
+            horizontal_layout = true;
+            redrawOptions();
+            redrawPixels();
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void twiddleZOptionsMenuItem_Click(object sender, EventArgs e)
+        {
+            if (twiddle == 1) twiddle = 0;
+            else twiddle = 1;
+            redrawOptions();
+            redrawPixels();
+        }
+
+        private void twiddleNOptionsMenuItem_Click(object sender, EventArgs e)
+        {
+            if (twiddle == 2) twiddle = 0;
+            else twiddle = 2;
+            redrawOptions();
+            redrawPixels();
+        }
+
+        private void aboutHelpMenuItem_Click(object sender, EventArgs e)
         {
             string about =
                 "Binxelview binary image explorer\n" +
@@ -1470,76 +1584,84 @@ namespace Binxelview
             MessageBox.Show(about, "Binxelview");
         }
 
-        void presetMenu_Select(object sender, EventArgs e)
+        //
+        // Position Panel (Design Linked)
+        //
+
+        private void buttonBytePos_Click(object sender, EventArgs e)
         {
-            ToolStripMenuItem item = (ToolStripMenuItem)sender;
-            int index = (int)item.Tag;
-            int old_bpp = preset.bpp;
-            preset = presets[index].copy();
-            scrollRange();
-            redrawPreset();
-            if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
-            refreshPalette();
+            advanceClick(1, 0);
+
+        }
+        private void buttonBytePos_MouseDown(object sender, MouseEventArgs e)
+        {
+            advanceMouseDown(e, 1, 0);
         }
 
-        private void reloadPresetsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void buttonBitPos_Click(object sender, EventArgs e)
         {
-            reloadPresets();
+            advanceClick(0, 1);
         }
 
-        private void buttonDefaultPreset_Click(object sender, EventArgs e)
+        private void buttonBitPos_MouseDown(object sender, MouseEventArgs e)
         {
-            int old_bpp = preset.bpp;
-            preset = default_preset.copy();
-            scrollRange();
-            if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
-            refreshPalette();
-            redrawPreset();
+            advanceMouseDown(e, 0, 1);
         }
 
-        private void buttonLoadPreset_Click(object sender, EventArgs e)
+        private void buttonZoom_Click(object sender, EventArgs e)
         {
-            OpenFileDialog d = new OpenFileDialog();
-            d.Title = "Load Preset";
-            d.DefaultExt = "bxp";
-            d.Filter = "Binxelview Preset (*.bxp)|*.bxp|All files (*.*)|*.*";
-            if (d.ShowDialog() == DialogResult.OK)
+            if ((Control.ModifierKeys & Keys.Shift) != 0)
             {
-                Preset p = new Preset();
-                if (p.loadFile(d.FileName))
-                {
-                    int old_bpp = preset.bpp;
-                    preset = p;
-                    scrollRange();
-                    if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
-                    refreshPalette();
-                    redrawPreset();
-                }
-                else
-                {
-                    MessageBox.Show("Unable to load preset:\n" + d.FileName + "\n\n" + Preset.last_error, "Binxelview");
-                }
+                --zoom;
             }
+            else
+            {
+                ++zoom;
+            }
+            if (zoom < numericZoom.Minimum) zoom = (int)numericZoom.Minimum; // TODO replace with ZOOM_MIN ZOOM_MAX
+            if (zoom > numericZoom.Maximum) zoom = (int)numericZoom.Maximum;
+            redrawOptions();
+            redrawPixels();
+
+        }
+        private void buttonZoom_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Right) return;
+            --zoom;
+            if (zoom < numericZoom.Minimum) zoom = (int)numericZoom.Minimum; // TODO replace with ZOOM_MIN ZOOM_MAX
+            redrawOptions();
+            redrawPixels();
         }
 
-        private void buttonSavePreset_Click(object sender, EventArgs e)
+        private void buttonZero_Click(object sender, EventArgs e)
         {
-            SaveFileDialog d = new SaveFileDialog();
-            d.Title = "Save Preset";
-            d.DefaultExt = "bxp";
-            d.Filter = "Binxelview Preset (*.bxp)|*.bxp|All files (*.*)|*.*";
-            if (d.ShowDialog() == DialogResult.OK)
-            {
-                if (!preset.saveFile(d.FileName))
-                {
-                    MessageBox.Show("Unable to save preset:\n" + d.FileName + "\n\n" + Preset.last_error, "Binxelview");
-                }
-                else
-                {
-                    reloadPresets();
-                }
-            }
+            pos_byte = 0;
+            pos_bit = 0;
+            updatePos();
         }
+
+        private void numericPosByte_ValueChanged(object sender, EventArgs e)
+        {
+            pos_byte = (long)numericPosByte.Value;
+            updatePos();
+            redrawPixels();
+        }
+
+        private void numericPosBit_ValueChanged(object sender, EventArgs e)
+        {
+            pos_bit = (int)numericPosBit.Value;
+            redrawPixels();
+        }
+
+        private void numericZoom_ValueChanged(object sender, EventArgs e)
+        {
+            zoom = (int)numericZoom.Value;
+            redrawPixels();
+        }
+
+        //
+        // Packing Panel (Design Linked)
+        //
 
         private void checkEndian_CheckedChanged(object sender, EventArgs e)
         {
@@ -1559,7 +1681,7 @@ namespace Binxelview
             int old_bpp = preset.bpp;
             preset.bpp = (int)numericBPP.Value;
             if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
-            refreshPalette();
+            redrawPalette();
             redrawPreset();
             redrawPixels();
         }
@@ -1576,6 +1698,36 @@ namespace Binxelview
             preset.height = (int)numericHeight.Value;
             redrawPreset();
             redrawPixels();
+        }
+
+        private void buttonPixel_Click(object sender, EventArgs e)
+        {
+            advanceClick(preset.pixel_stride_byte, preset.pixel_stride_bit);
+        }
+
+        private void buttonPixel_MouseDown(object sender, MouseEventArgs e)
+        {
+            advanceMouseDown(e, preset.pixel_stride_byte, preset.pixel_stride_bit);
+        }
+
+        private void buttonRow_Click(object sender, EventArgs e)
+        {
+            advanceClick(preset.row_stride_byte, preset.row_stride_bit);
+        }
+
+        private void buttonRow_MouseDown(object sender, MouseEventArgs e)
+        {
+            advanceMouseDown(e, preset.row_stride_byte, preset.row_stride_bit);
+        }
+
+        private void buttonNext_Click(object sender, EventArgs e)
+        {
+            advanceClick(next_increment_byte, next_increment_bit);
+        }
+
+        private void buttonNext_MouseDown(object sender, MouseEventArgs e)
+        {
+            advanceMouseDown(e, next_increment_byte, next_increment_bit);
         }
 
         private void numericPixelStrideByte_ValueChanged(object sender, EventArgs e)
@@ -1642,6 +1794,92 @@ namespace Binxelview
             redrawPixels();
         }
 
+        private void buttonDefaultPreset_Click(object sender, EventArgs e)
+        {
+            int old_bpp = preset.bpp;
+            preset = default_preset.copy();
+            if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
+            redrawPalette();
+            redrawPreset();
+            scrollRange();
+        }
+
+        private void buttonLoadPreset_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog d = new OpenFileDialog();
+            d.Title = "Load Preset";
+            d.DefaultExt = "bxp";
+            d.Filter = "Binxelview Preset (*.bxp)|*.bxp|All files (*.*)|*.*";
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                Preset p = new Preset();
+                if (p.loadFile(d.FileName))
+                {
+                    int old_bpp = preset.bpp;
+                    preset = p;
+                    if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
+                    redrawPalette();
+                    redrawPreset();
+                    scrollRange();
+                }
+                else
+                {
+                    MessageBox.Show("Unable to load preset:\n" + d.FileName + "\n\n" + Preset.last_error, "Binxelview");
+                }
+            }
+        }
+
+        private void buttonSavePreset_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog d = new SaveFileDialog();
+            d.Title = "Save Preset";
+            d.DefaultExt = "bxp";
+            d.Filter = "Binxelview Preset (*.bxp)|*.bxp|All files (*.*)|*.*";
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                if (!preset.saveFile(d.FileName))
+                {
+                    MessageBox.Show("Unable to save preset:\n" + d.FileName + "\n\n" + Preset.last_error, "Binxelview");
+                }
+                else
+                {
+                    reloadPresets();
+                }
+            }
+        }
+
+        private void dataGridPixel_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        {
+            int result;
+            if (!int.TryParse(e.FormattedValue.ToString(), out result))
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void dataGridPixel_CellValueChanged(object sender, DataGridViewCellEventArgs e)
+        {
+            int x = e.ColumnIndex;
+            int y = e.RowIndex;
+            if (x < 1) return;
+            if (x > 2) return;
+            if (y < 0) return;
+            if (y >= MAX_BPP) return;
+
+            int result;
+            string value = (string)dataGridPixel.Rows[y].Cells[x].Value;
+            if (int.TryParse(value,out result))
+            {
+                if (x == 1) preset.bit_stride_byte[y] = result;
+                if (x == 2) preset.bit_stride_bit[y] = result;
+                redrawPixels();
+            }
+        }
+
+        //
+        // Tiling Panel (Design Linked)
+        //
+
         private void numericTileSizeX_ValueChanged(object sender, EventArgs e)
         {
             preset.tile_size_x = (int)numericTileSizeX.Value;
@@ -1678,22 +1916,9 @@ namespace Binxelview
             redrawPixels();
         }
 
-        private void buttonAutoPal_Click(object sender, EventArgs e)
-        {
-            palette_mode = (PaletteMode)(comboBoxPalette.SelectedIndex + 1);
-            autoPalette();
-            refreshPalette();
-            redrawPixels();
-        }
-
-        private void comboBoxPalette_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            // generate new palette if we were previously using an automatic palette
-            if (palette_mode != PaletteMode.PALETTE_CUSTOM)
-            {
-                buttonAutoPal_Click(sender, e);
-            }
-        }
+        //
+        // Palette Panel (Design Linked)
+        //
 
         private void paletteBox_MouseMove(object sender, MouseEventArgs e)
         {
@@ -1728,7 +1953,7 @@ namespace Binxelview
                 setPalette((int)index, d.Color.R, d.Color.G, d.Color.B);
                 redrawPixels();
             }
-            refreshPalette();
+            redrawPalette();
         }
 
         private void bgBox_Click(object sender, EventArgs e)
@@ -1745,6 +1970,23 @@ namespace Binxelview
             }
         }
 
+        private void buttonAutoPal_Click(object sender, EventArgs e)
+        {
+            palette_mode = (PaletteMode)(comboBoxPalette.SelectedIndex + 1);
+            autoPalette();
+            redrawPalette();
+            redrawPixels();
+        }
+
+        private void comboBoxPalette_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // generate new palette if we were previously using an automatic palette
+            if (palette_mode != PaletteMode.PALETTE_CUSTOM)
+            {
+                buttonAutoPal_Click(sender, e);
+            }
+        }
+
         private void buttonLoadPal_Click(object sender, EventArgs e)
         {
             if (preset.bpp > PALETTE_BITS) return;
@@ -1752,7 +1994,7 @@ namespace Binxelview
             OpenFileDialog d = new OpenFileDialog();
             d.Title = "Load Palette";
             d.DefaultExt = "pal";
-            d.Filter =
+            d.Filter = // filters correspond to loadPalette filetype parameter
                 "Palette, RGB24 (*.pal)|*.pal|" +
                 "Image (*.bmp;*.gif;*.png;*.tif)|*.bmp;*.gif;*.png;*.tif|" +
                 "VGA Palette, 6-bit RGB18 (*.vga;*.*)|*.vga;*.*|"+
@@ -1764,7 +2006,7 @@ namespace Binxelview
                 selected_palette_filter = d.FilterIndex; // remember last used filter
                 if (loadPalette(d.FileName,d.FilterIndex-1))
                 {
-                    refreshPalette();
+                    redrawPalette();
                     redrawPixels();
                 }
                 else
@@ -1791,340 +2033,13 @@ namespace Binxelview
             }
         }
 
-        private void numericPosByte_ValueChanged(object sender, EventArgs e)
-        {
-            pos_byte = (long)numericPosByte.Value;
-            updatePos();
-            redrawPixels();
-        }
-
-        private void numericPosBit_ValueChanged(object sender, EventArgs e)
-        {
-            pos_bit = (int)numericPosBit.Value;
-            redrawPixels();
-        }
-
-        private void numericZoom_ValueChanged(object sender, EventArgs e)
-        {
-            zoom = (int)numericZoom.Value;
-            redrawPixels();
-        }
-
-        private void decimalPositionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            decimalPositionToolStripMenuItem.Checked = true;
-            hexadecimalPositionToolStripMenuItem.Checked = false;
-            decimal_position = true;
-            numericPosByte.Font = posfont_regular;
-            updatePos();
-        }
-
-        private void hexadecimalPositionToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            decimalPositionToolStripMenuItem.Checked = false;
-            hexadecimalPositionToolStripMenuItem.Checked = true;
-            decimal_position = false;
-            numericPosByte.Font = posfont_bold;
-            updatePos();
-        }
-
-        private void saveImageContextItem_Click(object sender, EventArgs e)
-        {
-            if (preset.width == 1 || preset.height == 1)
-            {
-                // if height is 1, we need to save everything seen anyway
-                saveAllVisibleContextItem_Click(sender, e);
-                return;
-            }
-
-            if (selected_tile < 0) // shouldn't happen, but giving an error just in case
-            {
-                MessageBox.Show("No image selected?", "Binxelview");
-                return;
-            }
-
-            long pos = (pos_byte * 8) + pos_bit;
-            pos += selected_tile * ((preset.next_stride_byte * 8) + preset.next_stride_bit);
-
-            SaveFileDialog d = new SaveFileDialog();
-            d.Title = "Save Image";
-            d.DefaultExt = "png";
-            d.Filter = "PNG Image (*.png)|*.png|All files (*.*)|*.*";
-            d.FileName = data_file + string.Format(".{0:X8}.{1:D1}.png", pos >> 3, pos & 7);
-            if (d.ShowDialog() == DialogResult.OK)
-            {
-                int w = preset.width;
-                int h = preset.height;
-                renderGrid(pos, 1, 1, 0, 0, w, h, true);
-
-                Bitmap b;
-                if (preset.bpp <= 8)
-                {
-                    b = renderGridIndexToBitmap();
-                }
-                else
-                {
-                    b = new Bitmap(w, h, PixelFormat.Format32bppArgb);
-                    renderGridColorToBitmap(b, 1);
-                }
-
-                try
-                {
-                    b.Save(d.FileName);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), "Binxelview");
-                }
-
-                redrawPixels();
-            }
-        }
-
-        private void saveAllVisibleContextItem_Click(object sender, EventArgs e)
-        {
-            saveAllVisibleToolStripMenuItem_Click(sender, e);
-        }
-
-        private void saveAllVisibleToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            long pos = (pos_byte * 8) + pos_bit;
-
-            SaveFileDialog d = new SaveFileDialog();
-            d.Title = "Save All Visible";
-            d.DefaultExt = "png";
-            d.Filter = "PNG Image (*.png)|*.png|All files (*.*)|*.*";
-            d.FileName = data_file + string.Format(".{0:X8}.{1:D1}.png",pos>>3,pos&7);
-            if (d.ShowDialog() == DialogResult.OK)
-            {
-                int w = pixel_gx * pixel_twp + pixel_padx;
-                int h = pixel_gy * pixel_thp + pixel_pady;
-                renderGrid(pos, pixel_gx, pixel_gy, pixel_padx, pixel_pady, w, h, true);
-
-                Bitmap b;
-                if (preset.bpp <= 8)
-                {
-                    b = renderGridIndexToBitmap();
-                }
-                else
-                {
-                    b = new Bitmap(w, h, PixelFormat.Format32bppArgb);
-                    renderGridColorToBitmap(b, 1);
-                }
-
-                try
-                {
-                    b.Save(d.FileName);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), "Binxelview");
-                }
-
-                redrawPixels();
-            }
-        }
-
-        private void positionToPixelToolContextItem_Click(object sender, EventArgs e)
-        {
-            if (selected_pos >= 0 && selected_pos < (data.Length * (long)8))
-            {
-                pos_byte = selected_pos >> 3;
-                pos_bit = (int)(selected_pos & 7);
-                updatePos(true);
-            }
-        }
-
-        private void pixelsToPaletteToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            long read_pos = selected_pos;
-            if (read_pos < 0) return;
-            // extract new palette
-            Color[] new_pal = new Color[PALETTE_DIM*PALETTE_DIM];
-            int count = 0;
-            for (int i=0; i<(PALETTE_DIM*PALETTE_DIM); ++i)
-            {
-                long p = readPixel(read_pos);
-                if (p < 0) break;
-                Color c = getPalette(p); // can't modify the new palette because we read it here
-                new_pal[i] = c;
-                ++count;
-                read_pos += preset.pixel_stride_bit;
-                read_pos += preset.pixel_stride_byte * 8;
-            }
-            // replace old palette
-            for (int i=0; i<count; ++i)
-            {
-                palette_mode = PaletteMode.PALETTE_CUSTOM;
-                Color c = new_pal[i];
-                setPalette(i,c.R,c.G,c.B);
-            }
-            refreshPalette();
-            redrawPixels();
-        }
+        //
+        // Pixel Panel (Design Linked)
+        //
 
         private void pixelBox_Resize(object sender, EventArgs e)
         {
             redrawPixels();
-        }
-
-        private void buttonZoom_Click(object sender, EventArgs e)
-        {
-            if ((Control.ModifierKeys & Keys.Shift) != 0)
-            {
-                --zoom;
-            }
-            else
-            {
-                ++zoom;
-            }
-            if (zoom < numericZoom.Minimum) zoom = (int)numericZoom.Minimum;
-            if (zoom > numericZoom.Maximum) zoom = (int)numericZoom.Maximum;
-            numericZoom.Value = zoom;
-            redrawPixels();
-        }
-
-        private void buttonZoom_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Right) return;
-            --zoom;
-            if (zoom < numericZoom.Minimum) zoom = (int)numericZoom.Minimum;
-            numericZoom.Value = zoom;
-            redrawPixels();
-        }
-
-        private void common_AdvanceClick(int inc_byte, int inc_bit)
-        {
-            if ((Control.ModifierKeys & Keys.Shift) != 0)
-            {
-                pos_byte -= inc_byte;
-                pos_bit -= inc_bit;
-            }
-            else
-            {
-                pos_byte += inc_byte;
-                pos_bit += inc_bit;
-            }
-            normalizePos();
-        }
-
-        private void common_AdvanceMouseDown(MouseEventArgs e, int inc_byte, int inc_bit)
-        {
-            if (e.Button != MouseButtons.Right) return;
-            pos_byte -= inc_byte;
-            pos_bit -= inc_bit;
-            normalizePos();
-        }
-
-        private void buttonBytePos_Click(object sender, EventArgs e)
-        {
-            common_AdvanceClick(1, 0);
-        }
-
-        private void buttonBitPos_Click(object sender, EventArgs e)
-        {
-            common_AdvanceClick(0, 1);
-        }
-
-        private void buttonPixel_Click(object sender, EventArgs e)
-        {
-            common_AdvanceClick(preset.pixel_stride_byte, preset.pixel_stride_bit);
-        }
-
-        private void buttonRow_Click(object sender, EventArgs e)
-        {
-            common_AdvanceClick(preset.row_stride_byte, preset.row_stride_bit);
-        }
-
-        private void buttonNext_Click(object sender, EventArgs e)
-        {
-            common_AdvanceClick(next_increment_byte, next_increment_bit);
-        }
-
-        private void buttonBytePos_MouseDown(object sender, MouseEventArgs e)
-        {
-            common_AdvanceMouseDown(e, 1, 0);
-        }
-
-        private void buttonBitPos_MouseDown(object sender, MouseEventArgs e)
-        {
-            common_AdvanceMouseDown(e, 0, 1);
-        }
-
-        private void buttonPixel_MouseDown(object sender, MouseEventArgs e)
-        {
-            common_AdvanceMouseDown(e, preset.pixel_stride_byte, preset.pixel_stride_bit);
-        }
-
-        private void buttonRow_MouseDown(object sender, MouseEventArgs e)
-        {
-            common_AdvanceMouseDown(e, preset.row_stride_byte, preset.row_stride_bit);
-        }
-
-        private void buttonNext_MouseDown(object sender, MouseEventArgs e)
-        {
-            common_AdvanceMouseDown(e, next_increment_byte, next_increment_bit);
-        }
-
-        private void buttonZero_Click(object sender, EventArgs e)
-        {
-            pos_byte = 0;
-            pos_bit = 0;
-            updatePos();
-        }
-
-        private void snapScrollToNextStrideToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            snap_scroll = !snap_scroll;
-            snapScrollToNextStrideToolStripMenuItem.Checked = snap_scroll;
-            scrollRange();
-        }
-
-        private void verticalLayoutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            horizontal_layout = false;
-            verticalLayoutToolStripMenuItem.Checked = true;
-            horizontalLayoutToolStripMenuItem.Checked = false;
-            redrawPixels();
-        }
-
-        private void horizontalLayoutToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            horizontal_layout = true;
-            verticalLayoutToolStripMenuItem.Checked = false;
-            horizontalLayoutToolStripMenuItem.Checked = true;
-            redrawPixels();
-        }
-
-        private void twiddleNToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (twiddle == 2) twiddle = 0;
-            else twiddle = 2;
-            twiddleZToolStripMenuItem.Checked = twiddle == 1;
-            twiddleNToolStripMenuItem.Checked = twiddle == 2;
-            redrawPixels();
-        }
-
-        private void twiddleZToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (twiddle == 1) twiddle = 0;
-            else twiddle = 1;
-            twiddleZToolStripMenuItem.Checked = twiddle == 1;
-            twiddleNToolStripMenuItem.Checked = twiddle == 2;
-            redrawPixels();
-        }
-
-        private void gridToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            hidegrid = !hidegrid;
-            gridToolStripMenuItem.Checked = !hidegrid;
-            redrawPixels();
-        }
-
-        private void exportBinaryChunkToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            BinaryChunkExportForm exportForm = new BinaryChunkExportForm(pos_byte, !decimal_position, data);
-            exportForm.ShowDialog();
         }
 
         private void pixelBox_MouseMove(object sender, MouseEventArgs e)
@@ -2132,8 +2047,8 @@ namespace Binxelview
             // clear selection
             selected_tile = -1;
             selected_pos = -1;
-            saveImageToolStripMenuItem.Enabled = false;
-            pixelsToPaletteToolStripMenuItem.Enabled = false;
+            saveImageContextItem.Enabled = false;
+            pixelsToPaletteContextItem.Enabled = false;
 
             // grid settings from last redrawPixels
             int padx = pixel_padx;
@@ -2198,8 +2113,8 @@ namespace Binxelview
             // record selection
             selected_tile = tile;
             selected_pos = pos;
-            saveImageToolStripMenuItem.Enabled = true;
-            pixelsToPaletteToolStripMenuItem.Enabled = true;
+            saveImageContextItem.Enabled = true;
+            pixelsToPaletteContextItem.Enabled = true;
 
             // pixel info
             labelInfoPixel.Text = String.Format("{0:D}+{1:D1} = {2:D}\n{0:X8}+{1:D1} = {2:X}", (int)(pos>>3), (int)(pos&7), p);
@@ -2233,36 +2148,105 @@ namespace Binxelview
             redrawPixels();
         }
 
-        private void dataGridPixel_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
+        private void saveImageContextItem_Click(object sender, EventArgs e)
         {
-            int result;
-            if (!int.TryParse(e.FormattedValue.ToString(), out result))
+            if (preset.width == 1 || preset.height == 1)
             {
-                e.Cancel = true;
+                // if height is 1, we need to save everything seen anyway
+                saveAllVisibleContextItem_Click(sender, e);
+                return;
             }
-        }
 
-        private void dataGridPixel_CellValueChanged(object sender, DataGridViewCellEventArgs e)
-        {
-            int x = e.ColumnIndex;
-            int y = e.RowIndex;
-            if (x < 1) return;
-            if (x > 2) return;
-            if (y < 0) return;
-            if (y >= MAX_BPP) return;
-
-            int result;
-            string value = (string)dataGridPixel.Rows[y].Cells[x].Value;
-            if (int.TryParse(value,out result))
+            if (selected_tile < 0) // shouldn't happen, but giving an error just in case
             {
-                if (x == 1) preset.bit_stride_byte[y] = result;
-                if (x == 2) preset.bit_stride_bit[y] = result;
+                MessageBox.Show("No image selected?", "Binxelview");
+                return;
+            }
+
+            long pos = (pos_byte * 8) + pos_bit;
+            pos += selected_tile * ((preset.next_stride_byte * 8) + preset.next_stride_bit);
+
+            SaveFileDialog d = new SaveFileDialog();
+            d.Title = "Save Image";
+            d.DefaultExt = "png";
+            d.Filter = "PNG Image (*.png)|*.png|All files (*.*)|*.*";
+            d.FileName = data_file + string.Format(".{0:X8}.{1:D1}.png", pos >> 3, pos & 7);
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                int w = preset.width;
+                int h = preset.height;
+                renderGrid(pos, 1, 1, 0, 0, w, h, true);
+
+                Bitmap b;
+                if (preset.bpp <= 8)
+                {
+                    b = renderGridIndexToBitmap();
+                }
+                else
+                {
+                    b = new Bitmap(w, h, PixelFormat.Format32bppArgb);
+                    renderGridColorToBitmap(b, 1);
+                }
+
+                try
+                {
+                    b.Save(d.FileName);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), "Binxelview");
+                }
+
                 redrawPixels();
             }
         }
 
+        private void saveAllVisibleContextItem_Click(object sender, EventArgs e)
+        {
+            saveAllVisibleFileMenuItem_Click(sender, e);
+        }
+
+        private void positionToPixelToolContextItem_Click(object sender, EventArgs e)
+        {
+            if (selected_pos >= 0 && selected_pos < (data.Length * (long)8))
+            {
+                pos_byte = selected_pos >> 3;
+                pos_bit = (int)(selected_pos & 7);
+                updatePos(true);
+            }
+        }
+
+        private void pixelsToPaletteContextItem_Click(object sender, EventArgs e)
+        {
+            long read_pos = selected_pos;
+            if (read_pos < 0) return;
+            // extract new palette
+            Color[] new_pal = new Color[PALETTE_DIM*PALETTE_DIM];
+            int count = 0;
+            for (int i=0; i<(PALETTE_DIM*PALETTE_DIM); ++i)
+            {
+                long p = readPixel(read_pos);
+                if (p < 0) break;
+                Color c = getPalette(p); // can't modify the new palette yet because we read it here
+                new_pal[i] = c;
+                ++count;
+                read_pos += preset.pixel_stride_bit;
+                read_pos += preset.pixel_stride_byte * 8;
+            }
+            // replace old palette
+            for (int i=0; i<count; ++i)
+            {
+                palette_mode = PaletteMode.PALETTE_CUSTOM;
+                palette_path = "";
+                Color c = new_pal[i];
+                setPalette(i,c.R,c.G,c.B);
+            }
+            redrawPalette();
+            redrawPixels();
+        }
+
         //
-        // Other Form overrides
+        // Main Form
         //
 
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
@@ -2271,14 +2255,93 @@ namespace Binxelview
             switch (keyData)
             {
                 case Keys.Control | Keys.O:
-                    openToolStripMenuItem_Click(this, null);
+                    openFileMenuItem_Click(this, null);
                     return true;
                 case Keys.Control | Keys.R:
-                    reloadFileToolStripMenuItem_Click(this, null);
+                    reloadFileMenuItem_Click(this, null);
                     return true;
                 default:
                     return base.ProcessCmdKey(ref msg, keyData);
             }
+        }
+
+        private void BinxelviewForm_DragDrop(object sender, DragEventArgs e)
+        {
+            string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
+            foreach (string file in files) openFile(file);
+        }
+
+        private void BinxelviewForm_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = (e.Data.GetDataPresent(DataFormats.FileDrop)) ?
+                DragDropEffects.Copy : DragDropEffects.None;
+        }
+
+        public BinxelviewForm()
+        {
+            InitializeComponent();
+        }
+
+        private void BinxelviewForm_Load(object sender, EventArgs e)
+        {
+            // suppress unnecessary redraws during setup
+            disable_pixel_redraw = true;
+
+            // additional form setup
+            posfont_regular = new Font(numericPosByte.Font, FontStyle.Regular);
+            posfont_bold = new Font(numericPosByte.Font, FontStyle.Bold);
+            comboBoxPalette.SelectedIndex = (int)PaletteMode.PALETTE_RGB - 1;
+
+            // set default options
+            defaultOption();
+
+            // setup presets
+            default_preset.empty();
+            reloadPresets(); // loads "Default" preset if it exists
+            preset = default_preset.copy();
+
+            // load default palette if it exists
+            DirectoryInfo dir_cwd = new DirectoryInfo(".");
+            DirectoryInfo dir_app = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+            string pal_cwd = Path.Combine(dir_cwd.ToString(),"default.pal");
+            string pal_app = Path.Combine(dir_app.ToString(),"default.pal");
+            bool success = true;
+            if      (File.Exists(pal_cwd)) { success = loadPalette(pal_cwd,0); }
+            else if (File.Exists(pal_app)) { success = loadPalette(pal_app,0); }
+            if (!success)  MessageBox.Show("Error opening default palette:\n" + palette_error,"Binxelview");
+
+            // parse INI file
+            // TODO find INI, 3 locations
+
+            // parse the command line options
+            string[] args = Environment.GetCommandLineArgs();
+            string arg_err = "";
+            option_palette_type = -1;
+            for (int i=1; i<args.Length; ++i)
+            {
+                string arg = args[i];
+                if (!arg.StartsWith("-")) // anything that doesn't start with - is the file to open
+                {
+                    openFile(arg);
+                }
+                else // anything that starts with - or -- is an option
+                {
+                    string sarg = arg.Substring(1);
+                    if (sarg.StartsWith("-")) sarg = sarg.Substring(1);
+                    string opt_err = parseOption(sarg,".",false);
+                    if (opt_err.Length > 0 && arg_err.Length > 0) arg_err += "\n";
+                    arg_err += opt_err;
+                }
+            }
+            if (arg_err.Length > 0) MessageBox.Show("Command line error:\n" + arg_err,"Binxelview");
+
+            autoPalette();
+            scrollRange();
+            redrawOptions();
+            redrawPreset();
+            redrawPalette();
+            disable_pixel_redraw = false; // finally allow redraw of pixels
+            redrawPixels();
         }
     }
 }
