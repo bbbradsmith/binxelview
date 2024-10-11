@@ -128,6 +128,10 @@ otherwise an automatic RGB or Greyscale palette can be applied.
 Custom palettes are 24-bit RGB triples (8 bits for each component).
 Click on a colour in the palette box to edit it.
 
+You can create a default palette named "default.pal" to be loaded automatically at startup.
+As with presets, it will check the current working directory for "default.pal" first,
+before also checking the directory of the executable.
+
 If you are able to view a block of palette data in a file, you can quickly copy it to the palette.
 Right click on the first pixel of the block, and the palette will be generated with the colour of
 each pixel starting with that one. Note that this assumes contiguous pixel data, and will not account
@@ -235,6 +239,7 @@ Changes
 - VGA Palette preset.
 - Indicate hexadecimal position with bold font.
 - Command line arguments for options.
+- Default palette ability.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.

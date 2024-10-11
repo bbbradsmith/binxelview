@@ -329,7 +329,7 @@ namespace Binxelview
                     valu.EndsWith(".TIF");
                 bool vga =
                     valu.EndsWith(".VGA");
-                if (!openPalette(val,image,vga)) return "Could not load palette file: "+val+"\n"+palette_error;
+                if (!loadPalette(val,image,vga)) return "Could not load palette file: "+val+"\n"+palette_error;
                 return "";
             }
             if (opt == "AUTOPAL")
@@ -1043,9 +1043,19 @@ namespace Binxelview
             }
         }
 
-        bool openPalette(string path, bool image, bool sixbit_vga)
+        void initCustomPalette()
         {
+            // initialize palette to grey stripes
+            for (int i=0; i<(PALETTE_DIM*PALETTE_DIM); ++i)
+            {
+                int v = ((i&1)==1) ? 0x84 : 0x74;
+                setPalette(i,v,v,v);
+            }
             palette_mode = PaletteMode.PALETTE_CUSTOM;
+        }
+
+        bool loadPalette(string path, bool image, bool sixbit_vga)
+        {
 
             if (image)
             {
@@ -1066,6 +1076,8 @@ namespace Binxelview
                     palette_error = "Image does not contain a palette.";
                     return false;
                 }
+
+                initCustomPalette();
                 for (int i=0; (i<(PALETTE_DIM*PALETTE_DIM)) && (i<cols.Length); ++i)
                 {
                     Color c = cols[i];
@@ -1085,6 +1097,7 @@ namespace Binxelview
                 return false;
             }
 
+            initCustomPalette();
             for (int i=0; (i<(PALETTE_DIM*PALETTE_DIM)) && (((i*3)+2)<read_data.Length); ++i)
             {
                 int r = read_data[(i * 3) + 0];
@@ -1320,7 +1333,17 @@ namespace Binxelview
             reloadPresets(); // loads "Default" preset if it exists
             preset = default_preset.copy();
 
-            // open file from the command line
+            // load default palette if it exists
+            DirectoryInfo dir_cwd = new DirectoryInfo(".");
+            DirectoryInfo dir_app = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+            string pal_cwd = Path.Combine(dir_cwd.ToString(),"default.pal");
+            string pal_app = Path.Combine(dir_app.ToString(),"default.pal");
+            bool success = true;
+            if      (File.Exists(pal_cwd)) { success = loadPalette(pal_cwd,false,false); }
+            else if (File.Exists(pal_app)) { success = loadPalette(pal_app,false,false); }
+            if (!success)  MessageBox.Show("Error opening default palette:\n" + palette_error,"Binxelview");
+
+            // parse the command line options
             string[] args = Environment.GetCommandLineArgs();
             string arg_err = "";
             for (int i=1; i<args.Length; ++i)
@@ -1339,10 +1362,7 @@ namespace Binxelview
                     arg_err += opt_err;
                 }
             }
-            if (arg_err.Length > 0)
-            {
-                MessageBox.Show("Command line error:\n" + arg_err,"Binxelview");
-            }
+            if (arg_err.Length > 0) MessageBox.Show("Command line error:\n" + arg_err,"Binxelview");
 
             scrollRange();
             redrawPreset();
@@ -1664,7 +1684,7 @@ namespace Binxelview
                 "All files, RGB24 (*.*)|*.*";
             if (d.ShowDialog() == DialogResult.OK)
             {
-                if (openPalette(d.FileName,d.FilterIndex==2,d.FilterIndex==3))
+                if (loadPalette(d.FileName,d.FilterIndex==2,d.FilterIndex==3))
                 {
                     refreshPalette();
                     redrawPixels();
