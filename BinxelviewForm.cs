@@ -1682,7 +1682,7 @@ namespace Binxelview
             d.Filter =
                 "Palette, RGB24 (*.pal)|*.pal|" +
                 "Image (*.bmp;*.gif;*.png;*.tif)|*.bmp;*.gif;*.png;*.tif|" +
-                "VGA Palette, 6-bit RGB18 (*.*)|*.*|"+
+                "VGA Palette, 6-bit RGB18 (*.vga;*.*)|*.vga;*.*|"+
                 "All files, RGB24 (*.*)|*.*";
             if (d.ShowDialog() == DialogResult.OK)
             {
