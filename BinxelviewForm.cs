@@ -323,14 +323,16 @@ namespace Binxelview
             }
             if (opt == "PAL") // load palette file
             {
-                bool image =
+                int paltype = 0;
+                if (
                     valu.EndsWith(".BMP") ||
                     valu.EndsWith(".GIF") ||
                     valu.EndsWith(".PNG") ||
-                    valu.EndsWith(".TIF");
-                bool vga =
-                    valu.EndsWith(".VGA");
-                if (!loadPalette(val,image,vga)) return "Could not load palette file: "+val+"\n"+palette_error;
+                    valu.EndsWith(".TIF"))
+                    paltype = 1;
+                if (valu.EndsWith(".VGA")) paltype = 2;
+                if (valu.EndsWith(".RIFF")) paltype = 3;
+                if (!loadPalette(val,paltype)) return "Could not load palette file: "+val+"\n"+palette_error;
                 return "";
             }
             if (opt == "AUTOPAL")
@@ -1055,10 +1057,14 @@ namespace Binxelview
             palette_mode = PaletteMode.PALETTE_CUSTOM;
         }
 
-        bool loadPalette(string path, bool image, bool sixbit_vga)
+        bool loadPalette(string path, int filetype)
         {
+            // filetype <=0,>=4: RGB24
+            //          1: image (BMP, GIF, PNG, TIF)
+            //          2: VGA RGB18 stored in the low 6 bits of each byte.
+            //          3: Microsoft RIFF PAL
 
-            if (image)
+            if (filetype == 1) // image
             {
                 Image img;
                 try
@@ -1100,13 +1106,79 @@ namespace Binxelview
                 return false;
             }
 
+            if (filetype == 3) // Microsoft RIFF palette format
+            {
+                // verify RIFF header
+                if (read_data.Length < 12 ||
+                    read_data[ 0] != 'R' ||
+                    read_data[ 1] != 'I' ||
+                    read_data[ 2] != 'F' ||
+                    read_data[ 3] != 'F' ||
+                    read_data[ 8] != 'P' ||
+                    read_data[ 9] != 'A' ||
+                    read_data[10] != 'L' ||
+                    read_data[11] != ' ')
+                {
+                    palette_error = "Microsoft RIFF PAL has invalid header.";
+                    return false;
+                }
+
+                // find data chunk
+                int chunk_len = 0;
+                int riff_pos = 12;
+                while ((riff_pos+8) < read_data.Length)
+                {
+                    chunk_len =
+                        (read_data[riff_pos+4] <<  0) |
+                        (read_data[riff_pos+5] <<  8) |
+                        (read_data[riff_pos+6] << 16) |
+                        (read_data[riff_pos+7] << 24);
+                    if (chunk_len < 0)
+                    {
+                        palette_error = "Microsoft RIFF PAL has invalid chunk size.";
+                        return false;
+                    }
+
+                    if (read_data[riff_pos+0] == 'd' &&
+                        read_data[riff_pos+1] == 'a' &&
+                        read_data[riff_pos+2] == 't' &&
+                        read_data[riff_pos+3] == 'a')
+                        break;
+                    riff_pos += 8 + chunk_len; // skip to next chunk
+                }
+                if ((riff_pos+8) >= read_data.Length)
+                {
+                    palette_error = "Microsoft RIFF PAL missing data chunk.";
+                    return false;
+                }
+                if ((riff_pos+8+chunk_len) > read_data.Length || chunk_len < 4)
+                {
+                    palette_error = "Microsoft RIFF PAL data chunk incomplete.";
+                    return false;
+                }
+
+                // replace read_data with converted data chunk
+                riff_pos += 12; // 8 byte 'data' + size header, 4 bytes ignored: 00 03 00 01 (unknown meaning)
+                chunk_len -= 4; // first 4 bytes skipped
+                byte[] riff_convert = new byte[(chunk_len / 4) * 3];
+                for (int i=0; (i+2)<chunk_len; i+=4)
+                {
+                    int pi = (i/4)*3;
+                    riff_convert[pi+0] = read_data[riff_pos+i+0];
+                    riff_convert[pi+1] = read_data[riff_pos+i+1];
+                    riff_convert[pi+2] = read_data[riff_pos+i+2];
+                    // 4th byte of each entry is ignored (typically 0)
+                }
+                read_data = riff_convert;
+            }
+
             initCustomPalette();
             for (int i=0; (i<(PALETTE_DIM*PALETTE_DIM)) && (((i*3)+2)<read_data.Length); ++i)
             {
                 int r = read_data[(i * 3) + 0];
                 int g = read_data[(i * 3) + 1];
                 int b = read_data[(i * 3) + 2];
-                if (sixbit_vga)
+                if (filetype == 2) // VGA palette
                 {
                     // Convert 18-bit VGA palette to 24-bit
                     r = r * 255 / 63;
@@ -1342,8 +1414,8 @@ namespace Binxelview
             string pal_cwd = Path.Combine(dir_cwd.ToString(),"default.pal");
             string pal_app = Path.Combine(dir_app.ToString(),"default.pal");
             bool success = true;
-            if      (File.Exists(pal_cwd)) { success = loadPalette(pal_cwd,false,false); }
-            else if (File.Exists(pal_app)) { success = loadPalette(pal_app,false,false); }
+            if      (File.Exists(pal_cwd)) { success = loadPalette(pal_cwd,0); }
+            else if (File.Exists(pal_app)) { success = loadPalette(pal_app,0); }
             if (!success)  MessageBox.Show("Error opening default palette:\n" + palette_error,"Binxelview");
 
             // parse the command line options
@@ -1684,12 +1756,13 @@ namespace Binxelview
                 "Palette, RGB24 (*.pal)|*.pal|" +
                 "Image (*.bmp;*.gif;*.png;*.tif)|*.bmp;*.gif;*.png;*.tif|" +
                 "VGA Palette, 6-bit RGB18 (*.vga;*.*)|*.vga;*.*|"+
+                "Microsoft RIFF (*.riff;*.*)|*.riff;*.*|" +
                 "All files, RGB24 (*.*)|*.*";
             d.FilterIndex = selected_palette_filter;
             if (d.ShowDialog() == DialogResult.OK)
             {
                 selected_palette_filter = d.FilterIndex; // remember last used filter
-                if (loadPalette(d.FileName,d.FilterIndex==2,d.FilterIndex==3))
+                if (loadPalette(d.FileName,d.FilterIndex-1))
                 {
                     refreshPalette();
                     redrawPixels();

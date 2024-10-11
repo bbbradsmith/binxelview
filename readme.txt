@@ -183,6 +183,7 @@ If a space is required in the value, you should enclose the entire argument in q
     Loads a palette file.
     If the extension is .BMP .GIF .PNG or .TIF it will load it as an palette from an image.
     If the extension is .VGA it will load it as 6-bit RGB18 format.
+    If the extension is .RIFF it will load it as a Microsoft RIFF palette.
     Otherwise it will load it as RGB24.
 
   -autopal=Greyscale
@@ -242,6 +243,7 @@ Changes
 - Default palette ability.
 - Fix image loaded as palette not releasing file handle.
 - Remember last used file type filter from the load palette dialog.
+- Microsoft RIFF palette support.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.
