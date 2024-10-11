@@ -188,7 +188,7 @@ If a space is required in the value, you should enclose the entire argument in q
 
   -autopal=Greyscale
     Chooses an automatic palette, one of:
-      RGB - RGB with the current preset BPP, bits evenly divided with G >= R >= B, red as the highest bits.
+      RGB - RGB with the current preset BPP, bits evenly divided with G bits >= R bits >= B bits. (Red is MSB.)
       Random - Every colour is randomized.
       Greyscale - Gradient from black to white.
       Cubehelix - Smooth gradient with rotating hue, created by Dave Green. See: https://people.phy.cam.ac.uk/dag9/CUBEHELIX/
