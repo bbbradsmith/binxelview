@@ -149,8 +149,8 @@ namespace Binxelview
                 bit_stride_bit = new int[MAX_BPP];
                 for (int i = 0; i < MAX_BPP; ++i)
                 {
-                    bit_stride_byte[i] = 0;
-                    bit_stride_bit[i] = i;
+                    bit_stride_byte[i] = i / 8;
+                    bit_stride_bit[i] = i % 8;
                 }
             }
 

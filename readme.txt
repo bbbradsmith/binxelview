@@ -276,7 +276,7 @@ Changes
 -------
 
 1.6.2.0 (unreleased beta)
-- No changes yet.
+- Use byte/bit for default chunky table instead of just bit.
 
 1.6.1.0 (2024-10-13)
 - Option persistence, INI file save and load.
