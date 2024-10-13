@@ -1,8 +1,8 @@
 
 Binxelview binary image explorer
 
-Version 1.5.0.0
-2020-07-31
+Version 1.6.0.0
+2024-10-13
 Brad Smith et al.
 
 https://github.com/bbbradsmith/binxelview
@@ -272,7 +272,7 @@ a specific INI setup.
 Changes
 -------
 
-1.6.0.0 (unreleased beta)
+1.6.0.0 (2024-10-13)
 - Option persistence, INI file save and load.
 - Command line arguments for options.
 - Pixel window option for second viewing window.
