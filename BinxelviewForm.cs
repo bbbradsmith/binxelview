@@ -230,14 +230,14 @@ namespace Binxelview
                         string[] ls = l.Split(' ');
                         little_endian = int.Parse(ls[0]) != 0;
                         chunky = int.Parse(ls[1]) != 0;
+                        if (version >= 3) twiddle = int.Parse(ls[2]);
+                        else twiddle = 0;
 
                         l = tr.ReadLine();
                         ls = l.Split(' ');
                         bpp = int.Parse(ls[0]);
                         width = int.Parse(ls[1]);
                         height = int.Parse(ls[2]);
-                        if (version >= 3) twiddle = int.Parse(ls[3]);
-                        else twiddle = 0;
 
                         l = tr.ReadLine();
                         ls = l.Split(' ');
@@ -318,6 +318,7 @@ namespace Binxelview
                 catch (Exception ex)
                 {
                     last_error = string.Format("Line {0}: ",linecount) + ex.ToString();
+                    Debug.WriteLine(last_error);
                     return false;
                 }
 
