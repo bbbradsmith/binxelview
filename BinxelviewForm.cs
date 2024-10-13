@@ -7,6 +7,7 @@ using System.IO;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using System.Xml.Linq;
+using Binxelview.Dialogs;
 
 namespace Binxelview
 {
@@ -54,6 +55,9 @@ namespace Binxelview
         Preset preset;
         List<Preset> presets;
 
+        ViewForm split_view_form;
+        PictureBox view_box;
+        VScrollBar view_scroll;
         DirectoryInfo dir_cwd, dir_exe, dir_loc;
         string ini_exe, ini_loc;
         Bitmap palette_bmp = new Bitmap(PALETTE_DIM, PALETTE_DIM);
@@ -69,6 +73,8 @@ namespace Binxelview
         bool disable_pixel_redraw = false; // used to temporarily block redraws during repeated updates
         Font posfont_regular, posfont_bold;
         Random random = new Random();
+        int main_w, main_h; // used to restore size during split_view switch
+        int fixed_w, fixed_h;
 
         // settings
         int zoom;
@@ -78,6 +84,7 @@ namespace Binxelview
         bool decimal_position;
         bool snap_scroll;
         bool horizontal_layout;
+        bool split_view;
         int twiddle; // Twiddle probably belongs in preset, but its use is very rare, and I didn't want it to take up panel space.
                      // If something more important needs a PRESET_VERSION 3, we should add it then to the preset.
                      // We could maybe place rare options like this into an "advanced" menu on the menu bar,
@@ -331,6 +338,7 @@ namespace Binxelview
             decimal_position = false;
             snap_scroll = true;
             horizontal_layout = false;
+            split_view = false;
             twiddle = 0;
             palette_path = "";
             preset_dir = "";
@@ -470,6 +478,14 @@ namespace Binxelview
                 snap_scroll = (v != 0);
                 return "";
             }
+            if (opt == "SPLITVIEW")
+            {
+                int v;
+                if (!int.TryParse(val,out v)) return "Could not parse integer for splitview: "+val;
+                if (v != 0 && v != 1) return "Splitview value must be 0 or 1: "+val;
+                split_view = (v != 0);
+                return "";
+            }
             if (opt == "HORIZONTAL")
             {
                 int v;
@@ -562,6 +578,7 @@ namespace Binxelview
                     sw.WriteLine(string.Format("grid={0}",hidegrid ? 0 : 1));
                     sw.WriteLine(string.Format("hexpos={0}",decimal_position ? 0 : 1));
                     sw.WriteLine(string.Format("snapscroll={0}",snap_scroll ? 1 : 0));
+                    sw.WriteLine(string.Format("splitview={0}",split_view ? 1 : 0));
                     sw.WriteLine(string.Format("horizontal={0}",horizontal_layout ? 1 : 0));
                     sw.WriteLine(string.Format("twiddle={0}",twiddle));
                     sw.WriteLine("# end");
@@ -1097,8 +1114,8 @@ namespace Binxelview
 
         void scrollRange()
         {
-            if (pixelScroll.Value > data.Length) pixelScroll.Value = data.Length;
-            pixelScroll.Maximum = data.Length;
+            if (view_scroll.Value > data.Length) view_scroll.Value = data.Length;
+            view_scroll.Maximum = data.Length;
 
             next_increment_byte = preset.next_stride_byte * ((preset.height == 1) ? 16 : 1);
             next_increment_bit = preset.next_stride_bit * ((preset.height == 1) ? 16 : 1);
@@ -1106,12 +1123,12 @@ namespace Binxelview
             next_increment_byte += nb;
             next_increment_bit -= nb * 8;
 
-            pixelScroll.LargeChange = (next_increment_byte >= 0) ? next_increment_byte : -next_increment_byte;
+            view_scroll.LargeChange = (next_increment_byte >= 0) ? next_increment_byte : -next_increment_byte;
 
-            pixelScroll.SmallChange = 1;
+            view_scroll.SmallChange = 1;
             if (snap_scroll)
             {
-                pixelScroll.SmallChange = pixelScroll.LargeChange;
+                view_scroll.SmallChange = view_scroll.LargeChange;
             }
         }
 
@@ -1122,9 +1139,9 @@ namespace Binxelview
             numericPosBit.Value = pos_bit;
             if (update_scroll)
             {
-                pixelScroll.Value =
-                    ((int)pos_byte < pixelScroll.Minimum) ? pixelScroll.Minimum :
-                    ((int)pos_byte > pixelScroll.Maximum) ? pixelScroll.Maximum :
+                view_scroll.Value =
+                    ((int)pos_byte < view_scroll.Minimum) ? view_scroll.Minimum :
+                    ((int)pos_byte > view_scroll.Maximum) ? view_scroll.Maximum :
                     (int)pos_byte;
             }
         }
@@ -1187,6 +1204,7 @@ namespace Binxelview
             data_path = path;
             data_file = Path.GetFileName(path);
             this.Text = APPNAME + " (" + data_file + ")";
+            split_view_form.Text = "Pixel (" + data_file + ")";
             redrawPixels();
             return true;
         }
@@ -1440,8 +1458,8 @@ namespace Binxelview
         {
             if (disable_pixel_redraw) return;
 
-            int w = pixelBox.Width - 2;
-            int h = pixelBox.Height - 2;
+            int w = view_box.Width - 2;
+            int h = view_box.Height - 2;
             if (w < 1 || h < 1) return;
 
             if (pixel_bmp == null ||
@@ -1479,7 +1497,7 @@ namespace Binxelview
 
             renderGrid((pos_byte * 8) + pos_bit, gx, gy, padx, pady, sx, sy, true);
             renderGridColorToBitmap(pixel_bmp, zoom);
-            pixelBox.Image = pixel_bmp;
+            view_box.Image = pixel_bmp;
         }
 
         void redrawPreset()
@@ -1587,7 +1605,8 @@ namespace Binxelview
             decimalPositionOptionsMenuItem.Checked = decimal_position;
             hexadecimalPositionOptionsMenuItem.Checked = !decimal_position;
             numericPosByte.Font = decimal_position ? posfont_regular : posfont_bold;
-            snapScrollToNextStrideOptionsMenuItem.Checked = snap_scroll;
+            snapScrollOptionsMenuItem.Checked = snap_scroll;
+            splitViewOptionsMenuItem.Checked = split_view;
             if (palette_mode != PaletteMode.PALETTE_CUSTOM)
                 comboBoxPalette.SelectedIndex = (int)palette_mode - 1;
             verticalLayoutOptionsMenuItem.Checked = !horizontal_layout;
@@ -1596,6 +1615,39 @@ namespace Binxelview
             twiddleNOptionsMenuItem.Checked = twiddle == 2;
             bgBox.BackColor = background;
             saveOnExitOptionsMenuItem.Checked = save_ini;
+            if (!split_view)
+            {
+                view_box = pixelBox;
+                view_scroll = pixelScroll;
+                if (split_view_form.Visible)
+                {
+                    split_view_form.Hide();
+                    this.SetBounds(this.Left,this.Top,main_w,main_h);
+                    pixelBox.Show(); // do this after SetBounds because it causes a pixelBox_Resize
+                    pixelScroll.Show();
+                    scrollRange();
+                }
+            }
+            else
+            {
+                view_box = split_view_form.getPixelBox();
+                view_scroll = split_view_form.getPixelScroll();
+                if (!split_view_form.Visible)
+                {
+                    split_view_form.Show();
+                    this.SetBounds(this.Left,this.Top,fixed_w,fixed_h);
+                    pixelBox.Hide();
+                    pixelScroll.Hide();
+                    scrollRange();
+                }
+            }
+        }
+
+        public void splitviewClose()
+        {
+            split_view = false;
+            redrawOptions();
+            redrawPixels();
         }
 
         //
@@ -1701,9 +1753,10 @@ namespace Binxelview
             int old_bpp = preset.bpp;
             preset = presets[index].copy();
             if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
+            scrollRange();
             redrawPalette();
             redrawPreset();
-            scrollRange();
+            redrawPixels();
         }
 
         private void decimalPositionOptionsMenuItem_Click(object sender, EventArgs e)
@@ -1741,11 +1794,18 @@ namespace Binxelview
             redrawPixels();
         }
 
-        private void snapScrollToNextStrideOptionsMenuItem_Click(object sender, EventArgs e)
+        private void snapScrollOptionsMenuItem_Click(object sender, EventArgs e)
         {
             snap_scroll = !snap_scroll;
             redrawOptions();
             scrollRange();
+        }
+
+        private void splitViewOptionsMenuItem_Click(object sender, EventArgs e)
+        {
+            split_view = !split_view;
+            redrawOptions();
+            redrawPixels();
         }
 
         private void twiddleZOptionsMenuItem_Click(object sender, EventArgs e)
@@ -2068,9 +2128,10 @@ namespace Binxelview
                     int old_bpp = preset.bpp;
                     preset = p;
                     if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
+                    scrollRange();
                     redrawPalette();
                     redrawPreset();
-                    scrollRange();
+                    redrawPixels();
                 }
                 else
                 {
@@ -2287,12 +2348,17 @@ namespace Binxelview
         // Pixel Panel (Design Linked)
         //
 
-        private void pixelBox_Resize(object sender, EventArgs e)
+        public void pixelBox_Resize(object sender, EventArgs e)
         {
+            if (!split_view) // remember window size in case split_view changes
+            {
+                main_w = this.Width;
+                main_h = this.Height;
+            }
             redrawPixels();
         }
 
-        private void pixelBox_MouseMove(object sender, MouseEventArgs e)
+        public void pixelBox_MouseMove(object sender, MouseEventArgs e)
         {
             // clear selection
             selected_tile = -1;
@@ -2370,7 +2436,7 @@ namespace Binxelview
             labelInfoPixel.Text = String.Format("{0:D}+{1:D1} = {2:D}\n{0:X8}+{1:D1} = {2:X}", (int)(pos>>3), (int)(pos&7), p);
         }
 
-        private void pixelScroll_Scroll(object sender, ScrollEventArgs e)
+        public void pixelScroll_Scroll(object sender, ScrollEventArgs e)
         {
             if (snap_scroll)
             {
@@ -2499,7 +2565,7 @@ namespace Binxelview
         // Main Form
         //
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        public bool handleHotkeys(ref Message msg, Keys keyData)
         {
             // global hotkeys
             switch (keyData)
@@ -2511,8 +2577,15 @@ namespace Binxelview
                     reloadFileMenuItem_Click(this, null);
                     return true;
                 default:
-                    return base.ProcessCmdKey(ref msg, keyData);
+                    return false;
             }
+
+        }
+
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (handleHotkeys(ref msg,keyData)) return true;
+            return base.ProcessCmdKey(ref msg, keyData);
         }
 
         private void BinxelviewForm_DragDrop(object sender, DragEventArgs e)
@@ -2543,11 +2616,18 @@ namespace Binxelview
             disable_pixel_redraw = true;
 
             // additional form setup
+            view_box = pixelBox;
+            view_scroll = pixelScroll;
+            split_view_form = new ViewForm(this,pixelBox.ContextMenuStrip);
             posfont_regular = new Font(numericPosByte.Font, FontStyle.Regular);
             posfont_bold = new Font(numericPosByte.Font, FontStyle.Bold);
             comboBoxPalette.SelectedIndex = (int)PaletteMode.PALETTE_RGB - 1;
             numericZoom.Minimum = 1;
             numericZoom.Maximum = ZOOM_MAX;
+            fixed_w = this.Width; // default width is fixed width
+            fixed_h = this.Height - (pixelScroll.Height + 0); // fixed height should cut off pixel view entirely
+            main_w = this.Width;
+            main_h = this.Height;
 
             // set default options
             defaultOption();
@@ -2590,6 +2670,11 @@ namespace Binxelview
             }
             if (arg_err.Length > 0) MessageBox.Show("Command line error:\n" + arg_err, APPNAME);
 
+            // Setup is finished, will complete during BinxelviewForm_Shown.
+        }
+
+        private void BinxelviewForm_Shown(object sender, EventArgs e)
+        {
             autoPalette();
             scrollRange();
             redrawOptions();

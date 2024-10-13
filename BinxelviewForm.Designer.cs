@@ -50,7 +50,7 @@
             this.horizontalLayoutOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsMenuSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.gridOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.snapScrollToNextStrideOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.snapScrollOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsMenuSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.twiddleZOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.twiddleNOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -130,6 +130,7 @@
             this.pixelsToPaletteContextItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pixelScroll = new System.Windows.Forms.VScrollBar();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.splitViewOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             this.tableTop.SuspendLayout();
             this.groupPacking.SuspendLayout();
@@ -269,7 +270,8 @@
             this.horizontalLayoutOptionsMenuItem,
             this.optionsMenuSeparator2,
             this.gridOptionsMenuItem,
-            this.snapScrollToNextStrideOptionsMenuItem,
+            this.snapScrollOptionsMenuItem,
+            this.splitViewOptionsMenuItem,
             this.optionsMenuSeparator3,
             this.twiddleZOptionsMenuItem,
             this.twiddleNOptionsMenuItem,
@@ -334,14 +336,14 @@
             this.gridOptionsMenuItem.Text = "&Grid Padding";
             this.gridOptionsMenuItem.Click += new System.EventHandler(this.gridOptionsMenuItem_Click);
             // 
-            // snapScrollToNextStrideOptionsMenuItem
+            // snapScrollOptionsMenuItem
             // 
-            this.snapScrollToNextStrideOptionsMenuItem.Checked = true;
-            this.snapScrollToNextStrideOptionsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.snapScrollToNextStrideOptionsMenuItem.Name = "snapScrollToNextStrideOptionsMenuItem";
-            this.snapScrollToNextStrideOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.snapScrollToNextStrideOptionsMenuItem.Text = "Sna&p scroll to next stride";
-            this.snapScrollToNextStrideOptionsMenuItem.Click += new System.EventHandler(this.snapScrollToNextStrideOptionsMenuItem_Click);
+            this.snapScrollOptionsMenuItem.Checked = true;
+            this.snapScrollOptionsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.snapScrollOptionsMenuItem.Name = "snapScrollOptionsMenuItem";
+            this.snapScrollOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.snapScrollOptionsMenuItem.Text = "Sna&p scroll to next stride";
+            this.snapScrollOptionsMenuItem.Click += new System.EventHandler(this.snapScrollOptionsMenuItem_Click);
             // 
             // optionsMenuSeparator3
             // 
@@ -1377,6 +1379,13 @@
             this.pixelScroll.TabStop = true;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
             // 
+            // splitViewOptionsMenuItem
+            // 
+            this.splitViewOptionsMenuItem.Name = "splitViewOptionsMenuItem";
+            this.splitViewOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.splitViewOptionsMenuItem.Text = "Pixel &Window";
+            this.splitViewOptionsMenuItem.Click += new System.EventHandler(this.splitViewOptionsMenuItem_Click);
+            // 
             // BinxelviewForm
             // 
             this.AllowDrop = true;
@@ -1391,6 +1400,7 @@
             this.Text = "Binxelview";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BinxelviewForm_FormClosed);
             this.Load += new System.EventHandler(this.BinxelviewForm_Load);
+            this.Shown += new System.EventHandler(this.BinxelviewForm_Shown);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.BinxelviewForm_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.BinxelviewForm_DragEnter);
             this.menuStripMain.ResumeLayout(false);
@@ -1515,7 +1525,7 @@
         private System.Windows.Forms.Button buttonZoom;
         private System.Windows.Forms.Button buttonZero;
         private System.Windows.Forms.ToolStripSeparator optionsMenuSeparator2;
-        private System.Windows.Forms.ToolStripMenuItem snapScrollToNextStrideOptionsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem snapScrollOptionsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem verticalLayoutOptionsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem horizontalLayoutOptionsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem twiddleZOptionsMenuItem;
@@ -1537,6 +1547,7 @@
         private System.Windows.Forms.ToolStripSeparator optionsMenuSeparator1;
         private System.Windows.Forms.ToolStripMenuItem saveOnExitOptionsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveCurrentOptionsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem splitViewOptionsMenuItem;
     }
 }
 

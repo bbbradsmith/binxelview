@@ -63,6 +63,12 @@
     <Compile Include="Dialogs\BinaryChunkExportForm.Designer.cs">
       <DependentUpon>BinaryChunkExportForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\ViewForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\ViewForm.Designer.cs">
+      <DependentUpon>ViewForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="BinxelviewForm.resx">
@@ -70,6 +76,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Dialogs\BinaryChunkExportForm.resx">
       <DependentUpon>BinaryChunkExportForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\ViewForm.resx">
+      <DependentUpon>ViewForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

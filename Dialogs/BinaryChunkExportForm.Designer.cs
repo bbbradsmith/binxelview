@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BinaryChunkExportForm));
             this.startLabel = new System.Windows.Forms.Label();
             this.startNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.lengthNumericUpDown = new System.Windows.Forms.NumericUpDown();
@@ -117,6 +118,7 @@
             this.Controls.Add(this.startNumericUpDown);
             this.Controls.Add(this.startLabel);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "BinaryChunkExportForm";

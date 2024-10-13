@@ -226,6 +226,9 @@ For an INI file, paths can be either absolute or relative to the INI file's dire
   -snapscroll=1
     Set the "Snap scroll to next stride" option (1 on, 0 off).
 
+  -splitview=1
+    Set the "Pixel Window" option to create a separate viewing window (1 on, 0 off).
+
   -horizontal=1
     Set the layout option (1 horizontal, 0 vertical).
 
@@ -294,6 +297,7 @@ Changes
 - Microsoft RIFF palette support.
 - Option persistence, INI file save and load.
 - Removed default preset, as persistent options will remember your last preset instead.
+- Pixel window option for second viewing window.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.
