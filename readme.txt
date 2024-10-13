@@ -53,15 +53,19 @@ The top left corner of the display will start at the byte/bit offset given in th
 Right click on an image for an option to save it to disk.
 If the pixels are 8-BPP or less, it will be saved as an indexed image.
 
-Alt+0 will return to position to the start of the file.
+Alt+0 - Return to position to the start of the file.
 
-Alt+B will advance the position by 1 byte.
-Alt+I will advance the position by 1 bit.
-Alt+X will advance the position by 1 pixel.
-Alt+R will advance the position by 1 row.
-Alt+N will advance the position by 1 image (or 16 rows if the image height is 1).
+Alt+B - Advance the position by 1 byte.
+Alt+I - Advance the position by 1 bit.
+Alt+X - Advance the position by 1 pixel.
+Alt+R - Advance the position by 1 row.
+Alt+N - Advance the position by 1 image (or 16 rows if the image height is 1).
 
-Shift+Alt+B,I,X,R,N will retreat the position by 1 byte, bit, pixel, row, image.
+Shift+Alt+B,I,X,R,N - Retreat the position by 1 byte, bit, pixel, row, image.
+
+Ctrl+O - Open a new file.
+Ctrl+R - Reload the current file.
+Ctrl+W - Toggle pixel window.
 
 
 Pixel Formats
@@ -138,16 +142,6 @@ Right clicking on the first pixel, you can "load" this palette directly from the
 Similarly, the VGA Palette preset may be able to find palettes in a format commonly found in DOS games.
 After transferring the palette, you will need to select another preset to view other data in the file
 using that palette.
-
-
-Hotkeys
--------
-
-The following global hotkeys may be used:
-
-Ctrl+O - Open a new file.
-Ctrl+R - Reload the current file.
-Ctrl+W - Toggle pixel window.
 
 
 Other Notes
