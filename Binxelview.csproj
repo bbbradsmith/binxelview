@@ -57,10 +57,10 @@
     <Compile Include="BinxelviewForm.Designer.cs">
       <DependentUpon>BinxelviewForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="BinaryChunkExportForm.cs">
+    <Compile Include="Dialogs\BinaryChunkExportForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="BinaryChunkExportForm.Designer.cs">
+    <Compile Include="Dialogs\BinaryChunkExportForm.Designer.cs">
       <DependentUpon>BinaryChunkExportForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
@@ -68,7 +68,7 @@
     <EmbeddedResource Include="BinxelviewForm.resx">
       <DependentUpon>BinxelviewForm.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="BinaryChunkExportForm.resx">
+    <EmbeddedResource Include="Dialogs\BinaryChunkExportForm.resx">
       <DependentUpon>BinaryChunkExportForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
