@@ -89,6 +89,8 @@
             this.Name = "ViewForm";
             this.Text = "Pixels";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.ViewForm_FormClosing);
+            this.DragDrop += new System.Windows.Forms.DragEventHandler(this.ViewForm_DragDrop);
+            this.DragEnter += new System.Windows.Forms.DragEventHandler(this.ViewForm_DragEnter);
             this.tableBase.ResumeLayout(false);
             this.tableBase.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pixelBox)).EndInit();

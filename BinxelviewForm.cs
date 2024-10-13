@@ -2610,13 +2610,13 @@ namespace Binxelview
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
-        private void BinxelviewForm_DragDrop(object sender, DragEventArgs e)
+        public void BinxelviewForm_DragDrop(object sender, DragEventArgs e)
         {
             string[] files = (string[])e.Data.GetData(DataFormats.FileDrop, false);
             foreach (string file in files) openFile(file);
         }
 
-        private void BinxelviewForm_DragEnter(object sender, DragEventArgs e)
+        public void BinxelviewForm_DragEnter(object sender, DragEventArgs e)
         {
             e.Effect = (e.Data.GetDataPresent(DataFormats.FileDrop)) ?
                 DragDropEffects.Copy : DragDropEffects.None;

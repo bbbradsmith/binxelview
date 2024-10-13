@@ -57,5 +57,15 @@ namespace Binxelview.Dialogs
             if (binxelview_form.handleHotkeys(ref msg,keyData)) return true;
             return base.ProcessCmdKey(ref msg, keyData);
         }
+
+        private void ViewForm_DragDrop(object sender, DragEventArgs e)
+        {
+            binxelview_form.BinxelviewForm_DragDrop(sender, e);
+        }
+
+        private void ViewForm_DragEnter(object sender, DragEventArgs e)
+        {
+            binxelview_form.BinxelviewForm_DragEnter(sender, e);
+        }
     }
 }
