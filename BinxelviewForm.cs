@@ -34,7 +34,7 @@ namespace Binxelview
             "Custom",
             "RGB",
             "Random",
-            "Grey",
+            "Greyscale",
             "Cubehelix",
         };
 
@@ -431,12 +431,15 @@ namespace Binxelview
             }
             if (opt == "AUTOPAL")
             {
-                if      (valu == "RGB"      ) { palette_mode = PaletteMode.PALETTE_RGB;       }
-                else if (valu == "RANDOM"   ) { palette_mode = PaletteMode.PALETTE_RANDOM;    }
-                else if (valu == "GREYSCALE") { palette_mode = PaletteMode.PALETTE_GREY;      }
-                else if (valu == "CUBEHELIX") { palette_mode = PaletteMode.PALETTE_CUBEHELIX; }
-                else return "Unknown autopal value: "+val;
-                return "";
+                for (int i=1; i<PaletteModeString.Length; ++i)
+                {
+                    if (valu == PaletteModeString[i].ToUpperInvariant())
+                    {
+                        palette_mode = (PaletteMode)i;
+                        return "";
+                    }
+                }
+                return "Unknown autopal value: "+val;
             }
             if (opt == "BACKGROUND")
             {
