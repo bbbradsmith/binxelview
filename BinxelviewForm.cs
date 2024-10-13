@@ -52,7 +52,6 @@ namespace Binxelview
         int palette_path_type = -1;
 
         Preset preset;
-        Preset default_preset;
         List<Preset> presets;
 
         DirectoryInfo dir_cwd, dir_exe, dir_loc;
@@ -363,21 +362,20 @@ namespace Binxelview
                 save_ini = (v != 0);
                 return "";
             }
-            if (opt == "PRESETDIR") // set preset library location and reload presets, selects default if it exists
+            if (opt == "PRESETDIR") // set preset library location and reload presets
             {
                 string path = val;
                 if (!Path.IsPathRooted(path)) path = Path.Combine(base_path,path);
                 preset_dir = path;
-                if (reloadPresets()) preset = default_preset.copy();
+                reloadPresets();
             }
-            if (opt == "PRESETFILE") // load preset file to replace default
+            if (opt == "PRESETFILE") // load preset file
             {
                 string path = val;
                 if (!Path.IsPathRooted(path)) path = Path.Combine(base_path,path);
                 Preset p = new Preset();
                 if (!p.loadFile(path)) return "Could not load preset file: "+path+"\n"+Preset.last_error;
-                default_preset = p;
-                preset = default_preset.copy();
+                preset = p;
                 return "";
             }
             if (opt == "PRESET") // select named preset from the library
@@ -538,6 +536,14 @@ namespace Binxelview
                         string p = Path.GetFullPath(preset_dir);
                         if (p.StartsWith(fulldir)) p = p.Substring(fulldir.Length+1);
                         sw.WriteLine("presetdir=" + p);
+                    }
+                    foreach (Preset pi in presets) // save current preset if it exists in the library
+                    {
+                        if (preset.name == pi.name)
+                        {
+                            sw.WriteLine("preset="+preset.name);
+                            break;
+                        }
                     }
                     if (palette_mode == PaletteMode.PALETTE_CUSTOM && palette_path.Length > 0)
                     {
@@ -1184,7 +1190,7 @@ namespace Binxelview
             return true;
         }
 
-        bool reloadPresets() // returns true if default found
+        void reloadPresets()
         {
             // remove everything but Reload, Set Directory and separator
             while (presetToolStripMenuItem.DropDownItems.Count > 3)
@@ -1210,7 +1216,6 @@ namespace Binxelview
             }
 
             // load files
-            bool default_found = false;
             foreach (FileInfo file in files)
             {
                 Preset p = new Preset();
@@ -1226,16 +1231,7 @@ namespace Binxelview
                         }
                     }
 
-                    if (!duplicate)
-                    {
-                        presets.Add(p);
-                        if (p.name.ToLower()=="default")
-                        {
-                            default_found = true;
-                            default_preset = p.copy();
-                            scrollRange();
-                        }
-                    }
+                    if (!duplicate) presets.Add(p);
                 }
             }
             presets.Sort((x, y) => x.name.CompareTo(y.name));
@@ -1249,8 +1245,6 @@ namespace Binxelview
                 item.Click += presetMenu_Select;
                 presetToolStripMenuItem.DropDownItems.Add(item);
             }
-
-            return default_found;
         }
 
         void initCustomPalette()
@@ -2059,16 +2053,6 @@ namespace Binxelview
             redrawPixels();
         }
 
-        private void buttonDefaultPreset_Click(object sender, EventArgs e)
-        {
-            int old_bpp = preset.bpp;
-            preset = default_preset.copy();
-            if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
-            redrawPalette();
-            redrawPreset();
-            scrollRange();
-        }
-
         private void buttonLoadPreset_Click(object sender, EventArgs e)
         {
             OpenFileDialog d = new OpenFileDialog();
@@ -2569,17 +2553,7 @@ namespace Binxelview
 
             // setup presets
             preset.empty();
-            default_preset.empty();
-            if (reloadPresets()) preset = default_preset.copy();
-
-            // load default palette if it exists
-            string pal_cwd = Path.Combine(dir_cwd.ToString(),"default.pal");
-            string pal_exe = Path.Combine(dir_exe.ToString(),"default.pal");
-            bool success = true;
-            if      (File.Exists(pal_cwd)) { success = loadPalette(pal_cwd,0); }
-            else if (File.Exists(pal_exe)) { success = loadPalette(pal_exe,0); }
-            if (!success)  MessageBox.Show("Error opening default palette:\n" + palette_error, APPNAME);
-            palette_path = ""; // default palette doesn't count as a saved option
+            reloadPresets();
 
             // parse INI file
             ini_path = "";

@@ -115,8 +115,8 @@ Pixel Formats
 
 Presets can be loaded and saved.
 The Preset menu is populated both from the current working directory,
-and also from the directory of the executable.
-You can save a preset file "Default.bxp" to replace the default.
+and also from the directory of the executable. This can be changed instead to one
+specific directory of your choice, which will be saved with your options.
 
 
 Palette
@@ -127,10 +127,6 @@ otherwise an automatic RGB or Greyscale palette can be applied.
 
 Custom palettes are 24-bit RGB triples (8 bits for each component).
 Click on a colour in the palette box to edit it.
-
-You can create a default palette named "default.pal" to be loaded automatically at startup.
-As with presets, it will check the current working directory for "default.pal" first,
-before also checking the directory of the executable.
 
 If you are able to view a block of palette data in a file, you can quickly copy it to the palette.
 Right click on the first pixel of the block, and the palette will be generated with the colour of
@@ -188,14 +184,13 @@ For an INI file, paths can be either absolute or relative to the INI file's dire
     If this option is disabled (0) your current settings will not be remembered when you quit.
 
   "-presetfile=C:\mypreset.bxp"
-    Replaces the default preset with one from a file.
+    Loads the current preset directly from a file, without adding it to the preset library.
 
   "-preset=Atari ST 4BPP"
-    Chooses a named preset from your preset library instead of the default.
+    Chooses a named preset from your preset library.
 
   "-presetdir=C:\mypresets"
     Discards the preset library and reloads a new library from this directory only.
-    If a default preset exists in this directory, it will be selected.
     If also using -preset or -presetfile, these options should come after -presetdir.
 
   "-pal=my palettes\red.pal"
@@ -294,11 +289,11 @@ Changes
 - VGA Palette preset.
 - Indicate hexadecimal position with bold font.
 - Command line arguments for options.
-- Default palette ability.
 - Fix image loaded as palette not releasing file handle.
 - Remember last used file type filter from the load palette dialog.
 - Microsoft RIFF palette support.
 - Option persistence, INI file save and load.
+- Removed default preset, as persistent options will remember your last preset instead.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.

@@ -57,6 +57,7 @@
             this.optionsMenuSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.loadOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveCurrentOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveOnExitOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.defaultOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -71,7 +72,6 @@
             this.checkAutoPixel = new System.Windows.Forms.CheckBox();
             this.buttonSavePreset = new System.Windows.Forms.Button();
             this.buttonLoadPreset = new System.Windows.Forms.Button();
-            this.buttonDefaultPreset = new System.Windows.Forms.Button();
             this.numericRowStrideBit = new System.Windows.Forms.NumericUpDown();
             this.numericNextStrideBit = new System.Windows.Forms.NumericUpDown();
             this.numericPixelStrideBit = new System.Windows.Forms.NumericUpDown();
@@ -130,7 +130,6 @@
             this.pixelsToPaletteContextItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pixelScroll = new System.Windows.Forms.VScrollBar();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.saveCurrentOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             this.tableTop.SuspendLayout();
             this.groupPacking.SuspendLayout();
@@ -382,6 +381,13 @@
             this.saveOptionsMenuItem.Text = "&Save Options File...";
             this.saveOptionsMenuItem.Click += new System.EventHandler(this.saveOptionsMenuItem_Click);
             // 
+            // saveCurrentOptionsMenuItem
+            // 
+            this.saveCurrentOptionsMenuItem.Name = "saveCurrentOptionsMenuItem";
+            this.saveCurrentOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.saveCurrentOptionsMenuItem.Text = "Save Current Options";
+            this.saveCurrentOptionsMenuItem.Click += new System.EventHandler(this.saveCurrentOptionsMenuItem_Click);
+            // 
             // saveOnExitOptionsMenuItem
             // 
             this.saveOnExitOptionsMenuItem.Checked = true;
@@ -445,7 +451,6 @@
             this.groupPacking.Controls.Add(this.checkAutoPixel);
             this.groupPacking.Controls.Add(this.buttonSavePreset);
             this.groupPacking.Controls.Add(this.buttonLoadPreset);
-            this.groupPacking.Controls.Add(this.buttonDefaultPreset);
             this.groupPacking.Controls.Add(this.numericRowStrideBit);
             this.groupPacking.Controls.Add(this.numericNextStrideBit);
             this.groupPacking.Controls.Add(this.numericPixelStrideBit);
@@ -546,7 +551,7 @@
             // 
             // buttonSavePreset
             // 
-            this.buttonSavePreset.Location = new System.Drawing.Point(122, 191);
+            this.buttonSavePreset.Location = new System.Drawing.Point(93, 191);
             this.buttonSavePreset.Name = "buttonSavePreset";
             this.buttonSavePreset.Size = new System.Drawing.Size(51, 24);
             this.buttonSavePreset.TabIndex = 19;
@@ -556,23 +561,13 @@
             // 
             // buttonLoadPreset
             // 
-            this.buttonLoadPreset.Location = new System.Drawing.Point(65, 191);
+            this.buttonLoadPreset.Location = new System.Drawing.Point(36, 191);
             this.buttonLoadPreset.Name = "buttonLoadPreset";
             this.buttonLoadPreset.Size = new System.Drawing.Size(51, 24);
             this.buttonLoadPreset.TabIndex = 18;
             this.buttonLoadPreset.Text = "Load...";
             this.buttonLoadPreset.UseVisualStyleBackColor = true;
             this.buttonLoadPreset.Click += new System.EventHandler(this.buttonLoadPreset_Click);
-            // 
-            // buttonDefaultPreset
-            // 
-            this.buttonDefaultPreset.Location = new System.Drawing.Point(7, 191);
-            this.buttonDefaultPreset.Name = "buttonDefaultPreset";
-            this.buttonDefaultPreset.Size = new System.Drawing.Size(51, 24);
-            this.buttonDefaultPreset.TabIndex = 17;
-            this.buttonDefaultPreset.Text = "Default";
-            this.buttonDefaultPreset.UseVisualStyleBackColor = true;
-            this.buttonDefaultPreset.Click += new System.EventHandler(this.buttonDefaultPreset_Click);
             // 
             // numericRowStrideBit
             // 
@@ -1382,13 +1377,6 @@
             this.pixelScroll.TabStop = true;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
             // 
-            // saveCurrentOptionsMenuItem
-            // 
-            this.saveCurrentOptionsMenuItem.Name = "saveCurrentOptionsMenuItem";
-            this.saveCurrentOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.saveCurrentOptionsMenuItem.Text = "Save Current Options";
-            this.saveCurrentOptionsMenuItem.Click += new System.EventHandler(this.saveCurrentOptionsMenuItem_Click);
-            // 
             // BinxelviewForm
             // 
             this.AllowDrop = true;
@@ -1486,7 +1474,6 @@
         private System.Windows.Forms.NumericUpDown numericPixelStrideByte;
         private System.Windows.Forms.Button buttonSavePreset;
         private System.Windows.Forms.Button buttonLoadPreset;
-        private System.Windows.Forms.Button buttonDefaultPreset;
         private System.Windows.Forms.ToolStripMenuItem presetToolStripMenuItem;
         private System.Windows.Forms.Label labelInfoPixel;
         private System.Windows.Forms.NumericUpDown numericPosBit;
