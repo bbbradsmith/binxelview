@@ -206,7 +206,8 @@ For an INI file, paths can be either absolute or relative to the INI file's dire
       RGB - RGB with the current preset BPP, bits evenly divided with G bits >= R bits >= B bits. (Red is MSB.)
       Random - Every colour is randomized.
       Greyscale - Gradient from black to white.
-      Cubehelix - Smooth gradient with rotating hue, created by Dave Green. See: https://people.phy.cam.ac.uk/dag9/CUBEHELIX/
+      Cubehelix - Smooth gradient with rotating hue, created by Dave Green.
+                  See: https://people.phy.cam.ac.uk/dag9/CUBEHELIX/
 
   -background=FF0088
     Set the Background grid colour, uses a 6 digit hexadecimal RRGGBB value.
