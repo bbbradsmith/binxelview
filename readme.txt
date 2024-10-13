@@ -117,6 +117,13 @@ Pixel Formats
           Advance 16 bytes (D) from the start of the row, then read the second tile.
           The next row will begin again 1 byte (B) from the start of the previous row.
 
+* Twiddle (Advanced menu)
+    This will rearrange the pixel X and Y within a tile to use a Morton (Z/N) ordering,
+    commonly seen in square textures "twiddled" or "swizzled" for GPU cache coherence.
+    Width and Height should be the same, and a power of two.
+    See: https://en.wikipedia.org/wiki/Z-order_curve
+
+
 Presets can be loaded and saved.
 The Preset menu is populated both from the current working directory,
 and also from the directory of the executable. This can be changed instead to one
@@ -149,10 +156,6 @@ Other Notes
 
 Due to signed 32-bit integer limitations of C sharp, files must be less than 2GB in size.
 To inspect extremely large files, you may have to split them first.
-
-The Twiddle options will rearrange the pixel X and Y within a tile to use a
-Morton (Z/N) ordering, commonly seen in square textures "twiddled" or "swizzled" for
-GPU cache coherence.
 
 
 Command Line Options and INI Configuration Files

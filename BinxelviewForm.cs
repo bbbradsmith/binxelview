@@ -16,7 +16,7 @@ namespace Binxelview
         const string APPNAME = "Binxelview";
         const string APPDATA_FOLDER = "Binxelview";
         const int MAX_BPP = 32;
-        const int PRESET_VERSION = 2;
+        const int PRESET_VERSION = 3;
         const int PALETTE_BITS = 14; // maximum bits to fill 128 x 128 square
         const int PALETTE_DIM = 128; // should match paletteBox size
         const int ZOOM_MAX = 32;
@@ -85,10 +85,6 @@ namespace Binxelview
         bool snap_scroll;
         bool horizontal_layout;
         bool split_view;
-        int twiddle; // Twiddle probably belongs in preset, but its use is very rare, and I didn't want it to take up panel space.
-                     // If something more important needs a PRESET_VERSION 3, we should add it then to the preset.
-                     // We could maybe place rare options like this into an "advanced" menu on the menu bar,
-                     // instead of requiring UI panel space for it.
         string palette_path = "";
         string preset_dir = "";
         bool save_ini = true; // not changed by defaultOption
@@ -114,6 +110,7 @@ namespace Binxelview
             public int next_stride_byte;
             public int next_stride_bit;
             public bool next_stride_auto;
+            public int twiddle;
             public int tile_size_x;
             public int tile_stride_byte_x;
             public int tile_stride_bit_x;
@@ -174,7 +171,7 @@ namespace Binxelview
                     using (StreamWriter sw = File.CreateText(path))
                     {
                         sw.WriteLine(string.Format("{0}", PRESET_VERSION));
-                        sw.WriteLine(string.Format("{0} {1}", little_endian ? 1 : 0, chunky ? 1 : 0));
+                        sw.WriteLine(string.Format("{0} {1} {2}", little_endian ? 1 : 0, chunky ? 1 : 0, twiddle));
                         sw.WriteLine(string.Format("{0} {1} {2}", bpp, width, height));
                         sw.WriteLine(string.Format("{0} {1} {2}", pixel_stride_byte, row_stride_byte, next_stride_byte));
                         sw.WriteLine(string.Format("{0} {1} {2}", pixel_stride_bit, row_stride_bit, next_stride_bit));
@@ -203,6 +200,7 @@ namespace Binxelview
             {
                 Debug.WriteLine("Preset.loadFile(\""+path+"\")");
                 empty();
+                int linecount = 0;
                 try
                 {
                     // version
@@ -219,7 +217,7 @@ namespace Binxelview
 
                     using (TextReader tr = File.OpenText(path))
                     {
-                        string l = tr.ReadLine();
+                        string l = tr.ReadLine(); ++linecount;
                         int v = int.Parse(l);
                         if (v > PRESET_VERSION)
                         {
@@ -238,6 +236,8 @@ namespace Binxelview
                         bpp = int.Parse(ls[0]);
                         width = int.Parse(ls[1]);
                         height = int.Parse(ls[2]);
+                        if (version >= 3) twiddle = int.Parse(ls[3]);
+                        else twiddle = 0;
 
                         l = tr.ReadLine();
                         ls = l.Split(' ');
@@ -317,7 +317,7 @@ namespace Binxelview
                 }
                 catch (Exception ex)
                 {
-                    last_error = ex.ToString();
+                    last_error = string.Format("Line {0}: ",linecount) + ex.ToString();
                     return false;
                 }
 
@@ -340,7 +340,6 @@ namespace Binxelview
             snap_scroll = true;
             horizontal_layout = false;
             split_view = false;
-            twiddle = 0;
             palette_path = "";
             preset_dir = "";
             // note: save_ini is not changed, intentionally, default options shouldn't alter the current ini read-only state
@@ -514,14 +513,6 @@ namespace Binxelview
                 horizontal_layout = (v != 0);
                 return "";
             }
-            if (opt == "TWIDDLE")
-            {
-                int v;
-                if (!int.TryParse(val,out v)) return "Could not parse integer for twiddle: "+val;
-                if (v <  0 || v > 2) return "Twiddle value must be 0, 1 or 2: "+val;
-                twiddle = v;
-                return "";
-            }
             return "Invalid option: "+optline;
         }
 
@@ -605,7 +596,6 @@ namespace Binxelview
                         sw.WriteLine(string.Format("splitviewh={0}",split_view_form.Height));
                     }
                     sw.WriteLine(string.Format("horizontal={0}",horizontal_layout ? 1 : 0));
-                    sw.WriteLine(string.Format("twiddle={0}",twiddle));
                     sw.WriteLine("# end");
                 }
             }
@@ -683,11 +673,11 @@ namespace Binxelview
         {
             // rebuild index of twiddle ordering
             if (twiddle_cache == null ||
-                twiddle_cache_order != twiddle ||
+                twiddle_cache_order != preset.twiddle ||
                 twiddle_cache_w != tw ||
                 twiddle_cache_h != th )
             {
-                twiddle_cache_order = twiddle;
+                twiddle_cache_order = preset.twiddle;
                 twiddle_cache_w = tw;
                 twiddle_cache_h = th;
                 twiddle_cache = new int[tw * th];
@@ -699,7 +689,7 @@ namespace Binxelview
                         int twy = y;
                         int bit = 0;
                         int twxy = 0;
-                        if (twiddle == 2) // N instead of Z order
+                        if (preset.twiddle == 2) // N instead of Z order
                         {
                             int temp = twx;
                             twx = twy;
@@ -833,7 +823,7 @@ namespace Binxelview
             if (tile_size_y == 0) tile_shift_y = 0;
             // tile stride is converted to a relative shift that is applied at the end of each tile
 
-            if (twiddle != 0)
+            if (preset.twiddle != 0)
             {
                 twiddleCacheCheck(tw,th);
             }
@@ -1595,6 +1585,9 @@ namespace Binxelview
             dataGridPixel.FirstDisplayedScrollingRowIndex = old_scroll;
             dataGridPixel.Enabled = !preset.chunky;
 
+            twiddleZAdvancedMenuItem.Checked = preset.twiddle == 1;
+            twiddleNAdvancedMenuItem.Checked = preset.twiddle == 2;
+
             disable_pixel_redraw = old_disable_pixel_redraw; // restore pixel redraw
         }
 
@@ -1636,8 +1629,6 @@ namespace Binxelview
                 comboBoxPalette.SelectedIndex = (int)palette_mode - 1;
             verticalLayoutOptionsMenuItem.Checked = !horizontal_layout;
             horizontalLayoutOptionsMenuItem.Checked = horizontal_layout;
-            twiddleZOptionsMenuItem.Checked = twiddle == 1;
-            twiddleNOptionsMenuItem.Checked = twiddle == 2;
             bgBox.BackColor = background;
             saveOnExitOptionsMenuItem.Checked = save_ini;
             if (!split_view)
@@ -1784,6 +1775,22 @@ namespace Binxelview
             redrawPixels();
         }
 
+        private void twiddleZAdvancedMenuItem_Click(object sender, EventArgs e)
+        {
+            if (preset.twiddle == 1) preset.twiddle = 0;
+            else preset.twiddle = 1;
+            redrawPreset();
+            redrawPixels();
+        }
+
+        private void twiddleNAdvancedMenuItem_Click(object sender, EventArgs e)
+        {
+            if (preset.twiddle == 2) preset.twiddle = 0;
+            else preset.twiddle = 2;
+            redrawPreset();
+            redrawPixels();
+        }
+
         private void decimalPositionOptionsMenuItem_Click(object sender, EventArgs e)
         {
             decimal_position = true;
@@ -1829,22 +1836,6 @@ namespace Binxelview
         private void splitViewOptionsMenuItem_Click(object sender, EventArgs e)
         {
             split_view = !split_view;
-            redrawOptions();
-            redrawPixels();
-        }
-
-        private void twiddleZOptionsMenuItem_Click(object sender, EventArgs e)
-        {
-            if (twiddle == 1) twiddle = 0;
-            else twiddle = 1;
-            redrawOptions();
-            redrawPixels();
-        }
-
-        private void twiddleNOptionsMenuItem_Click(object sender, EventArgs e)
-        {
-            if (twiddle == 2) twiddle = 0;
-            else twiddle = 2;
             redrawOptions();
             redrawPixels();
         }
@@ -2426,7 +2417,7 @@ namespace Binxelview
             int row_stride = (preset.row_stride_byte * 8) + preset.row_stride_bit;
             int pixel_stride = (preset.pixel_stride_byte * 8) + preset.pixel_stride_bit;
 
-            if (twiddle != 0)
+            if (preset.twiddle != 0)
             {
                 twiddleCacheCheck(tw, th);
                 int twoxy = twiddle_cache[ox + (oy * tw)];

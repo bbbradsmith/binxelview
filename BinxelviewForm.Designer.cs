@@ -51,10 +51,8 @@
             this.optionsMenuSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             this.gridOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.snapScrollOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.splitViewOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsMenuSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-            this.twiddleZOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.twiddleNOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.optionsMenuSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.loadOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveCurrentOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -130,7 +128,9 @@
             this.pixelsToPaletteContextItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pixelScroll = new System.Windows.Forms.VScrollBar();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.splitViewOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.advancedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.twiddleZAdvancedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.twiddleNAdvancedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             this.tableTop.SuspendLayout();
             this.groupPacking.SuspendLayout();
@@ -170,6 +170,7 @@
             this.menuStripMain.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.presetToolStripMenuItem,
+            this.advancedToolStripMenuItem,
             this.optionsToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStripMain.Location = new System.Drawing.Point(0, 0);
@@ -244,21 +245,21 @@
             // reloadPresetMenuItem
             // 
             this.reloadPresetMenuItem.Name = "reloadPresetMenuItem";
-            this.reloadPresetMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.reloadPresetMenuItem.Size = new System.Drawing.Size(180, 22);
             this.reloadPresetMenuItem.Text = "&Reload";
             this.reloadPresetMenuItem.Click += new System.EventHandler(this.reloadPresetMenuItem_Click);
             // 
             // setDirectoryPresetMenuItem
             // 
             this.setDirectoryPresetMenuItem.Name = "setDirectoryPresetMenuItem";
-            this.setDirectoryPresetMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.setDirectoryPresetMenuItem.Size = new System.Drawing.Size(180, 22);
             this.setDirectoryPresetMenuItem.Text = "Set &Directory...";
             this.setDirectoryPresetMenuItem.Click += new System.EventHandler(this.setDirectoryPresetMenuItem_Click);
             // 
             // presetMenuSeparator
             // 
             this.presetMenuSeparator.Name = "presetMenuSeparator";
-            this.presetMenuSeparator.Size = new System.Drawing.Size(147, 6);
+            this.presetMenuSeparator.Size = new System.Drawing.Size(177, 6);
             // 
             // optionsToolStripMenuItem
             // 
@@ -273,9 +274,6 @@
             this.snapScrollOptionsMenuItem,
             this.splitViewOptionsMenuItem,
             this.optionsMenuSeparator3,
-            this.twiddleZOptionsMenuItem,
-            this.twiddleNOptionsMenuItem,
-            this.optionsMenuSeparator4,
             this.loadOptionsMenuItem,
             this.saveOptionsMenuItem,
             this.saveCurrentOptionsMenuItem,
@@ -345,29 +343,17 @@
             this.snapScrollOptionsMenuItem.Text = "Sna&p scroll to next stride";
             this.snapScrollOptionsMenuItem.Click += new System.EventHandler(this.snapScrollOptionsMenuItem_Click);
             // 
+            // splitViewOptionsMenuItem
+            // 
+            this.splitViewOptionsMenuItem.Name = "splitViewOptionsMenuItem";
+            this.splitViewOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.splitViewOptionsMenuItem.Text = "Pixel &Window";
+            this.splitViewOptionsMenuItem.Click += new System.EventHandler(this.splitViewOptionsMenuItem_Click);
+            // 
             // optionsMenuSeparator3
             // 
             this.optionsMenuSeparator3.Name = "optionsMenuSeparator3";
             this.optionsMenuSeparator3.Size = new System.Drawing.Size(200, 6);
-            // 
-            // twiddleZOptionsMenuItem
-            // 
-            this.twiddleZOptionsMenuItem.Name = "twiddleZOptionsMenuItem";
-            this.twiddleZOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.twiddleZOptionsMenuItem.Text = "Twiddle &Z";
-            this.twiddleZOptionsMenuItem.Click += new System.EventHandler(this.twiddleZOptionsMenuItem_Click);
-            // 
-            // twiddleNOptionsMenuItem
-            // 
-            this.twiddleNOptionsMenuItem.Name = "twiddleNOptionsMenuItem";
-            this.twiddleNOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.twiddleNOptionsMenuItem.Text = "Twiddle &N";
-            this.twiddleNOptionsMenuItem.Click += new System.EventHandler(this.twiddleNOptionsMenuItem_Click);
-            // 
-            // optionsMenuSeparator4
-            // 
-            this.optionsMenuSeparator4.Name = "optionsMenuSeparator4";
-            this.optionsMenuSeparator4.Size = new System.Drawing.Size(200, 6);
             // 
             // loadOptionsMenuItem
             // 
@@ -1379,12 +1365,28 @@
             this.pixelScroll.TabStop = true;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
             // 
-            // splitViewOptionsMenuItem
+            // advancedToolStripMenuItem
             // 
-            this.splitViewOptionsMenuItem.Name = "splitViewOptionsMenuItem";
-            this.splitViewOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.splitViewOptionsMenuItem.Text = "Pixel &Window";
-            this.splitViewOptionsMenuItem.Click += new System.EventHandler(this.splitViewOptionsMenuItem_Click);
+            this.advancedToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.twiddleZAdvancedMenuItem,
+            this.twiddleNAdvancedMenuItem});
+            this.advancedToolStripMenuItem.Name = "advancedToolStripMenuItem";
+            this.advancedToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
+            this.advancedToolStripMenuItem.Text = "&Advanced";
+            // 
+            // twiddleZAdvancedMenuItem
+            // 
+            this.twiddleZAdvancedMenuItem.Name = "twiddleZAdvancedMenuItem";
+            this.twiddleZAdvancedMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.twiddleZAdvancedMenuItem.Text = "Twiddle &Z";
+            this.twiddleZAdvancedMenuItem.Click += new System.EventHandler(this.twiddleZAdvancedMenuItem_Click);
+            // 
+            // twiddleNAdvancedMenuItem
+            // 
+            this.twiddleNAdvancedMenuItem.Name = "twiddleNAdvancedMenuItem";
+            this.twiddleNAdvancedMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.twiddleNAdvancedMenuItem.Text = "Twiddle &N";
+            this.twiddleNAdvancedMenuItem.Click += new System.EventHandler(this.twiddleNAdvancedMenuItem_Click);
             // 
             // BinxelviewForm
             // 
@@ -1528,9 +1530,6 @@
         private System.Windows.Forms.ToolStripMenuItem snapScrollOptionsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem verticalLayoutOptionsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem horizontalLayoutOptionsMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem twiddleZOptionsMenuItem;
-        private System.Windows.Forms.ToolStripSeparator optionsMenuSeparator4;
-        private System.Windows.Forms.ToolStripMenuItem twiddleNOptionsMenuItem;
         private System.Windows.Forms.ToolStripSeparator optionsMenuSeparator3;
         private System.Windows.Forms.ToolStripMenuItem gridOptionsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportBinaryChunkFileMenuItem;
@@ -1548,6 +1547,9 @@
         private System.Windows.Forms.ToolStripMenuItem saveOnExitOptionsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem saveCurrentOptionsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem splitViewOptionsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem advancedToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem twiddleZAdvancedMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem twiddleNAdvancedMenuItem;
     }
 }
 
