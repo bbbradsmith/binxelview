@@ -2598,6 +2598,9 @@ namespace Binxelview
                 case Keys.Control | Keys.R:
                     reloadFileMenuItem_Click(this, null);
                     return true;
+                case Keys.Control | Keys.W:
+                    splitViewOptionsMenuItem_Click(this, null);
+                    return true;
                 default:
                     return false;
             }

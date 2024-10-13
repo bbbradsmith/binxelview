@@ -147,6 +147,7 @@ The following global hotkeys may be used:
 
 Ctrl+O - Open a new file.
 Ctrl+R - Reload the current file.
+Ctrl+W - Toggle pixel window.
 
 
 Other Notes
