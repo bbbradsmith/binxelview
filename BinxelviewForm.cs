@@ -368,6 +368,7 @@ namespace Binxelview
                 if (!Path.IsPathRooted(path)) path = Path.Combine(base_path,path);
                 preset_dir = path;
                 reloadPresets();
+                return "";
             }
             if (opt == "PRESETFILE") // load preset file
             {
