@@ -486,6 +486,22 @@ namespace Binxelview
                 split_view = (v != 0);
                 return "";
             }
+            if (opt == "SPLITVIEWW")
+            {
+                int v;
+                if (!int.TryParse(val,out v)) return "Could not parse integer for splitvieww: "+val;
+                if (v <= 0) return "Splitvieww value must be positive: "+val;
+                split_view_form.Width = v;
+                return "";
+            }
+            if (opt == "SPLITVIEWH")
+            {
+                int v;
+                if (!int.TryParse(val,out v)) return "Could not parse integer for splitviewh: "+val;
+                if (v <= 0) return "Splitviewh value must be positive: "+val;
+                split_view_form.Height = v;
+                return "";
+            }
             if (opt == "HORIZONTAL")
             {
                 int v;
@@ -579,6 +595,11 @@ namespace Binxelview
                     sw.WriteLine(string.Format("hexpos={0}",decimal_position ? 0 : 1));
                     sw.WriteLine(string.Format("snapscroll={0}",snap_scroll ? 1 : 0));
                     sw.WriteLine(string.Format("splitview={0}",split_view ? 1 : 0));
+                    if (split_view) // save split_view window size if active
+                    {
+                        sw.WriteLine(string.Format("splitvieww={0}",split_view_form.Width));
+                        sw.WriteLine(string.Format("splitviewh={0}",split_view_form.Height));
+                    }
                     sw.WriteLine(string.Format("horizontal={0}",horizontal_layout ? 1 : 0));
                     sw.WriteLine(string.Format("twiddle={0}",twiddle));
                     sw.WriteLine("# end");

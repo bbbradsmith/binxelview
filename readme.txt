@@ -229,6 +229,10 @@ For an INI file, paths can be either absolute or relative to the INI file's dire
   -splitview=1
     Set the "Pixel Window" option to create a separate viewing window (1 on, 0 off).
 
+  -splitvieww=640
+  -splitviewh=480
+    Set the Pixel Window's width and height.
+
   -horizontal=1
     Set the layout option (1 horizontal, 0 vertical).
 
