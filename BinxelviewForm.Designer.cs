@@ -131,6 +131,7 @@
             this.advancedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.twiddleZAdvancedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.twiddleNAdvancedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.backgroundOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             this.tableTop.SuspendLayout();
             this.groupPacking.SuspendLayout();
@@ -270,6 +271,7 @@
             this.verticalLayoutOptionsMenuItem,
             this.horizontalLayoutOptionsMenuItem,
             this.optionsMenuSeparator2,
+            this.backgroundOptionsMenuItem,
             this.gridOptionsMenuItem,
             this.snapScrollOptionsMenuItem,
             this.splitViewOptionsMenuItem,
@@ -1388,6 +1390,13 @@
             this.twiddleNAdvancedMenuItem.Text = "Twiddle &N";
             this.twiddleNAdvancedMenuItem.Click += new System.EventHandler(this.twiddleNAdvancedMenuItem_Click);
             // 
+            // backgroundOptionsMenuItem
+            // 
+            this.backgroundOptionsMenuItem.Name = "backgroundOptionsMenuItem";
+            this.backgroundOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.backgroundOptionsMenuItem.Text = "Background &Colour...";
+            this.backgroundOptionsMenuItem.Click += new System.EventHandler(this.backgroundOptionsMenuItem_Click);
+            // 
             // BinxelviewForm
             // 
             this.AllowDrop = true;
@@ -1550,6 +1559,7 @@
         private System.Windows.Forms.ToolStripMenuItem advancedToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem twiddleZAdvancedMenuItem;
         private System.Windows.Forms.ToolStripMenuItem twiddleNAdvancedMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem backgroundOptionsMenuItem;
     }
 }
 

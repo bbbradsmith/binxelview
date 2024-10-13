@@ -1815,6 +1815,11 @@ namespace Binxelview
             redrawPixels();
         }
 
+        private void backgroundOptionsMenuItem_Click(object sender, EventArgs e)
+        {
+            bgBox_Click(sender, e);
+        }
+
         private void gridOptionsMenuItem_Click(object sender, EventArgs e)
         {
             hidegrid = !hidegrid;

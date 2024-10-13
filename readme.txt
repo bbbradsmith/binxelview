@@ -291,6 +291,7 @@ Changes
 - Fix image loaded as palette not releasing file handle.
 - Remember last used file type filter from the load palette dialog.
 - Removed default preset, as persistent options will remember your last preset instead.
+- Added redundant menu option for background colour, to find easier and be keyboard accessible.
 - Palette load option for common VGA format. (Contributor: foone)
 - Microsoft RIFF palette support.
 - GB CHR 8px preset. (Contributor: Lord-Nightmare)
