@@ -562,7 +562,8 @@ namespace Binxelview
                     if (preset_dir.Length > 0)
                     {
                         string p = Path.GetFullPath(preset_dir);
-                        if (p.StartsWith(fulldir)) p = p.Substring(fulldir.Length+1);
+                        if (p == fulldir) p = "";
+                        else if (p.StartsWith(fulldir)) p = p.Substring(fulldir.Length+1);
                         sw.WriteLine("presetdir=" + p);
                     }
                     foreach (Preset pi in presets) // save current preset if it exists in the library

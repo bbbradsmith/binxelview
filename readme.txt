@@ -241,6 +241,7 @@ INI files provide the same options as the command line, with minor differences:
   - One option may be used per line, there is no leading - for an option like the command line.
   - Blank lines, or lines starting with # will be ignored.
   - Paths can be either absolute or relative to the INI file's directory.
+    Paths inside the INI directory (or subdirectories) will be automatically saved as relative.
   - The 'ini' option cannot be used to load an INI file from within an INI file.
 
 The default INI file location will be the first found in one of 3 locations, checked in order:
