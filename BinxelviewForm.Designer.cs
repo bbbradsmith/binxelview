@@ -403,7 +403,7 @@
             // aboutHelpMenuItem
             // 
             this.aboutHelpMenuItem.Name = "aboutHelpMenuItem";
-            this.aboutHelpMenuItem.Size = new System.Drawing.Size(107, 22);
+            this.aboutHelpMenuItem.Size = new System.Drawing.Size(180, 22);
             this.aboutHelpMenuItem.Text = "&About";
             this.aboutHelpMenuItem.Click += new System.EventHandler(this.aboutHelpMenuItem_Click);
             // 
@@ -881,7 +881,7 @@
             this.comboBoxPalette.Location = new System.Drawing.Point(193, 58);
             this.comboBoxPalette.Name = "comboBoxPalette";
             this.comboBoxPalette.Size = new System.Drawing.Size(83, 21);
-            this.comboBoxPalette.TabIndex = 8;
+            this.comboBoxPalette.TabIndex = 4;
             this.comboBoxPalette.SelectedIndexChanged += new System.EventHandler(this.comboBoxPalette_SelectedIndexChanged);
             // 
             // buttonAutoPal
@@ -889,7 +889,7 @@
             this.buttonAutoPal.Location = new System.Drawing.Point(143, 57);
             this.buttonAutoPal.Name = "buttonAutoPal";
             this.buttonAutoPal.Size = new System.Drawing.Size(43, 24);
-            this.buttonAutoPal.TabIndex = 7;
+            this.buttonAutoPal.TabIndex = 3;
             this.buttonAutoPal.Text = "Auto";
             this.buttonAutoPal.UseVisualStyleBackColor = true;
             this.buttonAutoPal.Click += new System.EventHandler(this.buttonAutoPal_Click);
@@ -909,7 +909,7 @@
             this.buttonSavePal.Location = new System.Drawing.Point(213, 87);
             this.buttonSavePal.Name = "buttonSavePal";
             this.buttonSavePal.Size = new System.Drawing.Size(64, 24);
-            this.buttonSavePal.TabIndex = 4;
+            this.buttonSavePal.TabIndex = 8;
             this.buttonSavePal.Text = "Save...";
             this.buttonSavePal.UseVisualStyleBackColor = true;
             this.buttonSavePal.Click += new System.EventHandler(this.buttonSavePal_Click);
@@ -919,7 +919,7 @@
             this.buttonLoadPal.Location = new System.Drawing.Point(143, 87);
             this.buttonLoadPal.Name = "buttonLoadPal";
             this.buttonLoadPal.Size = new System.Drawing.Size(64, 24);
-            this.buttonLoadPal.TabIndex = 3;
+            this.buttonLoadPal.TabIndex = 7;
             this.buttonLoadPal.Text = "Load...";
             this.buttonLoadPal.UseVisualStyleBackColor = true;
             this.buttonLoadPal.Click += new System.EventHandler(this.buttonLoadPal_Click);

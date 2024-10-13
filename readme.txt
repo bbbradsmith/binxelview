@@ -125,9 +125,8 @@ Pixel Formats
 
 
 Presets can be loaded and saved.
-The Preset menu is populated both from the current working directory,
-and also from the directory of the executable. This can be changed instead to one
-specific directory of your choice, which will be saved with your options.
+The Preset menu is populated from the directory of the executable,
+but this can be changed to another directory of your choice, which will be saved with your options.
 
 
 Palette
@@ -273,33 +272,32 @@ Changes
 -------
 
 1.6.0.0 (unreleased beta)
-- GB CHR 8px preset. (Contributor: Lord-Nightmare)
-- ZX Spectrum preset. (Contributor: damieng)
-- Now loads presets from executable directory after trying current directory first. (Contributor: damieng)
-- Option to disable grid padding between cells.
-- "Little Endian" renamed to "Reverse Byte" for clarity.
-- "Export Binary Chunk" option added to File menu. (Contributor: damieng)
-- Tab stop organization of interface. (Contributor: Erquint)
-- Palette load option for common VGA format. (Contributor: foone)
-- Limit width to 65536 to prevent out of memory from accidentally typing huge widths.
-- SNES 8BPP preset. (Contributor: ButThouMust)
+- Option persistence, INI file save and load.
+- Command line arguments for options.
+- Pixel window option for second viewing window.
 - Maximum file size increased from 256MB to 2GB.
-- Right click context menu option to move position to the selected pixel.
+- Option to disable grid padding between cells.
+- "Export Binary Chunk" option added to File menu. (Contributor: damieng)
 - File menu reload option.
 - Added global Ctrl hotkeys.
+- Right click context menu option to move position to the selected pixel.
+- Right click context menu option to copy to the palette starting from the selected pixel.
 - Added Cubehelix automatic palette option.
 - Automatic palette modes are now a dropdown list.
-- Right click context menu option to copy to the palette starting from the selected pixel.
-- PS1 15BPP and 4BPP presets. (Contributor: HeyItsLollie)
-- VGA Palette preset.
+- Tab stop organization of interface. (Contributor: Erquint)
+- "Little Endian" renamed to "Reverse Byte" for clarity.
+- Limit width to 65536 to prevent out of memory from accidentally typing huge widths.
 - Indicate hexadecimal position with bold font.
-- Command line arguments for options.
 - Fix image loaded as palette not releasing file handle.
 - Remember last used file type filter from the load palette dialog.
-- Microsoft RIFF palette support.
-- Option persistence, INI file save and load.
 - Removed default preset, as persistent options will remember your last preset instead.
-- Pixel window option for second viewing window.
+- Palette load option for common VGA format. (Contributor: foone)
+- Microsoft RIFF palette support.
+- GB CHR 8px preset. (Contributor: Lord-Nightmare)
+- ZX Spectrum preset. (Contributor: damieng)
+- SNES 8BPP preset. (Contributor: ButThouMust)
+- PS1 15BPP and 4BPP presets. (Contributor: HeyItsLollie)
+- VGA Palette preset.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.

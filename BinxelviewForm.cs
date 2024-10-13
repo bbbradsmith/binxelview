@@ -1235,13 +1235,9 @@ namespace Binxelview
 
             // gather files
             FileInfo[] files;
-            if (preset_dir.Length < 1) // default looks in current directory, then executable directory
+            if (preset_dir.Length < 1) // default looks in  executable directory
             {
-                FileInfo[] files_cwd = dir_cwd.GetFiles("*.bxp");
-                FileInfo[] files_app = dir_exe.GetFiles("*.bxp");
-                files = new FileInfo[files_cwd.Length+files_app.Length];
-                Array.Copy(files_cwd,0,files,0,files_cwd.Length);
-                Array.Copy(files_app,0,files,files_cwd.Length,files_app.Length);
+                files = dir_exe.GetFiles("*.bxp");
             }
             else // preset_dir
             {
