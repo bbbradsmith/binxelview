@@ -245,16 +245,18 @@ INI files provide the same options as the command line, with minor differences:
     Paths inside the INI directory (or subdirectories) will be automatically saved as relative.
   - The 'ini' option cannot be used to load an INI file from within an INI file.
 
-The default INI file location will be the first found in one of 3 locations, checked in order:
+If not overridden with the -ini command line option, Binxelview will look for Binxelview.ini.
+It will search 3 locations, checked in this order:
   - The current working directory.
   - The executable directory.
-  - The appdata local folder.
+  - The appdata local folder. (%LOCALAPPDATA%\Binxelview\Binxelview.ini)
 
 When save on exit is applied, options will be saved back to the first INI file that was found,
-or the INI selected from the command line -ini option. If no INI was found, 2 locations will be
-tried in order. If a write to the executable directory fails, appdata will be attempted instead.
+or the INI selected from the command line -ini option. If no INI was found, it will try to create
+a default Binxelview.ini file in 2 possible locations, attempted in order. (Appdata is used
+as a fallback in case the executable is installed in a protected location like Program Files.)
   - The executable directory.
-  - The appdata local folder. (%LOCALAPPDATA%\Binxelview)
+  - The appdata local folder.
 
 
 Because save on exit is an option saved to the INI file, if you want to create a "read only"
