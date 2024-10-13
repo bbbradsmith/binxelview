@@ -595,7 +595,7 @@ namespace Binxelview
                     sw.WriteLine(string.Format("hexpos={0}",decimal_position ? 0 : 1));
                     sw.WriteLine(string.Format("snapscroll={0}",snap_scroll ? 1 : 0));
                     sw.WriteLine(string.Format("splitview={0}",split_view ? 1 : 0));
-                    if (split_view) // save split_view window size if active
+                    if (split_view && split_view_form.WindowState == FormWindowState.Normal) // save split_view window size if active
                     {
                         sw.WriteLine(string.Format("splitvieww={0}",split_view_form.Width));
                         sw.WriteLine(string.Format("splitviewh={0}",split_view_form.Height));
