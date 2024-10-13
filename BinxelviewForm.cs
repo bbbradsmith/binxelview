@@ -2154,6 +2154,7 @@ namespace Binxelview
                 }
                 else
                 {
+                    preset.name = Path.GetFileNameWithoutExtension(d.FileName); // update name for saved options
                     reloadPresets();
                 }
             }
