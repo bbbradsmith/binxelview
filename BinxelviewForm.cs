@@ -2636,7 +2636,7 @@ namespace Binxelview
             // current directory, executable directory, appdata
             dir_cwd = new DirectoryInfo(".");
             dir_exe = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-            dir_loc = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),APPDATA_FOLDER));
+            dir_loc = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),APPDATA_FOLDER));
 
             // suppress unnecessary redraws during setup
             disable_pixel_redraw = true;
@@ -2665,8 +2665,8 @@ namespace Binxelview
             // parse INI file
             ini_path = "";
             string ini_cwd = Path.Combine(dir_cwd.ToString(),"Binxelview.ini");
-                   ini_exe = Path.Combine(dir_cwd.ToString(),"Binxelview.ini");
-                   ini_loc = Path.Combine(dir_cwd.ToString(),"Binxelview.ini");
+                   ini_exe = Path.Combine(dir_exe.ToString(),"Binxelview.ini");
+                   ini_loc = Path.Combine(dir_loc.ToString(),"Binxelview.ini");
             if      (File.Exists(ini_cwd)) { ini_path = ini_cwd; }
             else if (File.Exists(ini_exe)) { ini_path = ini_exe; }
             else if (File.Exists(ini_loc)) { ini_path = ini_loc; }
