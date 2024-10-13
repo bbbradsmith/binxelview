@@ -164,8 +164,8 @@ Morton (Z/N) ordering, commonly seen in square textures "twiddled" or "swizzled"
 GPU cache coherence.
 
 
-Command Line Options
---------------------
+Command Line Options and INI Configuration Files
+------------------------------------------------
 
 To open a file, just add that file's path to the command line.
 
@@ -173,12 +173,30 @@ Options can be set with a command line argument beginning with '-',
 followed by the option name, an '=' separator, and the value for the option.
 If a space is required in the value, you should enclose the entire argument in quotes.
 Paths can be either absolute or relative to the current working directory.
+For an INI file, paths can be either absolute or relative to the INI file's directory.
+
+  "-ini=mysettings.ini"
+    Loads an applies settings from another INI file besides the default.
+    This option can only be used from the command line, and not within an INI file.
+    If the save on exit option is enabled (see -saveini below),
+    it will save to this file used with -ini, rather than the default location.
+    (This only applies to the command line. INI files loaded from the Options menu do not
+    become the save on exit file.)
+
+  -saveini=1
+    If this option is enabled (1) current settings will be saved back to the loaded INI when you quit.
+    If this option is disabled (0) your current settings will not be remembered when you quit.
 
   "-presetfile=C:\mypreset.bxp"
     Replaces the default preset with one from a file.
 
   "-preset=Atari ST 4BPP"
     Chooses a named preset from your preset library instead of the default.
+
+  "-presetdir=C:\mypresets"
+    Discards the preset library and reloads a new library from this directory only.
+    If a default preset exists in this directory, it will be selected.
+    If also using -preset or -presetfile, these options should come after -presetdir.
 
   "-pal=my palettes\red.pal"
     Loads a palette file. If -paltype is not used (see below) it will detect the type by the file extension.
@@ -220,6 +238,37 @@ Paths can be either absolute or relative to the current working directory.
     Set the twiddle option (0 off, 1 twiddle Z, 2 twiddle N).
 
 
+INI files provide the same options as the command line, with minor differences:
+  - One option may be used per line, there is no leading - for an option like the command line.
+  - Blank lines, or lines starting with # will be ignored.
+  - Paths can be either absolute or relative to the INI file's directory.
+  - The 'ini' option cannot be used to load an INI file from within an INI file.
+
+The default INI file location will be the first found in one of 3 locations, checked in order:
+  - The current working directory.
+  - The executable directory.
+  - The appdata local folder.
+
+When save on exit is applied, options will be saved back to the first INI file that was found,
+or the INI selected from the command line -ini option. If no INI was found, 2 locations will be
+tried in order. If a write to the executable directory fails, appdata will be attempted instead.
+  - The executable directory.
+  - The appdata local folder. (%LOCALAPPDATA%\binxelview)
+
+
+Because save on exit is an option saved to the INI file, if you want to create a "read only"
+INI that gives you an unchanging default setup, turn off save on exit, then "Save Current Options"
+from the menu. This will save the current options now, since disabling that option will prevent
+them from being saved when you exit the program.
+
+
+You can create "workspaces" for Binxelview by putting a binxelview.ini, presets, etc. into
+a folder, then opening Binxelview with that folder as the current working directory.
+
+Alternatively, you might use the -ini command line option to create a shortcut that applies
+a specific INI setup.
+
+
 Changes
 -------
 
@@ -249,6 +298,7 @@ Changes
 - Fix image loaded as palette not releasing file handle.
 - Remember last used file type filter from the load palette dialog.
 - Microsoft RIFF palette support.
+- Option persistence, INI file save and load.
 
 1.5.0.0 (2020-07-31)
 - Twiddle option for inspecting textures stored with morton ordering of pixels.

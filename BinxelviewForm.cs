@@ -5,11 +5,15 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
+using System.Xml.Linq;
 
 namespace Binxelview
 {
     public partial class BinxelviewForm : Form
     {
+        const string APPNAME = "Binxelview";
+        const string APPDATA_FOLDER = "binxelview";
         const int MAX_BPP = 32;
         const int PRESET_VERSION = 2;
         const int PALETTE_BITS = 14; // maximum bits to fill 128 x 128 square
@@ -24,6 +28,14 @@ namespace Binxelview
             PALETTE_GREY,
             PALETTE_CUBEHELIX,
         };
+        static readonly string[] PaletteModeString =
+        {
+            "Custom",
+            "RGB",
+            "Random",
+            "Grey",
+            "Cubehelix",
+        };
 
         byte[] data = {};
         string data_path = "";
@@ -36,12 +48,15 @@ namespace Binxelview
         long selected_pos = -1;
         int selected_palette_filter = 0;
         int option_palette_type;
-        string palette_path = "";
+        string ini_path = "";
+        int palette_path_type = -1;
 
         Preset preset;
         Preset default_preset;
         List<Preset> presets;
 
+        DirectoryInfo dir_cwd, dir_exe, dir_loc;
+        string ini_exe, ini_loc;
         Bitmap palette_bmp = new Bitmap(PALETTE_DIM, PALETTE_DIM);
         Bitmap pixel_bmp = null;
         Color[] palette = new Color[PALETTE_DIM * PALETTE_DIM];
@@ -68,6 +83,9 @@ namespace Binxelview
                      // If something more important needs a PRESET_VERSION 3, we should add it then to the preset.
                      // We could maybe place rare options like this into an "advanced" menu on the menu bar,
                      // instead of requiring UI panel space for it.
+        string palette_path = "";
+        string preset_dir = "";
+        bool save_ini = true; // not changed by defaultOption
 
         //
         // Preset
@@ -144,6 +162,7 @@ namespace Binxelview
 
             public bool saveFile(string path)
             {
+                Debug.WriteLine("Preset.saveFile(\""+path+"\")");
                 try
                 {
                     using (StreamWriter sw = File.CreateText(path))
@@ -176,6 +195,7 @@ namespace Binxelview
 
             public bool loadFile(string path)
             {
+                Debug.WriteLine("Preset.loadFile(\""+path+"\")");
                 empty();
                 try
                 {
@@ -195,7 +215,11 @@ namespace Binxelview
                     {
                         string l = tr.ReadLine();
                         int v = int.Parse(l);
-                        if (v > PRESET_VERSION) return false;
+                        if (v > PRESET_VERSION)
+                        {
+                            last_error = string.Format("Unknown preset version: {0} > {1}",v,PRESET_VERSION);
+                            return false;
+                        }
                         int version = v;
 
                         l = tr.ReadLine();
@@ -309,6 +333,9 @@ namespace Binxelview
             snap_scroll = true;
             horizontal_layout = false;
             twiddle = 0;
+            palette_path = "";
+            preset_dir = "";
+            // note: save_ini is not changed, intentionally, default options shouldn't alter the current ini read-only state
         }
 
         string parseOption(string optline, string base_path, bool ini_file)
@@ -319,6 +346,30 @@ namespace Binxelview
             string val = optline.Substring(eqpos+1);
             string valu = val.ToUpperInvariant();
 
+            if (opt == "INI" && !ini_file)
+            {
+                string path = val;
+                if (!Path.IsPathRooted(path)) path = Path.Combine(base_path,path);
+                ini_path = path;
+                string result = loadIni(path);
+                if (result.Length > 0) return "-ini error: "+path+"\n"+result;
+                return "";
+            }
+            if (opt == "SAVEINI")
+            {
+                int v;
+                if (!int.TryParse(val,out v)) return "Could not parse integer for saveini: "+val;
+                if (v != 0 && v != 1) return "Saveini value must be 0 or 1: "+val;
+                save_ini = (v != 0);
+                return "";
+            }
+            if (opt == "PRESETDIR") // set preset library location and reload presets, selects default if it exists
+            {
+                string path = val;
+                if (!Path.IsPathRooted(path)) path = Path.Combine(base_path,path);
+                preset_dir = path;
+                if (reloadPresets()) preset = default_preset.copy();
+            }
             if (opt == "PRESETFILE") // load preset file to replace default
             {
                 string path = val;
@@ -437,6 +488,111 @@ namespace Binxelview
                 return "";
             }
             return "Invalid option: "+optline;
+        }
+
+        string loadIni(string path)
+        {
+            Debug.WriteLine("loadIni(\""+path+"\")");
+            string ini_base = Path.GetDirectoryName(path);
+            option_palette_type = -1;
+            string ini_err = "";
+            try
+            {
+                using (TextReader tr = File.OpenText(path))
+                {
+                    string l;
+                    while ((l = tr.ReadLine()) != null)
+                    {
+                        l = l.Trim(); // eliminate leading and trailing whitespace
+                        if (l.Length < 1) continue;
+                        if (l.StartsWith("#")) continue; // comment line
+                        string opt_err = parseOption(l,ini_base,true);
+                        if (opt_err.Length > 0 && ini_err.Length > 0) ini_err += "\n";
+                        ini_err += opt_err;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                if (ini_err.Length > 0) ini_err += "\n";
+                return ini_err + ex.ToString();
+            }
+            return ini_err;
+        }
+
+        string saveIni(string path)
+        {
+            Debug.WriteLine("saveIni(\""+path+"\")");
+            string fullpath = Path.GetFullPath(path);
+            string fulldir = Path.GetDirectoryName(fullpath);
+            // note: Path.GetRelativePath unavailable in .NET framework 4
+            try
+            {
+                using (StreamWriter sw = File.CreateText(path))
+                {
+                    sw.WriteLine("# Binxelview options file");
+                    sw.WriteLine("# " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+                    sw.WriteLine(string.Format("saveini={0}", save_ini ? 1 : 0));
+                    if (preset_dir.Length > 0)
+                    {
+                        string p = Path.GetFullPath(preset_dir);
+                        if (p.StartsWith(fulldir)) p = p.Substring(fulldir.Length+1);
+                        sw.WriteLine("presetdir=" + p);
+                    }
+                    if (palette_mode == PaletteMode.PALETTE_CUSTOM && palette_path.Length > 0)
+                    {
+                        sw.WriteLine(string.Format("paltype={0}",palette_path_type));
+                        string p = Path.GetFullPath(palette_path);
+                        if (p.StartsWith(fulldir)) p = p.Substring(fulldir.Length+1);
+                        sw.WriteLine("pal={0}", p);
+                    }
+                    else if (palette_mode != PaletteMode.PALETTE_CUSTOM)
+                    {
+                        sw.WriteLine("autopal=" + PaletteModeString[(int)palette_mode]);
+                    }
+                    sw.WriteLine(string.Format("background={0:X6}",background_raw & 0x00FFFFFF));
+                    sw.WriteLine(string.Format("zoom={0}",zoom));
+                    sw.WriteLine(string.Format("grid={0}",hidegrid ? 0 : 1));
+                    sw.WriteLine(string.Format("hexpos={0}",decimal_position ? 0 : 1));
+                    sw.WriteLine(string.Format("snapscroll={0}",snap_scroll ? 1 : 0));
+                    sw.WriteLine(string.Format("horizontal={0}",horizontal_layout ? 1 : 0));
+                    sw.WriteLine(string.Format("twiddle={0}",twiddle));
+                    sw.WriteLine("# end");
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.ToString();
+            }
+            return "";
+        }
+
+        string saveCurrentIni()
+        { 
+            if (ini_path.Length > 0) // if a default ini was found, or loaded with -ini, save back to it
+            {
+                string ini_err = saveIni(ini_path);
+                if (ini_err.Length < 1) return "";
+                return "Save options error: "+ini_path+"\n"+ini_err;
+            }
+            else // try to create a new ini
+            {
+                // first try to save in the executable directory
+                string ini_exe_err = saveIni(ini_exe);
+                if(ini_exe_err.Length < 1) return "";
+
+                // if that fails try to save in appdata local
+                // try to create directory first, ignore errors
+                try {
+                    Directory.CreateDirectory(Path.GetDirectoryName(ini_loc));
+                } catch { }
+                string ini_loc_err = saveIni(ini_loc);
+                if(ini_loc_err.Length < 1) return "";
+
+                return "Save options attempt 1: "+ini_exe+"\n"+ini_exe_err+
+                    "\n\n"+
+                    "Save options attempt 2: "+ini_loc+"\n"+ini_loc_err;
+            }
         }
 
         //
@@ -1010,7 +1166,7 @@ namespace Binxelview
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Unable to open file:\n" + path + "\n\n" + ex.ToString(), "Binxelview");
+                MessageBox.Show("Unable to open file:\n" + path + "\n\n" + ex.ToString(), APPNAME);
                 return false;
             }
             data = read_data;
@@ -1023,27 +1179,38 @@ namespace Binxelview
             scrollRange();
             data_path = path;
             data_file = Path.GetFileName(path);
-            this.Text = "Binxelview (" + data_file + ")";
+            this.Text = APPNAME + " (" + data_file + ")";
             redrawPixels();
             return true;
         }
 
-        void reloadPresets()
+        bool reloadPresets() // returns true if default found
         {
-            // remove everything but Reload and separator
-            while (presetToolStripMenuItem.DropDownItems.Count > 2)
+            // remove everything but Reload, Set Directory and separator
+            while (presetToolStripMenuItem.DropDownItems.Count > 3)
             {
-                presetToolStripMenuItem.DropDownItems.RemoveAt(2);
+                presetToolStripMenuItem.DropDownItems.RemoveAt(3);
+            }
+            presets = new List<Preset>();
+
+            // gather files
+            FileInfo[] files;
+            if (preset_dir.Length < 1) // default looks in current directory, then executable directory
+            {
+                FileInfo[] files_cwd = dir_cwd.GetFiles("*.bxp");
+                FileInfo[] files_app = dir_exe.GetFiles("*.bxp");
+                files = new FileInfo[files_cwd.Length+files_app.Length];
+                Array.Copy(files_cwd,0,files,0,files_cwd.Length);
+                Array.Copy(files_app,0,files,files_cwd.Length,files_app.Length);
+            }
+            else // preset_dir
+            {
+                DirectoryInfo d_preset = new DirectoryInfo(preset_dir);
+                files = d_preset.GetFiles("*.bxp");
             }
 
-            presets = new List<Preset>();
-            DirectoryInfo d_cwd = new DirectoryInfo(".");
-            DirectoryInfo d_app = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
-            FileInfo[] files_cwd = d_cwd.GetFiles("*.bxp");
-            FileInfo[] files_app = d_app.GetFiles("*.bxp");
-            FileInfo[] files = new FileInfo[files_cwd.Length+files_app.Length];
-            Array.Copy(files_cwd,0,files,0,files_cwd.Length);
-            Array.Copy(files_app,0,files,files_cwd.Length,files_app.Length);
+            // load files
+            bool default_found = false;
             foreach (FileInfo file in files)
             {
                 Preset p = new Preset();
@@ -1064,6 +1231,7 @@ namespace Binxelview
                         presets.Add(p);
                         if (p.name.ToLower()=="default")
                         {
+                            default_found = true;
                             default_preset = p.copy();
                             scrollRange();
                         }
@@ -1081,6 +1249,8 @@ namespace Binxelview
                 item.Click += presetMenu_Select;
                 presetToolStripMenuItem.DropDownItems.Add(item);
             }
+
+            return default_found;
         }
 
         void initCustomPalette()
@@ -1100,6 +1270,7 @@ namespace Binxelview
             //          1: image (BMP, GIF, PNG, TIF)
             //          2: VGA RGB18 stored in the low 6 bits of each byte.
             //          3: Microsoft RIFF PAL
+            if (filetype < 0 || filetype >=4) filetype = 0;
 
             if (filetype == 1) // image
             {
@@ -1131,6 +1302,7 @@ namespace Binxelview
                 img.Dispose();
 
                 palette_path = Path.GetFullPath(path);
+                palette_path_type = filetype;
                 return true;
             }
 
@@ -1232,6 +1404,7 @@ namespace Binxelview
             }
 
             palette_path = Path.GetFullPath(path);
+            palette_path_type = filetype;
             return true;
         }
 
@@ -1427,6 +1600,7 @@ namespace Binxelview
             twiddleZOptionsMenuItem.Checked = twiddle == 1;
             twiddleNOptionsMenuItem.Checked = twiddle == 2;
             bgBox.BackColor = background;
+            saveOnExitOptionsMenuItem.Checked = save_ini;
         }
 
         //
@@ -1483,7 +1657,7 @@ namespace Binxelview
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), "Binxelview");
+                    MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), APPNAME);
                 }
 
                 redrawPixels();
@@ -1500,9 +1674,29 @@ namespace Binxelview
         {
             this.Close();
         }
-        private void reloadPresetsToolStripMenuItem_Click(object sender, EventArgs e)
+        private void reloadPresetMenuItem_Click(object sender, EventArgs e)
         {
             reloadPresets();
+        }
+
+        private void setDirectoryPresetMenuItem_Click(object sender, EventArgs e)
+        {
+            // Note: Semantically this should be FolderBrowserDialog but practically it's UI is unusuable.
+            //   Instead, using OpenFileDialog as a kludgy workaround.
+            //   You can't "open" a folder, but choosing a file inside a folder works at least.
+            //   Typing any non-empty filename also works.
+            //   More intuitive variations of this approach appear to require large library depenencies.
+            OpenFileDialog d = new OpenFileDialog();
+            d.Title = "Select Preset Folder";
+            d.ValidateNames = false; // avoid validation that will reject folders
+            d.CheckFileExists = false; // folder is not a file
+            d.CheckPathExists = true; // folder is a valid path
+            d.FileName = " current folder "; // pre-filling this acts like a selected file in the current folder if not changed by the user
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                preset_dir = Path.GetDirectoryName(d.FileName);
+                reloadPresets();
+            }
         }
 
         void presetMenu_Select(object sender, EventArgs e) // clicking on a generated preset menu item
@@ -1531,20 +1725,6 @@ namespace Binxelview
             updatePos();
         }
 
-        private void snapScrollToNextStrideOptionsMenuItem_Click(object sender, EventArgs e)
-        {
-            snap_scroll = !snap_scroll;
-            redrawOptions();
-            scrollRange();
-        }
-
-        private void gridOptionsMenuItem_Click(object sender, EventArgs e)
-        {
-            hidegrid = !hidegrid;
-            redrawOptions();
-            redrawPixels();
-        }
-
         private void verticalLayoutOptionsMenuItem_Click(object sender, EventArgs e)
         {
             horizontal_layout = false;
@@ -1557,6 +1737,20 @@ namespace Binxelview
             horizontal_layout = true;
             redrawOptions();
             redrawPixels();
+        }
+
+        private void gridOptionsMenuItem_Click(object sender, EventArgs e)
+        {
+            hidegrid = !hidegrid;
+            redrawOptions();
+            redrawPixels();
+        }
+
+        private void snapScrollToNextStrideOptionsMenuItem_Click(object sender, EventArgs e)
+        {
+            snap_scroll = !snap_scroll;
+            redrawOptions();
+            scrollRange();
         }
 
         private void twiddleZOptionsMenuItem_Click(object sender, EventArgs e)
@@ -1575,6 +1769,76 @@ namespace Binxelview
             redrawPixels();
         }
 
+        private void loadOptionsMenuItem_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog d = new OpenFileDialog();
+            d.Title = "Load Options";
+            d.DefaultExt = "ini";
+            d.Filter = "Binxelview Options (*.ini)|*.ini|All files (*.*)|*.*";
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                disable_pixel_redraw = true;
+                string ini_err = loadIni(d.FileName);
+                if (ini_err.Length > 0)
+                {
+                    MessageBox.Show("Options load errors:\n" + d.FileName + "\n\n" + ini_err, APPNAME);
+                }
+                reloadPresets();
+                autoPalette();
+                scrollRange();
+                redrawOptions();
+                redrawPreset();
+                redrawPalette();
+                disable_pixel_redraw = false;
+                redrawPixels();
+            }
+        }
+
+        private void saveOptionsMenuItem_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog d = new SaveFileDialog();
+            d.Title = "Save Options";
+            d.DefaultExt = "ini";
+            d.Filter = "Binxelview Options (*.ini)|*.ini|All files (*.*)|*.*";
+            if (d.ShowDialog() == DialogResult.OK)
+            {
+                string ini_err = saveIni(d.FileName);
+                if (ini_err.Length > 0)
+                {
+                    MessageBox.Show("Unable to save options:\n" + d.FileName + "\n\n" + ini_err, APPNAME);
+                }
+            }
+        }
+
+        private void saveCurrentOptionsMenuItem_Click(object sender, EventArgs e)
+        {
+            string ini_err = saveCurrentIni();
+            if (ini_err.Length > 0)
+            {
+                MessageBox.Show("Unable to save current options:\n\n" + ini_err, APPNAME);
+            }
+        }
+
+        private void saveOnExitOptionsMenuItem_Click(object sender, EventArgs e)
+        {
+            save_ini = !save_ini;
+            redrawOptions();
+        }
+
+        private void defaultOptionsMenuItem_Click(object sender, EventArgs e)
+        {
+            disable_pixel_redraw = true;
+            defaultOption(); // set default options
+            reloadPresets();
+            autoPalette();
+            scrollRange();
+            redrawOptions();
+            redrawPreset();
+            redrawPalette();
+            disable_pixel_redraw = false;
+            redrawPixels();
+        }
+
         private void aboutHelpMenuItem_Click(object sender, EventArgs e)
         {
             string about =
@@ -1582,7 +1846,7 @@ namespace Binxelview
                 System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString() + "\n" +
                 "\n" +
                 "https://github.com/bbbradsmith/binxelview";
-            MessageBox.Show(about, "Binxelview");
+            MessageBox.Show(about, APPNAME);
         }
 
         //
@@ -1825,7 +2089,7 @@ namespace Binxelview
                 }
                 else
                 {
-                    MessageBox.Show("Unable to load preset:\n" + d.FileName + "\n\n" + Preset.last_error, "Binxelview");
+                    MessageBox.Show("Unable to load preset:\n" + d.FileName + "\n\n" + Preset.last_error, APPNAME);
                 }
             }
         }
@@ -1840,7 +2104,7 @@ namespace Binxelview
             {
                 if (!preset.saveFile(d.FileName))
                 {
-                    MessageBox.Show("Unable to save preset:\n" + d.FileName + "\n\n" + Preset.last_error, "Binxelview");
+                    MessageBox.Show("Unable to save preset:\n" + d.FileName + "\n\n" + Preset.last_error, APPNAME);
                 }
                 else
                 {
@@ -2012,7 +2276,7 @@ namespace Binxelview
                 }
                 else
                 {
-                    MessageBox.Show("Unable to load palette:\n" + d.FileName + "\n\n" + palette_error, "Binxelview");
+                    MessageBox.Show("Unable to load palette:\n" + d.FileName + "\n\n" + palette_error, APPNAME);
                 }
             }
         }
@@ -2029,7 +2293,7 @@ namespace Binxelview
             {
                 if (!savePalette(d.FileName))
                 {
-                    MessageBox.Show("Unable to save palette:\n" + d.FileName + "\n\n" + palette_error, "Binxelview");
+                    MessageBox.Show("Unable to save palette:\n" + d.FileName + "\n\n" + palette_error, APPNAME);
                 }
             }
         }
@@ -2160,7 +2424,7 @@ namespace Binxelview
 
             if (selected_tile < 0) // shouldn't happen, but giving an error just in case
             {
-                MessageBox.Show("No image selected?", "Binxelview");
+                MessageBox.Show("No image selected?", APPNAME);
                 return;
             }
 
@@ -2195,7 +2459,7 @@ namespace Binxelview
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), "Binxelview");
+                    MessageBox.Show("Unable to save image:\n" + d.FileName + "\n\n" + ex.ToString(), APPNAME);
                 }
 
                 redrawPixels();
@@ -2285,6 +2549,11 @@ namespace Binxelview
 
         private void BinxelviewForm_Load(object sender, EventArgs e)
         {
+            // current directory, executable directory, appdata
+            dir_cwd = new DirectoryInfo(".");
+            dir_exe = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
+            dir_loc = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData),APPDATA_FOLDER));
+
             // suppress unnecessary redraws during setup
             disable_pixel_redraw = true;
 
@@ -2299,22 +2568,30 @@ namespace Binxelview
             defaultOption();
 
             // setup presets
+            preset.empty();
             default_preset.empty();
-            reloadPresets(); // loads "Default" preset if it exists
-            preset = default_preset.copy();
+            if (reloadPresets()) preset = default_preset.copy();
 
             // load default palette if it exists
-            DirectoryInfo dir_cwd = new DirectoryInfo(".");
-            DirectoryInfo dir_app = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
             string pal_cwd = Path.Combine(dir_cwd.ToString(),"default.pal");
-            string pal_app = Path.Combine(dir_app.ToString(),"default.pal");
+            string pal_exe = Path.Combine(dir_exe.ToString(),"default.pal");
             bool success = true;
             if      (File.Exists(pal_cwd)) { success = loadPalette(pal_cwd,0); }
-            else if (File.Exists(pal_app)) { success = loadPalette(pal_app,0); }
-            if (!success)  MessageBox.Show("Error opening default palette:\n" + palette_error,"Binxelview");
+            else if (File.Exists(pal_exe)) { success = loadPalette(pal_exe,0); }
+            if (!success)  MessageBox.Show("Error opening default palette:\n" + palette_error, APPNAME);
+            palette_path = ""; // default palette doesn't count as a saved option
 
             // parse INI file
-            // TODO find INI, 3 locations
+            ini_path = "";
+            string ini_cwd = Path.Combine(dir_cwd.ToString(),"binxelview.ini");
+                   ini_exe = Path.Combine(dir_cwd.ToString(),"binxelview.ini");
+                   ini_loc = Path.Combine(dir_cwd.ToString(),"binxelview.ini");
+            if      (File.Exists(ini_cwd)) { ini_path = ini_cwd; }
+            else if (File.Exists(ini_exe)) { ini_path = ini_exe; }
+            else if (File.Exists(ini_loc)) { ini_path = ini_loc; }
+            string ini_err = "";
+            if (ini_path.Length > 0) ini_err = loadIni(ini_path);
+            if (ini_err.Length > 0) MessageBox.Show("Error opening options file: " + ini_path + "\n" + ini_err, APPNAME);
 
             // parse the command line options
             string[] args = Environment.GetCommandLineArgs();
@@ -2336,7 +2613,7 @@ namespace Binxelview
                     arg_err += opt_err;
                 }
             }
-            if (arg_err.Length > 0) MessageBox.Show("Command line error:\n" + arg_err,"Binxelview");
+            if (arg_err.Length > 0) MessageBox.Show("Command line error:\n" + arg_err, APPNAME);
 
             autoPalette();
             scrollRange();
@@ -2345,6 +2622,14 @@ namespace Binxelview
             redrawPalette();
             disable_pixel_redraw = false; // finally allow redraw of pixels
             redrawPixels();
+        }
+
+        private void BinxelviewForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            if (save_ini)
+            {
+                saveCurrentIni(); // no errors reported
+            }
         }
     }
 }

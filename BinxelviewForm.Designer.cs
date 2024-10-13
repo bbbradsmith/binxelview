@@ -40,20 +40,25 @@
             this.exitFileMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.presetToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.reloadPresetMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.setDirectoryPresetMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.presetMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.decimalPositionOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hexadecimalPositionOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsMenuSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-            this.snapScrollToNextStrideOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.optionsMenuSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-            this.gridOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.optionsMenuSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.verticalLayoutOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.horizontalLayoutOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.optionsMenuSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.optionsMenuSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.gridOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.snapScrollToNextStrideOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsMenuSeparator3 = new System.Windows.Forms.ToolStripSeparator();
             this.twiddleZOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.twiddleNOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.optionsMenuSeparator4 = new System.Windows.Forms.ToolStripSeparator();
+            this.loadOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.saveOnExitOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.defaultOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutHelpMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tableTop = new System.Windows.Forms.TableLayoutPanel();
@@ -125,6 +130,7 @@
             this.pixelsToPaletteContextItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pixelScroll = new System.Windows.Forms.VScrollBar();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.saveCurrentOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             this.tableTop.SuspendLayout();
             this.groupPacking.SuspendLayout();
@@ -229,6 +235,7 @@
             // 
             this.presetToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.reloadPresetMenuItem,
+            this.setDirectoryPresetMenuItem,
             this.presetMenuSeparator});
             this.presetToolStripMenuItem.Name = "presetToolStripMenuItem";
             this.presetToolStripMenuItem.Size = new System.Drawing.Size(51, 20);
@@ -237,14 +244,21 @@
             // reloadPresetMenuItem
             // 
             this.reloadPresetMenuItem.Name = "reloadPresetMenuItem";
-            this.reloadPresetMenuItem.Size = new System.Drawing.Size(110, 22);
+            this.reloadPresetMenuItem.Size = new System.Drawing.Size(150, 22);
             this.reloadPresetMenuItem.Text = "&Reload";
-            this.reloadPresetMenuItem.Click += new System.EventHandler(this.reloadPresetsToolStripMenuItem_Click);
+            this.reloadPresetMenuItem.Click += new System.EventHandler(this.reloadPresetMenuItem_Click);
+            // 
+            // setDirectoryPresetMenuItem
+            // 
+            this.setDirectoryPresetMenuItem.Name = "setDirectoryPresetMenuItem";
+            this.setDirectoryPresetMenuItem.Size = new System.Drawing.Size(150, 22);
+            this.setDirectoryPresetMenuItem.Text = "Set &Directory...";
+            this.setDirectoryPresetMenuItem.Click += new System.EventHandler(this.setDirectoryPresetMenuItem_Click);
             // 
             // presetMenuSeparator
             // 
             this.presetMenuSeparator.Name = "presetMenuSeparator";
-            this.presetMenuSeparator.Size = new System.Drawing.Size(107, 6);
+            this.presetMenuSeparator.Size = new System.Drawing.Size(147, 6);
             // 
             // optionsToolStripMenuItem
             // 
@@ -252,15 +266,20 @@
             this.decimalPositionOptionsMenuItem,
             this.hexadecimalPositionOptionsMenuItem,
             this.optionsMenuSeparator1,
-            this.snapScrollToNextStrideOptionsMenuItem,
-            this.optionsMenuSeparator2,
-            this.gridOptionsMenuItem,
-            this.optionsMenuSeparator3,
             this.verticalLayoutOptionsMenuItem,
             this.horizontalLayoutOptionsMenuItem,
-            this.optionsMenuSeparator4,
+            this.optionsMenuSeparator2,
+            this.gridOptionsMenuItem,
+            this.snapScrollToNextStrideOptionsMenuItem,
+            this.optionsMenuSeparator3,
             this.twiddleZOptionsMenuItem,
-            this.twiddleNOptionsMenuItem});
+            this.twiddleNOptionsMenuItem,
+            this.optionsMenuSeparator4,
+            this.loadOptionsMenuItem,
+            this.saveOptionsMenuItem,
+            this.saveCurrentOptionsMenuItem,
+            this.saveOnExitOptionsMenuItem,
+            this.defaultOptionsMenuItem});
             this.optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
             this.optionsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
             this.optionsToolStripMenuItem.Text = "&Options";
@@ -286,34 +305,6 @@
             this.optionsMenuSeparator1.Name = "optionsMenuSeparator1";
             this.optionsMenuSeparator1.Size = new System.Drawing.Size(200, 6);
             // 
-            // snapScrollToNextStrideOptionsMenuItem
-            // 
-            this.snapScrollToNextStrideOptionsMenuItem.Checked = true;
-            this.snapScrollToNextStrideOptionsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.snapScrollToNextStrideOptionsMenuItem.Name = "snapScrollToNextStrideOptionsMenuItem";
-            this.snapScrollToNextStrideOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.snapScrollToNextStrideOptionsMenuItem.Text = "&Snap scroll to next stride";
-            this.snapScrollToNextStrideOptionsMenuItem.Click += new System.EventHandler(this.snapScrollToNextStrideOptionsMenuItem_Click);
-            // 
-            // optionsMenuSeparator2
-            // 
-            this.optionsMenuSeparator2.Name = "optionsMenuSeparator2";
-            this.optionsMenuSeparator2.Size = new System.Drawing.Size(200, 6);
-            // 
-            // gridOptionsMenuItem
-            // 
-            this.gridOptionsMenuItem.Checked = true;
-            this.gridOptionsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.gridOptionsMenuItem.Name = "gridOptionsMenuItem";
-            this.gridOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.gridOptionsMenuItem.Text = "&Grid Padding";
-            this.gridOptionsMenuItem.Click += new System.EventHandler(this.gridOptionsMenuItem_Click);
-            // 
-            // optionsMenuSeparator3
-            // 
-            this.optionsMenuSeparator3.Name = "optionsMenuSeparator3";
-            this.optionsMenuSeparator3.Size = new System.Drawing.Size(200, 6);
-            // 
             // verticalLayoutOptionsMenuItem
             // 
             this.verticalLayoutOptionsMenuItem.Checked = true;
@@ -330,10 +321,33 @@
             this.horizontalLayoutOptionsMenuItem.Text = "H&orizontal layout";
             this.horizontalLayoutOptionsMenuItem.Click += new System.EventHandler(this.horizontalLayoutOptionsMenuItem_Click);
             // 
-            // optionsMenuSeparator4
+            // optionsMenuSeparator2
             // 
-            this.optionsMenuSeparator4.Name = "optionsMenuSeparator4";
-            this.optionsMenuSeparator4.Size = new System.Drawing.Size(200, 6);
+            this.optionsMenuSeparator2.Name = "optionsMenuSeparator2";
+            this.optionsMenuSeparator2.Size = new System.Drawing.Size(200, 6);
+            // 
+            // gridOptionsMenuItem
+            // 
+            this.gridOptionsMenuItem.Checked = true;
+            this.gridOptionsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.gridOptionsMenuItem.Name = "gridOptionsMenuItem";
+            this.gridOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.gridOptionsMenuItem.Text = "&Grid Padding";
+            this.gridOptionsMenuItem.Click += new System.EventHandler(this.gridOptionsMenuItem_Click);
+            // 
+            // snapScrollToNextStrideOptionsMenuItem
+            // 
+            this.snapScrollToNextStrideOptionsMenuItem.Checked = true;
+            this.snapScrollToNextStrideOptionsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.snapScrollToNextStrideOptionsMenuItem.Name = "snapScrollToNextStrideOptionsMenuItem";
+            this.snapScrollToNextStrideOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.snapScrollToNextStrideOptionsMenuItem.Text = "Sna&p scroll to next stride";
+            this.snapScrollToNextStrideOptionsMenuItem.Click += new System.EventHandler(this.snapScrollToNextStrideOptionsMenuItem_Click);
+            // 
+            // optionsMenuSeparator3
+            // 
+            this.optionsMenuSeparator3.Name = "optionsMenuSeparator3";
+            this.optionsMenuSeparator3.Size = new System.Drawing.Size(200, 6);
             // 
             // twiddleZOptionsMenuItem
             // 
@@ -348,6 +362,41 @@
             this.twiddleNOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
             this.twiddleNOptionsMenuItem.Text = "Twiddle &N";
             this.twiddleNOptionsMenuItem.Click += new System.EventHandler(this.twiddleNOptionsMenuItem_Click);
+            // 
+            // optionsMenuSeparator4
+            // 
+            this.optionsMenuSeparator4.Name = "optionsMenuSeparator4";
+            this.optionsMenuSeparator4.Size = new System.Drawing.Size(200, 6);
+            // 
+            // loadOptionsMenuItem
+            // 
+            this.loadOptionsMenuItem.Name = "loadOptionsMenuItem";
+            this.loadOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.loadOptionsMenuItem.Text = "&Load Options File...";
+            this.loadOptionsMenuItem.Click += new System.EventHandler(this.loadOptionsMenuItem_Click);
+            // 
+            // saveOptionsMenuItem
+            // 
+            this.saveOptionsMenuItem.Name = "saveOptionsMenuItem";
+            this.saveOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.saveOptionsMenuItem.Text = "&Save Options File...";
+            this.saveOptionsMenuItem.Click += new System.EventHandler(this.saveOptionsMenuItem_Click);
+            // 
+            // saveOnExitOptionsMenuItem
+            // 
+            this.saveOnExitOptionsMenuItem.Checked = true;
+            this.saveOnExitOptionsMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.saveOnExitOptionsMenuItem.Name = "saveOnExitOptionsMenuItem";
+            this.saveOnExitOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.saveOnExitOptionsMenuItem.Text = "Save Options on &Exit";
+            this.saveOnExitOptionsMenuItem.Click += new System.EventHandler(this.saveOnExitOptionsMenuItem_Click);
+            // 
+            // defaultOptionsMenuItem
+            // 
+            this.defaultOptionsMenuItem.Name = "defaultOptionsMenuItem";
+            this.defaultOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.defaultOptionsMenuItem.Text = "&Reset to Default";
+            this.defaultOptionsMenuItem.Click += new System.EventHandler(this.defaultOptionsMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -1333,6 +1382,13 @@
             this.pixelScroll.TabStop = true;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
             // 
+            // saveCurrentOptionsMenuItem
+            // 
+            this.saveCurrentOptionsMenuItem.Name = "saveCurrentOptionsMenuItem";
+            this.saveCurrentOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.saveCurrentOptionsMenuItem.Text = "Save Current Options";
+            this.saveCurrentOptionsMenuItem.Click += new System.EventHandler(this.saveCurrentOptionsMenuItem_Click);
+            // 
             // BinxelviewForm
             // 
             this.AllowDrop = true;
@@ -1345,6 +1401,7 @@
             this.MainMenuStrip = this.menuStripMain;
             this.Name = "BinxelviewForm";
             this.Text = "Binxelview";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.BinxelviewForm_FormClosed);
             this.Load += new System.EventHandler(this.BinxelviewForm_Load);
             this.DragDrop += new System.Windows.Forms.DragEventHandler(this.BinxelviewForm_DragDrop);
             this.DragEnter += new System.Windows.Forms.DragEventHandler(this.BinxelviewForm_DragEnter);
@@ -1470,15 +1527,14 @@
         private System.Windows.Forms.Button buttonBitPos;
         private System.Windows.Forms.Button buttonZoom;
         private System.Windows.Forms.Button buttonZero;
-        private System.Windows.Forms.ToolStripSeparator optionsMenuSeparator1;
+        private System.Windows.Forms.ToolStripSeparator optionsMenuSeparator2;
         private System.Windows.Forms.ToolStripMenuItem snapScrollToNextStrideOptionsMenuItem;
-        private System.Windows.Forms.ToolStripSeparator optionsMenuSeparator3;
         private System.Windows.Forms.ToolStripMenuItem verticalLayoutOptionsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem horizontalLayoutOptionsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem twiddleZOptionsMenuItem;
         private System.Windows.Forms.ToolStripSeparator optionsMenuSeparator4;
         private System.Windows.Forms.ToolStripMenuItem twiddleNOptionsMenuItem;
-        private System.Windows.Forms.ToolStripSeparator optionsMenuSeparator2;
+        private System.Windows.Forms.ToolStripSeparator optionsMenuSeparator3;
         private System.Windows.Forms.ToolStripMenuItem gridOptionsMenuItem;
         private System.Windows.Forms.ToolStripMenuItem exportBinaryChunkFileMenuItem;
         private System.Windows.Forms.ToolStripSeparator fileMenuSeparator;
@@ -1487,6 +1543,13 @@
         private System.Windows.Forms.Button buttonAutoPal;
         private System.Windows.Forms.ComboBox comboBoxPalette;
         private System.Windows.Forms.ToolStripMenuItem pixelsToPaletteContextItem;
+        private System.Windows.Forms.ToolStripMenuItem setDirectoryPresetMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem loadOptionsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveOptionsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem defaultOptionsMenuItem;
+        private System.Windows.Forms.ToolStripSeparator optionsMenuSeparator1;
+        private System.Windows.Forms.ToolStripMenuItem saveOnExitOptionsMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem saveCurrentOptionsMenuItem;
     }
 }
 
