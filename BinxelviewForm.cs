@@ -14,7 +14,7 @@ namespace Binxelview
     public partial class BinxelviewForm : Form
     {
         const string APPNAME = "Binxelview";
-        const string APPDATA_FOLDER = "binxelview";
+        const string APPDATA_FOLDER = "Binxelview";
         const int MAX_BPP = 32;
         const int PRESET_VERSION = 2;
         const int PALETTE_BITS = 14; // maximum bits to fill 128 x 128 square
@@ -2663,9 +2663,9 @@ namespace Binxelview
 
             // parse INI file
             ini_path = "";
-            string ini_cwd = Path.Combine(dir_cwd.ToString(),"binxelview.ini");
-                   ini_exe = Path.Combine(dir_cwd.ToString(),"binxelview.ini");
-                   ini_loc = Path.Combine(dir_cwd.ToString(),"binxelview.ini");
+            string ini_cwd = Path.Combine(dir_cwd.ToString(),"Binxelview.ini");
+                   ini_exe = Path.Combine(dir_cwd.ToString(),"Binxelview.ini");
+                   ini_loc = Path.Combine(dir_cwd.ToString(),"Binxelview.ini");
             if      (File.Exists(ini_cwd)) { ini_path = ini_cwd; }
             else if (File.Exists(ini_exe)) { ini_path = ini_exe; }
             else if (File.Exists(ini_loc)) { ini_path = ini_loc; }

@@ -256,7 +256,7 @@ When save on exit is applied, options will be saved back to the first INI file t
 or the INI selected from the command line -ini option. If no INI was found, 2 locations will be
 tried in order. If a write to the executable directory fails, appdata will be attempted instead.
   - The executable directory.
-  - The appdata local folder. (%LOCALAPPDATA%\binxelview)
+  - The appdata local folder. (%LOCALAPPDATA%\Binxelview)
 
 
 Because save on exit is an option saved to the INI file, if you want to create a "read only"
@@ -265,7 +265,7 @@ from the menu. This will save the current options now, since disabling that opti
 them from being saved when you exit the program.
 
 
-You can create "workspaces" for Binxelview by putting a binxelview.ini, presets, etc. into
+You can create "workspaces" for Binxelview by putting a Binxelview.ini, presets, etc. into
 a folder, then opening Binxelview with that folder as the current working directory.
 
 Alternatively, you might use the -ini command line option to create a shortcut that applies
