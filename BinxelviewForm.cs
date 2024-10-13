@@ -334,6 +334,7 @@ namespace Binxelview
             zoom = 2;
             hidegrid = false;
             background = SystemColors.Control;
+            background_raw = background.ToArgb();
             palette_mode = PaletteMode.PALETTE_RGB;
             decimal_position = false;
             snap_scroll = true;
