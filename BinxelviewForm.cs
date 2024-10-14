@@ -1130,26 +1130,6 @@ namespace Binxelview
         // Position and Scroll
         //
 
-        void scrollRange()
-        {
-            if (view_scroll.Value > data.Length) view_scroll.Value = data.Length;
-            view_scroll.Maximum = data.Length;
-
-            next_increment_byte = preset.next_stride_byte * ((preset.height == 1) ? 16 : 1);
-            next_increment_bit = preset.next_stride_bit * ((preset.height == 1) ? 16 : 1);
-            int nb = next_increment_bit / 8;
-            next_increment_byte += nb;
-            next_increment_bit -= nb * 8;
-
-            view_scroll.LargeChange = (next_increment_byte >= 0) ? next_increment_byte : -next_increment_byte;
-
-            view_scroll.SmallChange = 1;
-            if (snap_scroll)
-            {
-                view_scroll.SmallChange = view_scroll.LargeChange;
-            }
-        }
-
         void updatePos(bool update_scroll = true)
         {
             numericPosByte.Hexadecimal = (pos_byte >= 0) && !decimal_position;
@@ -1169,6 +1149,27 @@ namespace Binxelview
             int nb = pos_bit / 8;
             pos_byte += nb;
             pos_bit -= nb * 8;
+            updatePos();
+        }
+
+        void scrollRange()
+        {
+            if (view_scroll.Value > data.Length) view_scroll.Value = data.Length;
+            view_scroll.Maximum = data.Length;
+
+            next_increment_byte = preset.next_stride_byte * ((preset.height == 1) ? 16 : 1);
+            next_increment_bit = preset.next_stride_bit * ((preset.height == 1) ? 16 : 1);
+            int nb = next_increment_bit / 8;
+            next_increment_byte += nb;
+            next_increment_bit -= nb * 8;
+
+            view_scroll.LargeChange = (next_increment_byte >= 0) ? next_increment_byte : -next_increment_byte;
+            view_scroll.SmallChange = 1;
+            if (snap_scroll)
+            {
+                view_scroll.SmallChange = view_scroll.LargeChange;
+            }
+
             updatePos();
         }
 
@@ -1217,7 +1218,6 @@ namespace Binxelview
                 pos_byte = 0;
             }
             pos_bit = 0;
-            updatePos();
             scrollRange();
             data_path = path;
             data_file = Path.GetFileName(path);
