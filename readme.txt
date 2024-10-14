@@ -278,6 +278,9 @@ a specific INI setup.
 Changes
 -------
 
+1.6.4.0 (unreleased beta)
+- No changes yet.
+
 1.6.3.0 (2024-10-14)
 - Option persistence, INI file save and load.
 - Command line arguments for options.
