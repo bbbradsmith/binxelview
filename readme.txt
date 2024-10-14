@@ -135,7 +135,7 @@ but this can be changed to another directory of your choice, which will be saved
 Palette
 -------
 
-If the BPP setting is less than 15, custom palettes can be used,
+If the BPP setting is 16 or lower, custom palettes can be used,
 otherwise an automatic RGB or Greyscale palette can be applied.
 
 Custom palettes are 24-bit RGB triples (8 bits for each component).
@@ -280,6 +280,7 @@ Changes
 
 1.6.4.0 (unreleased beta)
 - Use full color picker dialog by default.
+- 16BPP palette support.
 
 1.6.3.0 (2024-10-14)
 - Option persistence, INI file save and load.

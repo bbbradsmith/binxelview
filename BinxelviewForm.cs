@@ -17,8 +17,10 @@ namespace Binxelview
         const string APPDATA_FOLDER = "Binxelview";
         const int MAX_BPP = 32;
         const int PRESET_VERSION = 3;
-        const int PALETTE_BITS = 14; // maximum bits to fill 128 x 128 square
-        const int PALETTE_DIM = 128; // should match paletteBox size
+        const int PALETTE_BITS = 16; // maximum bits supported in palette
+        const int PALETTE_SIZE = (1 << PALETTE_BITS);
+        const int PALETTEBOX_BITS = 14; // maximum bits the paletteBox can display (128x128 = 1<<14)
+        const int PALETTEBOX_DIM = 128; // should match paletteBox size
         const int ZOOM_MAX = 32;
 
         enum PaletteMode
@@ -60,10 +62,10 @@ namespace Binxelview
         VScrollBar view_scroll;
         DirectoryInfo dir_cwd, dir_exe, dir_loc;
         string ini_exe, ini_loc;
-        Bitmap palette_bmp = new Bitmap(PALETTE_DIM, PALETTE_DIM);
+        Bitmap palette_bmp = new Bitmap(PALETTEBOX_DIM, PALETTEBOX_DIM);
         Bitmap pixel_bmp = null;
-        Color[] palette = new Color[PALETTE_DIM * PALETTE_DIM];
-        int[] palette_raw = new int[PALETTE_DIM * PALETTE_DIM]; // int version of palette
+        Color[] palette = new Color[PALETTE_SIZE];
+        int[] palette_raw = new int[PALETTE_SIZE]; // int version of palette
         string palette_error = "";
         int background_raw = SystemColors.Control.ToArgb(); // int version of background setting
         int[] twiddle_cache = null;
@@ -1099,7 +1101,7 @@ namespace Binxelview
         {
             // randomizes the entire palette, not just the current used area,
             // and does not switch to custom palette mode.
-            for (int i = 0; i < (PALETTE_DIM * PALETTE_DIM); ++i)
+            for (int i = 0; i < PALETTE_SIZE; ++i)
             {
                 setPalette(i,
                     random.Next() & 255,
@@ -1283,7 +1285,7 @@ namespace Binxelview
         void initCustomPalette()
         {
             // initialize palette to grey stripes
-            for (int i=0; i<(PALETTE_DIM*PALETTE_DIM); ++i)
+            for (int i=0; i<PALETTE_SIZE; ++i)
             {
                 int v = ((i&1)==1) ? 0x84 : 0x74;
                 setPalette(i,v,v,v);
@@ -1321,7 +1323,7 @@ namespace Binxelview
                 }
 
                 initCustomPalette();
-                for (int i=0; (i<(PALETTE_DIM*PALETTE_DIM)) && (i<cols.Length); ++i)
+                for (int i=0; (i<PALETTE_SIZE) && (i<cols.Length); ++i)
                 {
                     Color c = cols[i];
                     setPalette(i, c.R, c.G, c.B);
@@ -1411,7 +1413,7 @@ namespace Binxelview
             }
 
             initCustomPalette();
-            for (int i=0; (i<(PALETTE_DIM*PALETTE_DIM)) && (((i*3)+2)<read_data.Length); ++i)
+            for (int i=0; (i<PALETTE_SIZE) && (((i*3)+2)<read_data.Length); ++i)
             {
                 int r = read_data[(i * 3) + 0];
                 int g = read_data[(i * 3) + 1];
@@ -1618,12 +1620,12 @@ namespace Binxelview
 
             int bx = preset.bpp / 2;
             int by = preset.bpp - bx;
-            for (int y = 0; y < PALETTE_DIM; ++y)
+            for (int y = 0; y < PALETTEBOX_DIM; ++y)
             {
-                for (int x = 0; x < PALETTE_DIM; ++x)
+                for (int x = 0; x < PALETTEBOX_DIM; ++x)
                 {
-                    long px = ((long)x * (1 << bx)) / PALETTE_DIM;
-                    long py = ((long)y * (1 << by)) / PALETTE_DIM;
+                    long px = ((long)x * (1 << bx)) / PALETTEBOX_DIM;
+                    long py = ((long)y * (1 << by)) / PALETTEBOX_DIM;
                     Color c = getPalette(px + (py * (1 << bx)));
                     palette_bmp.SetPixel(x, y, c);
                 }
@@ -2282,10 +2284,12 @@ namespace Binxelview
 
         private void paletteBox_MouseMove(object sender, MouseEventArgs e)
         {
+            int x = (e.X < 0) ? 0 : ((e.X >= PALETTEBOX_DIM) ? (PALETTEBOX_DIM-1) : e.X);
+            int y = (e.Y < 0) ? 0 : ((e.Y >= PALETTEBOX_DIM) ? (PALETTEBOX_DIM-1) : e.Y);
             int bx = preset.bpp / 2;
             int by = preset.bpp - bx;
-            long px = ((long)e.X * (1 << bx)) / PALETTE_DIM;
-            long py = ((long)e.Y * (1 << by)) / PALETTE_DIM;
+            long px = ((long)x * (1 << bx)) / PALETTEBOX_DIM;
+            long py = ((long)y * (1 << by)) / PALETTEBOX_DIM;
             long index = px + (py * (1 << bx));
             Color c = getPalette(index);
             int ch = (c.R << 16) | (c.G << 8) | c.B;
@@ -2296,10 +2300,12 @@ namespace Binxelview
         {
             if (preset.bpp > PALETTE_BITS) return;
 
+            int x = (e.X < 0) ? 0 : ((e.X >= PALETTEBOX_DIM) ? (PALETTEBOX_DIM-1) : e.X);
+            int y = (e.Y < 0) ? 0 : ((e.Y >= PALETTEBOX_DIM) ? (PALETTEBOX_DIM-1) : e.Y);
             int bx = preset.bpp / 2;
             int by = preset.bpp - bx;
-            long px = ((long)e.X * (1 << bx)) / PALETTE_DIM;
-            long py = ((long)e.Y * (1 << by)) / PALETTE_DIM;
+            long px = ((long)x * (1 << bx)) / PALETTEBOX_DIM;
+            long py = ((long)y * (1 << by)) / PALETTEBOX_DIM;
             long index = px + (py * (1 << bx));
             Color c = getPalette(index);
 
@@ -2588,9 +2594,9 @@ namespace Binxelview
             long read_pos = selected_pos;
             if (read_pos < 0) return;
             // extract new palette
-            Color[] new_pal = new Color[PALETTE_DIM*PALETTE_DIM];
+            Color[] new_pal = new Color[PALETTE_SIZE];
             int count = 0;
-            for (int i=0; i<(PALETTE_DIM*PALETTE_DIM); ++i)
+            for (int i=0; i<PALETTE_SIZE; ++i)
             {
                 long p = readPixel(read_pos);
                 if (p < 0) break;
