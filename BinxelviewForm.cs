@@ -2307,6 +2307,7 @@ namespace Binxelview
             d.Color = c;
             //d.Title = String.Format("Edit palette {0:D} ({0:X})", index, index);
             d.AllowFullOpen = true;
+            d.FullOpen = true;
             if (d.ShowDialog() == DialogResult.OK)
             {
                 palette_mode = PaletteMode.PALETTE_CUSTOM;
@@ -2321,6 +2322,7 @@ namespace Binxelview
             ColorDialog d = new ColorDialog();
             d.Color = background;
             d.AllowFullOpen = true;
+            d.FullOpen = true;
             if (d.ShowDialog() == DialogResult.OK)
             {
                 background = d.Color;

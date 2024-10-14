@@ -279,7 +279,7 @@ Changes
 -------
 
 1.6.4.0 (unreleased beta)
-- No changes yet.
+- Use full color picker dialog by default.
 
 1.6.3.0 (2024-10-14)
 - Option persistence, INI file save and load.
