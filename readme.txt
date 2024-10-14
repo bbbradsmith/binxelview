@@ -276,7 +276,7 @@ Changes
 -------
 
 1.6.3.0 (unreleased beta)
-- No changes yet.
+- Fix relative INI path edge case, when the target directory has a similar name to the INI directory.
 
 1.6.2.0 (2024-10-13)
 - Option persistence, INI file save and load.
