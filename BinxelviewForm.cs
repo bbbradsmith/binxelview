@@ -73,6 +73,7 @@ namespace Binxelview
         bool disable_pixel_redraw = false; // used to temporarily block redraws during repeated updates
         Font posfont_regular, posfont_bold;
         Random random = new Random();
+        int preset_menu_fixed_items;
         int main_w, main_h; // used to restore size during split_view switch
         int fixed_w, fixed_h;
 
@@ -1229,9 +1230,9 @@ namespace Binxelview
         void reloadPresets()
         {
             // remove everything but Reload, Set Directory and separator
-            while (presetToolStripMenuItem.DropDownItems.Count > 3)
+            while (presetToolStripMenuItem.DropDownItems.Count > preset_menu_fixed_items)
             {
-                presetToolStripMenuItem.DropDownItems.RemoveAt(3);
+                presetToolStripMenuItem.DropDownItems.RemoveAt(preset_menu_fixed_items);
             }
             presets = new List<Preset>();
 
@@ -1586,6 +1587,13 @@ namespace Binxelview
             twiddleZAdvancedMenuItem.Checked = preset.twiddle == 1;
             twiddleNAdvancedMenuItem.Checked = preset.twiddle == 2;
 
+            // check the preset menu item corresponding to the current preset
+            for (int i=preset_menu_fixed_items; i < presetToolStripMenuItem.DropDownItems.Count; ++i)
+            {
+                ToolStripMenuItem t = (ToolStripMenuItem)presetToolStripMenuItem.DropDownItems[i];
+                t.Checked = (preset.name == t.Name);
+            }
+
             disable_pixel_redraw = old_disable_pixel_redraw; // restore pixel redraw
         }
 
@@ -1738,6 +1746,7 @@ namespace Binxelview
         private void reloadPresetMenuItem_Click(object sender, EventArgs e)
         {
             reloadPresets();
+            redrawPreset();
         }
 
         private void setDirectoryPresetMenuItem_Click(object sender, EventArgs e)
@@ -1757,6 +1766,7 @@ namespace Binxelview
             {
                 preset_dir = Path.GetDirectoryName(d.FileName);
                 reloadPresets();
+                redrawPreset();
             }
         }
 
@@ -2175,6 +2185,7 @@ namespace Binxelview
                 {
                     preset.name = Path.GetFileNameWithoutExtension(d.FileName); // update name for saved options
                     reloadPresets();
+                    redrawPreset();
                 }
             }
         }
@@ -2647,6 +2658,7 @@ namespace Binxelview
             comboBoxPalette.SelectedIndex = (int)PaletteMode.PALETTE_RGB - 1;
             numericZoom.Minimum = 1;
             numericZoom.Maximum = ZOOM_MAX;
+            preset_menu_fixed_items = presetToolStripMenuItem.DropDownItems.Count;
             fixed_w = this.Width; // default width is fixed width
             fixed_h = this.Height - (pixelScroll.Height + 0); // fixed height should cut off pixel view entirely
             main_w = this.Width;

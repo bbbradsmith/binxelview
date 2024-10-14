@@ -279,6 +279,7 @@ Changes
 - Use byte/bit for default chunky table instead of just bit.
 - Genesis/MegaDrive 8px preset.
 - Fix bug when loading version 3 presets.
+- Indicate selected preset in the presets menu.
 
 1.6.1.0 (2024-10-13)
 - Option persistence, INI file save and load.
