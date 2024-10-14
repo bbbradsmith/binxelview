@@ -1761,7 +1761,7 @@ namespace Binxelview
             d.ValidateNames = false; // avoid validation that will reject folders
             d.CheckFileExists = false; // folder is not a file
             d.CheckPathExists = true; // folder is a valid path
-            d.FileName = " current folder "; // pre-filling this acts like a selected file in the current folder if not changed by the user
+            d.FileName = " select folder "; // pre-filling this acts like a selected file in the current folder if not changed by the user
             if (d.ShowDialog() == DialogResult.OK)
             {
                 preset_dir = Path.GetDirectoryName(d.FileName);
