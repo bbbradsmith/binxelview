@@ -1583,8 +1583,9 @@ namespace Binxelview
                 r.Cells[2].Style.ForeColor = SystemColors.MenuHighlight;
                 dataGridPixel.Rows.Add(r);
             }
+            // If new BPP has fewer entries, the scroll position might be invalid. The grid is large enough to show 8 entries.
+            if ((old_scroll + 8) >= dataGridPixel.Rows.Count) old_scroll = dataGridPixel.Rows.Count - 8;
             if (old_scroll < 0) old_scroll = 0;
-            //if (old_scroll >= dataGridPixel.Rows.Count) old_scroll = 0;
             dataGridPixel.FirstDisplayedScrollingRowIndex = old_scroll;
             dataGridPixel.Enabled = !preset.chunky;
 
