@@ -1,7 +1,7 @@
 
 Binxelview binary image explorer
 
-Version 1.6.1.0
+Version 1.6.2.0
 2024-10-13
 Brad Smith et al.
 
@@ -275,13 +275,7 @@ a specific INI setup.
 Changes
 -------
 
-1.6.2.0 (unreleased beta)
-- Use byte/bit for default chunky table instead of just bit.
-- Genesis/MegaDrive 8px preset.
-- Fix bug when loading version 3 presets.
-- Indicate selected preset in the presets menu.
-
-1.6.1.0 (2024-10-13)
+1.6.2.0 (2024-10-13)
 - Option persistence, INI file save and load.
 - Command line arguments for options.
 - Pixel window option for second viewing window.
@@ -301,12 +295,15 @@ Changes
 - Fix image loaded as palette not releasing file handle.
 - Remember last used file type filter from the load palette dialog.
 - Removed default preset, as persistent options will remember your last preset instead.
+- Indicate selected preset in the presets menu.
 - Added redundant menu option for background colour, to find easier and be keyboard accessible.
+- Use byte/bit for default chunky table instead of just bit.
 - Palette load option for common VGA format. (Contributor: foone)
 - Microsoft RIFF palette support.
 - GB CHR 8px preset. (Contributor: Lord-Nightmare)
 - ZX Spectrum preset. (Contributor: damieng)
 - SNES 8BPP preset. (Contributor: ButThouMust)
+- Genesis/MegaDrive 8px preset.
 - PS1 15BPP and 4BPP presets. (Contributor: HeyItsLollie)
 - VGA Palette preset.
 
