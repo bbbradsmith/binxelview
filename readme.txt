@@ -279,6 +279,8 @@ Changes
 
 1.6.3.0 (unreleased beta)
 - Fix relative INI path edge case, when the target directory has a similar name to the INI directory.
+- Fix intermittent crash bug when changing presets (re-entrant code).
+- Fix PixelView not updating scroll position on first open.
 
 1.6.2.0 (2024-10-13)
 - Option persistence, INI file save and load.

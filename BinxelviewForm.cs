@@ -1514,8 +1514,12 @@ namespace Binxelview
             view_box.Image = pixel_bmp;
         }
 
+        private bool redrawPreset_active = false;
         void redrawPreset()
         {
+            if (redrawPreset_active) return; // prevent re-entry on UI value changes
+            redrawPreset_active = true;
+
             if (preset.pixel_stride_auto)
             {
                 preset.pixel_stride_byte = preset.bpp >> 3;
@@ -1595,10 +1599,15 @@ namespace Binxelview
             }
 
             disable_pixel_redraw = old_disable_pixel_redraw; // restore pixel redraw
+            redrawPreset_active = false;
         }
 
+        private bool redrawPalette_active = false;
         void redrawPalette()
         {
+            if (redrawPalette_active) return; // prevent re-entry on UI value changes
+            redrawPalette_active = true;
+
             autoPaletteSetup();
             // disable these if BPP is too high to use an actual palette
             bool palenable = preset.bpp <= PALETTE_BITS;
@@ -1620,10 +1629,16 @@ namespace Binxelview
             }
             paletteBox.Image = palette_bmp;
             paletteBox.Refresh();
+
+            redrawPalette_active = false;
         }
 
+        private bool redrawOptions_active = false;
         void redrawOptions() // make sure the UI state matches current options
         {
+            if (redrawOptions_active) return; // prevent re-entry on UI value changes
+            redrawOptions_active = true;
+
             numericZoom.Value = zoom;
             gridOptionsMenuItem.Checked = !hidegrid;
             decimalPositionOptionsMenuItem.Checked = decimal_position;
@@ -1663,6 +1678,8 @@ namespace Binxelview
                     scrollRange();
                 }
             }
+
+            redrawOptions_active = false;
         }
 
         public void splitviewClose()
