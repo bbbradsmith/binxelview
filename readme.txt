@@ -7,6 +7,7 @@ Brad Smith et al.
 
 https://github.com/bbbradsmith/binxelview
 http://rainwarrior.ca
+https://patreon.com/rainwarrior
 
 
 This is a relatively simple tool for making visual analysis of data in binary files.
