@@ -1,8 +1,8 @@
 
 Binxelview binary image explorer
 
-Version 1.6.2.0
-2024-10-13
+Version 1.6.3.0
+2024-10-14
 Brad Smith et al.
 
 https://github.com/bbbradsmith/binxelview
@@ -278,13 +278,7 @@ a specific INI setup.
 Changes
 -------
 
-1.6.3.0 (unreleased beta)
-- Fix relative INI path edge case, when the target directory has a similar name to the INI directory.
-- Fix inefficient UI updates which were accidentally recursive.
-- Fix PixelView not updating scroll position on first open.
-- Fix crash bug when lowering BPP and bit ordering grid was scrolled down too far.
-
-1.6.2.0 (2024-10-13)
+1.6.3.0 (2024-10-14)
 - Option persistence, INI file save and load.
 - Command line arguments for options.
 - Pixel window option for second viewing window.
@@ -301,6 +295,7 @@ Changes
 - "Little Endian" renamed to "Reverse Byte" for clarity.
 - Limit width to 65536 to prevent out of memory from accidentally typing huge widths.
 - Indicate hexadecimal position with bold font.
+- Fix crash bug when lowering BPP and bit ordering grid was scrolled down too far.
 - Fix image loaded as palette not releasing file handle.
 - Remember last used file type filter from the load palette dialog.
 - Removed default preset, as persistent options will remember your last preset instead.
