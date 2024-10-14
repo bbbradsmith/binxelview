@@ -20,6 +20,8 @@ which might contain data that can be identified visually in a grid.
 Once the data is identified and located within the file,
 more work would follow with other appropriate tools.
 
+Video demonstration:
+https://www.youtube.com/watch?v=3GAPvPCM-lg
 
 Unstable preview builds:
 https://nightly.link/bbbradsmith/binxelview/workflows/build/master
