@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.ProgressBar;
 using System.Xml.Linq;
 using Binxelview.Dialogs;
+using System.Security.Policy;
 
 namespace Binxelview
 {
@@ -75,6 +76,7 @@ namespace Binxelview
         bool disable_pixel_redraw = false; // used to temporarily block redraws during repeated updates
         Font posfont_regular, posfont_bold;
         Random random = new Random();
+        uint random_seed;
         int preset_menu_fixed_items;
         int main_w, main_h; // used to restore size during split_view switch
         int fixed_w, fixed_h;
@@ -1063,6 +1065,47 @@ namespace Binxelview
             return b | (g << 8) | (r << 16) | unchecked((int)0xFF000000);
         }
 
+        void randomColorSeed() // reseed the random color generator
+        {
+            random_seed =
+                (uint)random.Next(0x00010000) ^
+                (((uint)random.Next(0x00010000)) << 16);
+        }
+
+        unsafe int randomColorHash(long x)
+        {
+            // derived from MurmurHash3 (public domain)
+            // https://github.com/aappleby/smhasher/blob/master/src/MurmurHash3.cpp
+
+            const uint C1 = 0xCC9E2D51;
+            const uint C2 = 0x1B873593;
+            const uint C3 = 0xE6546B64;
+            const uint C4 = 0x85EBCA6B;
+            const uint C5 = 0xC2B2AE35;
+
+            uint h = random_seed;
+
+            // one 32-bit iteration
+            uint k = (uint)x;
+            k *= C1;
+            k = (k << 15) | (k >> 17);
+            k *= C2;
+            h ^= k;
+            h = (h << 13) | (h >> 19);
+            h = h * 5 + C3;
+
+            // finalization mix
+            h ^= h >> 16;
+            h *= C4;
+            h ^= h >> 13;
+            h *= C5;
+            h ^= h >> 16;
+
+            // reduce to 24-bit colour
+            h = h & 0x00FFFFFF;
+            return (int)h | unchecked((int)0xFF000000);
+        }
+
         unsafe int autoPaletteRaw(long x) // generated palettes
         {
             switch (palette_mode)
@@ -1074,6 +1117,8 @@ namespace Binxelview
                     int g = (((ix >> palette_gshift) & palette_gmask) * 255) / palette_gmask;
                     int b = (((ix >> palette_bshift) & palette_bmask) * 255) / palette_bmask;
                     return b | (g << 8) | (r << 16) | unchecked((int)0xFF000000);
+                case PaletteMode.PALETTE_RANDOM:
+                    return randomColorHash(x);
                 case PaletteMode.PALETTE_GREY:
                     long lx = (x >= 0) ? x : (x + (1L << 32));
                     int grey = (int)((lx * 255L) / palette_greymax);
@@ -1097,25 +1142,10 @@ namespace Binxelview
             return Color.FromArgb(p);
         }
 
-        void randomPalette()
-        {
-            // randomizes the entire palette, not just the current used area,
-            // and does not switch to custom palette mode.
-            for (int i = 0; i < PALETTE_SIZE; ++i)
-            {
-                setPalette(i,
-                    random.Next() & 255,
-                    random.Next() & 255,
-                    random.Next() & 255);
-            }
-            palette_path = "";
-        }
-
         void autoPalette() // regenerate automatic palettes
         {
             autoPaletteSetup();
             if (palette_mode == PaletteMode.PALETTE_CUSTOM) return;
-            if (palette_mode == PaletteMode.PALETTE_RANDOM) { randomPalette(); return; }
             if (preset.bpp > PALETTE_BITS) return;
             palette_path = "";
             for (int i=0; i < (1 << preset.bpp); ++i)
@@ -1794,9 +1824,8 @@ namespace Binxelview
         {
             ToolStripMenuItem item = (ToolStripMenuItem)sender;
             int index = (int)item.Tag;
-            int old_bpp = preset.bpp;
             preset = presets[index].copy();
-            if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
+            autoPalette();
             scrollRange();
             redrawPalette();
             redrawPreset();
@@ -2047,9 +2076,8 @@ namespace Binxelview
 
         private void numericBPP_ValueChanged(object sender, EventArgs e)
         {
-            int old_bpp = preset.bpp;
             preset.bpp = (int)numericBPP.Value;
-            if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
+            autoPalette();
             redrawPalette();
             redrawPreset();
             redrawPixels();
@@ -2174,9 +2202,8 @@ namespace Binxelview
                 Preset p = new Preset();
                 if (p.loadFile(d.FileName))
                 {
-                    int old_bpp = preset.bpp;
                     preset = p;
-                    if (old_bpp != preset.bpp && palette_mode != PaletteMode.PALETTE_RANDOM) autoPalette();
+                    autoPalette();
                     scrollRange();
                     redrawPalette();
                     redrawPreset();
@@ -2340,19 +2367,16 @@ namespace Binxelview
 
         private void buttonAutoPal_Click(object sender, EventArgs e)
         {
-            palette_mode = (PaletteMode)(comboBoxPalette.SelectedIndex + 1);
-            autoPalette();
-            redrawPalette();
-            redrawPixels();
+            randomColorSeed(); // reseed the random palette
+            comboBoxPalette_SelectedIndexChanged(sender, e);
         }
 
         private void comboBoxPalette_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // generate new palette if we were previously using an automatic palette
-            if (palette_mode != PaletteMode.PALETTE_CUSTOM)
-            {
-                buttonAutoPal_Click(sender, e);
-            }
+            palette_mode = (PaletteMode)(comboBoxPalette.SelectedIndex + 1);
+            autoPalette();
+            redrawPalette();
+            redrawPixels();
         }
 
         private void buttonLoadPal_Click(object sender, EventArgs e)
@@ -2689,6 +2713,7 @@ namespace Binxelview
             fixed_h = this.Height - (pixelScroll.Height + 0); // fixed height should cut off pixel view entirely
             main_w = this.Width;
             main_h = this.Height;
+            randomColorSeed();
 
             // set default options
             defaultOption();
