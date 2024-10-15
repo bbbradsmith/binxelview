@@ -905,12 +905,6 @@
             this.comboBoxPalette.FormattingEnabled = true;
             this.comboBoxPalette.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.comboBoxPalette.ItemHeight = 13;
-            this.comboBoxPalette.Items.AddRange(new object[] {
-            "Custom",
-            "RGB",
-            "Random",
-            "Greyscale",
-            "Cubehelix"});
             this.comboBoxPalette.Location = new System.Drawing.Point(193, 58);
             this.comboBoxPalette.Name = "comboBoxPalette";
             this.comboBoxPalette.Size = new System.Drawing.Size(83, 21);

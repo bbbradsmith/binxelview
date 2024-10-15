@@ -32,7 +32,7 @@ namespace Binxelview
             PALETTE_GREY,
             PALETTE_CUBEHELIX,
         };
-        static readonly string[] PaletteModeString =
+        static readonly string[] PALETTE_MODE_STRING =
         {
             "Custom",
             "RGB",
@@ -437,9 +437,9 @@ namespace Binxelview
             }
             if (opt == "AUTOPAL")
             {
-                for (int i=1; i<PaletteModeString.Length; ++i)
+                for (int i=1; i<PALETTE_MODE_STRING.Length; ++i)
                 {
-                    if (valu == PaletteModeString[i].ToUpperInvariant())
+                    if (valu == PALETTE_MODE_STRING[i].ToUpperInvariant())
                     {
                         palette_mode = (PaletteMode)i;
                         return "";
@@ -590,7 +590,7 @@ namespace Binxelview
                     }
                     else if (palette_mode != PaletteMode.PALETTE_CUSTOM)
                     {
-                        sw.WriteLine("autopal=" + PaletteModeString[(int)palette_mode]);
+                        sw.WriteLine("autopal=" + PALETTE_MODE_STRING[(int)palette_mode]);
                     }
                     sw.WriteLine(string.Format("background={0:X6}",background_raw & 0x00FFFFFF));
                     sw.WriteLine(string.Format("zoom={0}",zoom));
@@ -2727,6 +2727,7 @@ namespace Binxelview
             split_view_form = new ViewForm(this,pixelBox.ContextMenuStrip);
             posfont_regular = new Font(numericPosByte.Font, FontStyle.Regular);
             posfont_bold = new Font(numericPosByte.Font, FontStyle.Bold);
+            comboBoxPalette.Items.AddRange(PALETTE_MODE_STRING);
             comboBoxPalette.SelectedIndex = (int)PaletteMode.PALETTE_RGB - 1;
             numericZoom.Minimum = 1;
             numericZoom.Maximum = ZOOM_MAX;
