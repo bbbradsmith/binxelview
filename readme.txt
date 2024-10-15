@@ -152,6 +152,8 @@ Similarly, the VGA Palette preset may be able to find palettes in a format commo
 After transferring the palette, you will need to select another preset to view other data in the file
 using that palette.
 
+If using the Random automatic palette, the "Auto" button can be used to generate a new random palette.
+
 
 Other Notes
 -----------
@@ -281,6 +283,8 @@ Changes
 1.6.4.0 (unreleased beta)
 - Use full color picker dialog by default.
 - 16BPP palette support.
+- Random palette now supported above 16BPP.
+- Indicate use of automatic palette with bold Auto button.
 
 1.6.3.0 (2024-10-14)
 - Option persistence, INI file save and load.

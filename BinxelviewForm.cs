@@ -75,6 +75,7 @@ namespace Binxelview
         int twiddle_cache_h = 0;
         bool disable_pixel_redraw = false; // used to temporarily block redraws during repeated updates
         Font posfont_regular, posfont_bold;
+        Font autopalfont_regular, autopalfont_bold;
         Random random = new Random();
         uint random_seed;
         int preset_menu_fixed_items;
@@ -1647,6 +1648,7 @@ namespace Binxelview
             buttonLoadPal.Enabled = palenable;
             buttonSavePal.Enabled = palenable;
             pixelsToPaletteContextItem.Enabled = palenable;
+            buttonAutoPal.Font = palette_mode == (PaletteMode.PALETTE_CUSTOM) ? posfont_regular : posfont_bold;
 
             int bx = preset.bpp / 2;
             int by = preset.bpp - bx;
@@ -2367,7 +2369,11 @@ namespace Binxelview
 
         private void buttonAutoPal_Click(object sender, EventArgs e)
         {
-            randomColorSeed(); // reseed the random palette
+            palette_mode = (PaletteMode)(comboBoxPalette.SelectedIndex + 1);
+            if (palette_mode == PaletteMode.PALETTE_RANDOM)
+            {
+                randomColorSeed(); // reseed the random palette
+            }
             comboBoxPalette_SelectedIndexChanged(sender, e);
         }
 
@@ -2705,6 +2711,8 @@ namespace Binxelview
             split_view_form = new ViewForm(this,pixelBox.ContextMenuStrip);
             posfont_regular = new Font(numericPosByte.Font, FontStyle.Regular);
             posfont_bold = new Font(numericPosByte.Font, FontStyle.Bold);
+            autopalfont_regular = new Font(buttonAutoPal.Font, FontStyle.Regular);
+            autopalfont_bold = new Font(buttonAutoPal.Font, FontStyle.Bold);
             comboBoxPalette.SelectedIndex = (int)PaletteMode.PALETTE_RGB - 1;
             numericZoom.Minimum = 1;
             numericZoom.Maximum = ZOOM_MAX;
