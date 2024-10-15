@@ -42,6 +42,9 @@
             this.reloadPresetMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.setDirectoryPresetMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.presetMenuSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.advancedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.twiddleZAdvancedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.twiddleNAdvancedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.decimalPositionOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.hexadecimalPositionOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -49,6 +52,7 @@
             this.verticalLayoutOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.horizontalLayoutOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsMenuSeparator2 = new System.Windows.Forms.ToolStripSeparator();
+            this.backgroundOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gridOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.snapScrollOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.splitViewOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -128,10 +132,6 @@
             this.pixelsToPaletteContextItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pixelScroll = new System.Windows.Forms.VScrollBar();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
-            this.advancedToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.twiddleZAdvancedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.twiddleNAdvancedMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.backgroundOptionsMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStripMain.SuspendLayout();
             this.tableTop.SuspendLayout();
             this.groupPacking.SuspendLayout();
@@ -246,21 +246,44 @@
             // reloadPresetMenuItem
             // 
             this.reloadPresetMenuItem.Name = "reloadPresetMenuItem";
-            this.reloadPresetMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.reloadPresetMenuItem.Size = new System.Drawing.Size(150, 22);
             this.reloadPresetMenuItem.Text = "&Reload";
             this.reloadPresetMenuItem.Click += new System.EventHandler(this.reloadPresetMenuItem_Click);
             // 
             // setDirectoryPresetMenuItem
             // 
             this.setDirectoryPresetMenuItem.Name = "setDirectoryPresetMenuItem";
-            this.setDirectoryPresetMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.setDirectoryPresetMenuItem.Size = new System.Drawing.Size(150, 22);
             this.setDirectoryPresetMenuItem.Text = "Set &Directory...";
             this.setDirectoryPresetMenuItem.Click += new System.EventHandler(this.setDirectoryPresetMenuItem_Click);
             // 
             // presetMenuSeparator
             // 
             this.presetMenuSeparator.Name = "presetMenuSeparator";
-            this.presetMenuSeparator.Size = new System.Drawing.Size(177, 6);
+            this.presetMenuSeparator.Size = new System.Drawing.Size(147, 6);
+            // 
+            // advancedToolStripMenuItem
+            // 
+            this.advancedToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.twiddleZAdvancedMenuItem,
+            this.twiddleNAdvancedMenuItem});
+            this.advancedToolStripMenuItem.Name = "advancedToolStripMenuItem";
+            this.advancedToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
+            this.advancedToolStripMenuItem.Text = "&Advanced";
+            // 
+            // twiddleZAdvancedMenuItem
+            // 
+            this.twiddleZAdvancedMenuItem.Name = "twiddleZAdvancedMenuItem";
+            this.twiddleZAdvancedMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.twiddleZAdvancedMenuItem.Text = "Twiddle &Z";
+            this.twiddleZAdvancedMenuItem.Click += new System.EventHandler(this.twiddleZAdvancedMenuItem_Click);
+            // 
+            // twiddleNAdvancedMenuItem
+            // 
+            this.twiddleNAdvancedMenuItem.Name = "twiddleNAdvancedMenuItem";
+            this.twiddleNAdvancedMenuItem.Size = new System.Drawing.Size(126, 22);
+            this.twiddleNAdvancedMenuItem.Text = "Twiddle &N";
+            this.twiddleNAdvancedMenuItem.Click += new System.EventHandler(this.twiddleNAdvancedMenuItem_Click);
             // 
             // optionsToolStripMenuItem
             // 
@@ -326,6 +349,13 @@
             // 
             this.optionsMenuSeparator2.Name = "optionsMenuSeparator2";
             this.optionsMenuSeparator2.Size = new System.Drawing.Size(200, 6);
+            // 
+            // backgroundOptionsMenuItem
+            // 
+            this.backgroundOptionsMenuItem.Name = "backgroundOptionsMenuItem";
+            this.backgroundOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
+            this.backgroundOptionsMenuItem.Text = "Background &Colour...";
+            this.backgroundOptionsMenuItem.Click += new System.EventHandler(this.backgroundOptionsMenuItem_Click);
             // 
             // gridOptionsMenuItem
             // 
@@ -405,7 +435,7 @@
             // aboutHelpMenuItem
             // 
             this.aboutHelpMenuItem.Name = "aboutHelpMenuItem";
-            this.aboutHelpMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.aboutHelpMenuItem.Size = new System.Drawing.Size(107, 22);
             this.aboutHelpMenuItem.Text = "&About";
             this.aboutHelpMenuItem.Click += new System.EventHandler(this.aboutHelpMenuItem_Click);
             // 
@@ -876,6 +906,7 @@
             this.comboBoxPalette.ImeMode = System.Windows.Forms.ImeMode.Off;
             this.comboBoxPalette.ItemHeight = 13;
             this.comboBoxPalette.Items.AddRange(new object[] {
+            "Custom",
             "RGB",
             "Random",
             "Greyscale",
@@ -1366,36 +1397,6 @@
             this.pixelScroll.TabIndex = 1;
             this.pixelScroll.TabStop = true;
             this.pixelScroll.Scroll += new System.Windows.Forms.ScrollEventHandler(this.pixelScroll_Scroll);
-            // 
-            // advancedToolStripMenuItem
-            // 
-            this.advancedToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.twiddleZAdvancedMenuItem,
-            this.twiddleNAdvancedMenuItem});
-            this.advancedToolStripMenuItem.Name = "advancedToolStripMenuItem";
-            this.advancedToolStripMenuItem.Size = new System.Drawing.Size(72, 20);
-            this.advancedToolStripMenuItem.Text = "&Advanced";
-            // 
-            // twiddleZAdvancedMenuItem
-            // 
-            this.twiddleZAdvancedMenuItem.Name = "twiddleZAdvancedMenuItem";
-            this.twiddleZAdvancedMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.twiddleZAdvancedMenuItem.Text = "Twiddle &Z";
-            this.twiddleZAdvancedMenuItem.Click += new System.EventHandler(this.twiddleZAdvancedMenuItem_Click);
-            // 
-            // twiddleNAdvancedMenuItem
-            // 
-            this.twiddleNAdvancedMenuItem.Name = "twiddleNAdvancedMenuItem";
-            this.twiddleNAdvancedMenuItem.Size = new System.Drawing.Size(180, 22);
-            this.twiddleNAdvancedMenuItem.Text = "Twiddle &N";
-            this.twiddleNAdvancedMenuItem.Click += new System.EventHandler(this.twiddleNAdvancedMenuItem_Click);
-            // 
-            // backgroundOptionsMenuItem
-            // 
-            this.backgroundOptionsMenuItem.Name = "backgroundOptionsMenuItem";
-            this.backgroundOptionsMenuItem.Size = new System.Drawing.Size(203, 22);
-            this.backgroundOptionsMenuItem.Text = "Background &Colour...";
-            this.backgroundOptionsMenuItem.Click += new System.EventHandler(this.backgroundOptionsMenuItem_Click);
             // 
             // BinxelviewForm
             // 

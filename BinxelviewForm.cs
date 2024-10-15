@@ -66,6 +66,7 @@ namespace Binxelview
         Bitmap palette_bmp = new Bitmap(PALETTEBOX_DIM, PALETTEBOX_DIM);
         Bitmap pixel_bmp = null;
         Color[] palette = new Color[PALETTE_SIZE];
+        Color[] palette_custom = new Color[PALETTE_SIZE];
         int[] palette_raw = new int[PALETTE_SIZE]; // int version of palette
         string palette_error = "";
         int background_raw = SystemColors.Control.ToArgb(); // int version of background setting
@@ -75,7 +76,6 @@ namespace Binxelview
         int twiddle_cache_h = 0;
         bool disable_pixel_redraw = false; // used to temporarily block redraws during repeated updates
         Font posfont_regular, posfont_bold;
-        Font autopalfont_regular, autopalfont_bold;
         Random random = new Random();
         uint random_seed;
         int preset_menu_fixed_items;
@@ -1148,7 +1148,6 @@ namespace Binxelview
             autoPaletteSetup();
             if (palette_mode == PaletteMode.PALETTE_CUSTOM) return;
             if (preset.bpp > PALETTE_BITS) return;
-            palette_path = "";
             for (int i=0; i < (1 << preset.bpp); ++i)
             {
                 int p = autoPaletteRaw(i);
@@ -1319,7 +1318,16 @@ namespace Binxelview
             for (int i=0; i<PALETTE_SIZE; ++i)
             {
                 int v = ((i&1)==1) ? 0x84 : 0x74;
-                setPalette(i,v,v,v);
+                palette_custom[i] = Color.FromArgb(255,v,v,v);
+            }
+        }
+
+        void useCustomPalette()
+        {
+            for (int i=0; i<PALETTE_SIZE; ++i)
+            {
+                Color c = palette_custom[i];
+                setPalette(i, c.R, c.G, c.B);
             }
             palette_mode = PaletteMode.PALETTE_CUSTOM;
         }
@@ -1357,12 +1365,13 @@ namespace Binxelview
                 for (int i=0; (i<PALETTE_SIZE) && (i<cols.Length); ++i)
                 {
                     Color c = cols[i];
-                    setPalette(i, c.R, c.G, c.B);
+                    palette_custom[i] = c;
                 }
                 img.Dispose();
 
                 palette_path = Path.GetFullPath(path);
                 palette_path_type = filetype;
+                useCustomPalette();
                 return true;
             }
 
@@ -1460,11 +1469,12 @@ namespace Binxelview
                     if (g > 255) g = 255;
                     if (b > 255) b = 255;
                 }
-                setPalette(i, r, g, b);
+                palette_custom[i] = Color.FromArgb(255,r,g,b);
             }
 
             palette_path = Path.GetFullPath(path);
             palette_path_type = filetype;
+            useCustomPalette();
             return true;
         }
 
@@ -1479,9 +1489,10 @@ namespace Binxelview
             byte[] write_data = new byte[(1 << preset.bpp) * 3];
             for (int i=0; i<(1<<preset.bpp); ++i)
             {
-                write_data[(i * 3) + 0] = palette[i].R;
-                write_data[(i * 3) + 1] = palette[i].G;
-                write_data[(i * 3) + 2] = palette[i].B;
+                Color c = getPalette(i);
+                write_data[(i * 3) + 0] = c.R;
+                write_data[(i * 3) + 1] = c.G;
+                write_data[(i * 3) + 2] = c.B;
             }
 
             try
@@ -1648,7 +1659,8 @@ namespace Binxelview
             buttonLoadPal.Enabled = palenable;
             buttonSavePal.Enabled = palenable;
             pixelsToPaletteContextItem.Enabled = palenable;
-            buttonAutoPal.Font = palette_mode == (PaletteMode.PALETTE_CUSTOM) ? posfont_regular : posfont_bold;
+            comboBoxPalette.SelectedIndex = (int)palette_mode;
+            buttonAutoPal.Enabled = (palette_mode != (PaletteMode.PALETTE_CUSTOM));
 
             int bx = preset.bpp / 2;
             int by = preset.bpp - bx;
@@ -1681,8 +1693,6 @@ namespace Binxelview
             numericPosByte.Font = decimal_position ? posfont_regular : posfont_bold;
             snapScrollOptionsMenuItem.Checked = snap_scroll;
             splitViewOptionsMenuItem.Checked = split_view;
-            if (palette_mode != PaletteMode.PALETTE_CUSTOM)
-                comboBoxPalette.SelectedIndex = (int)palette_mode - 1;
             verticalLayoutOptionsMenuItem.Checked = !horizontal_layout;
             horizontalLayoutOptionsMenuItem.Checked = horizontal_layout;
             bgBox.BackColor = background;
@@ -2345,7 +2355,19 @@ namespace Binxelview
             d.FullOpen = true;
             if (d.ShowDialog() == DialogResult.OK)
             {
-                palette_mode = PaletteMode.PALETTE_CUSTOM;
+                if (palette_mode != PaletteMode.PALETTE_CUSTOM)
+                {
+                    // copy current palette to custom so that it can be edited
+                    palette_path = "";
+                    initCustomPalette();
+                    for (int i=0; i < (1<<preset.bpp); ++i)
+                    {
+                        palette_custom[i] = getPalette(i);
+                    }
+                    useCustomPalette();
+                }
+                // set color
+                palette_custom[index] = Color.FromArgb(255, d.Color.R, d.Color.G, d.Color.B);
                 setPalette((int)index, d.Color.R, d.Color.G, d.Color.B);
                 redrawPixels();
             }
@@ -2369,7 +2391,7 @@ namespace Binxelview
 
         private void buttonAutoPal_Click(object sender, EventArgs e)
         {
-            palette_mode = (PaletteMode)(comboBoxPalette.SelectedIndex + 1);
+            palette_mode = (PaletteMode)comboBoxPalette.SelectedIndex;
             if (palette_mode == PaletteMode.PALETTE_RANDOM)
             {
                 randomColorSeed(); // reseed the random palette
@@ -2379,7 +2401,11 @@ namespace Binxelview
 
         private void comboBoxPalette_SelectedIndexChanged(object sender, EventArgs e)
         {
-            palette_mode = (PaletteMode)(comboBoxPalette.SelectedIndex + 1);
+            palette_mode = (PaletteMode)comboBoxPalette.SelectedIndex;
+            if (palette_mode == PaletteMode.PALETTE_CUSTOM)
+            {
+                useCustomPalette();
+            }
             autoPalette();
             redrawPalette();
             redrawPixels();
@@ -2624,26 +2650,16 @@ namespace Binxelview
             long read_pos = selected_pos;
             if (read_pos < 0) return;
             // extract new palette
-            Color[] new_pal = new Color[PALETTE_SIZE];
-            int count = 0;
+            initCustomPalette();
             for (int i=0; i<PALETTE_SIZE; ++i)
             {
                 long p = readPixel(read_pos);
                 if (p < 0) break;
-                Color c = getPalette(p); // can't modify the new palette yet because we read it here
-                new_pal[i] = c;
-                ++count;
+                palette_custom[i] = getPalette(p);
                 read_pos += preset.pixel_stride_bit;
                 read_pos += preset.pixel_stride_byte * 8;
             }
-            // replace old palette
-            for (int i=0; i<count; ++i)
-            {
-                palette_mode = PaletteMode.PALETTE_CUSTOM;
-                palette_path = "";
-                Color c = new_pal[i];
-                setPalette(i,c.R,c.G,c.B);
-            }
+            useCustomPalette();
             redrawPalette();
             redrawPixels();
         }
@@ -2711,8 +2727,6 @@ namespace Binxelview
             split_view_form = new ViewForm(this,pixelBox.ContextMenuStrip);
             posfont_regular = new Font(numericPosByte.Font, FontStyle.Regular);
             posfont_bold = new Font(numericPosByte.Font, FontStyle.Bold);
-            autopalfont_regular = new Font(buttonAutoPal.Font, FontStyle.Regular);
-            autopalfont_bold = new Font(buttonAutoPal.Font, FontStyle.Bold);
             comboBoxPalette.SelectedIndex = (int)PaletteMode.PALETTE_RGB - 1;
             numericZoom.Minimum = 1;
             numericZoom.Maximum = ZOOM_MAX;
@@ -2722,6 +2736,7 @@ namespace Binxelview
             main_w = this.Width;
             main_h = this.Height;
             randomColorSeed();
+            initCustomPalette();
 
             // set default options
             defaultOption();

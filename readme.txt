@@ -136,7 +136,7 @@ Palette
 -------
 
 If the BPP setting is 16 or lower, custom palettes can be used,
-otherwise an automatic RGB or Greyscale palette can be applied.
+otherwise an automatic one can be applied.
 
 Custom palettes are 24-bit RGB triples (8 bits for each component).
 Click on a colour in the palette box to edit it.
@@ -285,6 +285,7 @@ Changes
 - 16BPP palette support.
 - Random palette now supported above 16BPP.
 - Indicate use of automatic palette with bold Auto button.
+- Can now switch from custom palette to auto palette and back without reloading the palette.
 
 1.6.3.0 (2024-10-14)
 - Option persistence, INI file save and load.
