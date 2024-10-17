@@ -1,8 +1,8 @@
 
 Binxelview binary image explorer
 
-Version 1.6.3.0
-2024-10-14
+Version 1.6.4.0
+2024-10-17
 Brad Smith et al.
 
 https://github.com/bbbradsmith/binxelview
@@ -280,14 +280,7 @@ a specific INI setup.
 Changes
 -------
 
-1.6.4.0 (unreleased beta)
-- Use full color picker dialog by default.
-- 16BPP palette support.
-- Random palette now supported above 16BPP.
-- Indicate use of automatic palette with bold Auto button.
-- Can now switch from custom palette to auto palette and back without reloading the palette.
-
-1.6.3.0 (2024-10-14)
+1.6.4.0 (2024-10-17)
 - Option persistence, INI file save and load.
 - Command line arguments for options.
 - Pixel window option for second viewing window.
@@ -299,6 +292,9 @@ Changes
 - Right click context menu option to move position to the selected pixel.
 - Right click context menu option to copy to the palette starting from the selected pixel.
 - Added Cubehelix automatic palette option.
+- 16BPP palette support.
+- Can now switch from custom palette to auto palette and back without reloading the palette.
+- Random palette now supported above 16BPP.
 - Automatic palette modes are now a dropdown list.
 - Tab stop organization of interface. (Contributor: Erquint)
 - "Little Endian" renamed to "Reverse Byte" for clarity.
@@ -311,6 +307,7 @@ Changes
 - Indicate selected preset in the presets menu.
 - Added redundant menu option for background colour, to find easier and be keyboard accessible.
 - Use byte/bit for default chunky table instead of just bit.
+- Use full color picker dialog by default.
 - Palette load option for common VGA format. (Contributor: foone)
 - Microsoft RIFF palette support.
 - GB CHR 8px preset. (Contributor: Lord-Nightmare)
