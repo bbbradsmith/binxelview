@@ -2708,6 +2708,8 @@ namespace Binxelview
 
         public BinxelviewForm()
         {
+            // suppress redraws during setup
+            disable_pixel_redraw = true;
             InitializeComponent();
         }
 
@@ -2717,9 +2719,6 @@ namespace Binxelview
             dir_cwd = new DirectoryInfo(".");
             dir_exe = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory);
             dir_loc = new DirectoryInfo(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),APPDATA_FOLDER));
-
-            // suppress unnecessary redraws during setup
-            disable_pixel_redraw = true;
 
             // additional form setup
             view_box = pixelBox;
@@ -2790,7 +2789,8 @@ namespace Binxelview
             redrawOptions();
             redrawPreset();
             redrawPalette();
-            disable_pixel_redraw = false; // finally allow redraw of pixels
+            // begin drawing of pixels
+            disable_pixel_redraw = false;
             redrawPixels();
         }
 
