@@ -280,6 +280,9 @@ a specific INI setup.
 Changes
 -------
 
+1.6.5.0 (unreleased beta)
+- Initialization tweak to avoid reported crash.
+
 1.6.4.0 (2024-10-17)
 - Option persistence, INI file save and load.
 - Command line arguments for options.
