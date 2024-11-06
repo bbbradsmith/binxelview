@@ -280,6 +280,10 @@ a specific INI setup.
 Changes
 -------
 
+1.6.6.0 (unreleased beta)
+- Add PDB to release package to assist debugging.
+- Fix initialization crash. #30
+
 1.6.5.0 (2024-10-26)
 - Option persistence, INI file save and load.
 - Command line arguments for options.

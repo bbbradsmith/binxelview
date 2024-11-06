@@ -15,8 +15,8 @@ namespace Binxelview.Dialogs
 
         public ViewForm(BinxelviewForm parent_form, ContextMenuStrip context_strip)
         {
-            InitializeComponent();
             binxelview_form = parent_form;
+            InitializeComponent();
             pixelBox.ContextMenuStrip = context_strip;
         }
 
