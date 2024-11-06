@@ -209,15 +209,22 @@ namespace Binxelview
                 int linecount = 0;
                 try
                 {
-                    // version
-                    // endian chunky
-                    // bpp width height
-                    // (stride byte) pixel row next
-                    // (stride bit) pixel row next
-                    // (stride auto) pixel row next
-                    // plane X size byte bit
-                    // plane Y size byte bit
-                    // (bpp * bit stride) byte bit
+                    // VERSION 3
+                    //   version
+                    //   endian chunky twiddle
+                    //   bpp width height
+                    //   (stride byte) pixel row next
+                    //   (stride bit) pixel row next
+                    //   (stride auto) pixel row next
+                    //   (tile stride X) size byte bit
+                    //   (tile stride Y) size byte bit
+                    //   (bpp * bit stride) byte bit
+
+                    // VERSION 2
+                    //   same as VERSION 3 without twiddle
+
+                    // VERSION 1
+                    //   same as VERSION 2 but tile stride was relative to pixel stride, instead of absolute
 
                     name = Path.GetFileNameWithoutExtension(path);
 
@@ -238,12 +245,16 @@ namespace Binxelview
                         chunky = int.Parse(ls[1]) != 0;
                         if (version >= 3) twiddle = int.Parse(ls[2]);
                         else twiddle = 0;
+                        if (twiddle < 0 || twiddle > 2) twiddle = 0;
 
                         l = tr.ReadLine();
                         ls = l.Split(' ');
                         bpp = int.Parse(ls[0]);
                         width = int.Parse(ls[1]);
                         height = int.Parse(ls[2]);
+                        if (bpp < 0) bpp = 1;
+                        if (width < 1) width = 1;
+                        if (height < 1) height = 1;
 
                         l = tr.ReadLine();
                         ls = l.Split(' ');
