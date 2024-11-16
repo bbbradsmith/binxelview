@@ -1,8 +1,8 @@
 
 Binxelview binary image explorer
 
-Version 1.6.5.0
-2024-10-26
+Version 1.6.6.0
+2024-11-15
 Brad Smith et al.
 
 https://github.com/bbbradsmith/binxelview
@@ -280,12 +280,7 @@ a specific INI setup.
 Changes
 -------
 
-1.6.6.0 (unreleased beta)
-- Add PDB to release package to assist debugging.
-- Fix initialization crash. #30
-- Correct loaded presets if they have impossible values.
-
-1.6.5.0 (2024-10-26)
+1.6.6.0 (2024-11-15)
 - Option persistence, INI file save and load.
 - Command line arguments for options.
 - Pixel window option for second viewing window.
@@ -304,6 +299,8 @@ Changes
 - Tab stop organization of interface. (Contributor: Erquint)
 - "Little Endian" renamed to "Reverse Byte" for clarity.
 - Limit width to 65536 to prevent out of memory from accidentally typing huge widths.
+- Correct loaded presets if they have impossible values.
+- Add PDB to release package to assist debugging.
 - Indicate hexadecimal position with bold font.
 - Fix crash bug when lowering BPP and bit ordering grid was scrolled down too far.
 - Fix image loaded as palette not releasing file handle.
